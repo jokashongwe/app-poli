@@ -1,0 +1,73 @@
+{% extends 'loginbase.html.twig' %}
+
+{% block title %} AADS - Portail {% endblock %}
+
+{% block body %}
+
+	<style>
+
+		@import url('https://fonts.googleapis.com/css?family=Muli &display=swap');
+		@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+
+		.image {
+			width: 150px;
+		}
+
+		.btn {
+			font-family: 'Quicksand', sans-serif;
+			border-radius: 0 !important
+		}
+
+		.form-control {
+			font-family: 'Quicksand', sans-serif;
+			border-radius: 0 !important
+		}
+
+		.form-label {
+			font-family: 'Quicksand', sans-serif;
+		}
+		.img-container {
+		}
+
+        .form-login{
+            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+            border-radius: 1px;
+        }
+
+        .error{
+            color: red
+        }
+		.copyright{
+			font-family: 'Quicksand', sans-serif;
+			font-size: 11px;
+		}
+	</style>
+
+	<div class="container mt-5">
+		<form class="row justify-content-center" action="{{ path('login') }}" method="post">
+			<div class="col-6 form-login p-5">
+				<div class="img-container">
+					<image src="{{ asset('images/logo.png') }}" class="image"/>
+				</div>
+				<div class="mb-4">
+					<input class="form-control" type="text" id="username" placeholder="Nom d'utilisateur" name="_username" value="{{ last_username }}"/>
+				</div>
+
+				<div class="mb-4">
+					<input class="form-control" type="password" id="password" placeholder="Mot de passe" name="_password"/>
+				</div>
+
+				<input type="hidden" name="_target_path" value="{{ path('dashboard') }}"/>
+
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                {% if error %}
+                    <p class="error" >{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                {% endif %}
+
+				<button class="btn btn-danger col-4 mb-3" type="submit">Se connecter</button>
+				<p class="copyright">{{ copyrightText }} | Upcorporation</p>
+			</div>
+		</form>
+	</div>
+{% endblock %}
