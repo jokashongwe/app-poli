@@ -1,9 +1,13 @@
 <script src="https://unpkg.com/flowbite@1.4.1/dist/datepicker.js"></script>
 {% if form %}
+    <div class="mb-3" >
+        <image class="rounded border border-gray-300 rounded-lg p-4" style="height: 150px" id="membre_avatar" />
+    </div>
+    
+    
     {{ form_start(form) }}
     <div class="mb-6">
-        {{ form_label(form.photo, 'Photo', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
-        {{ form_widget(form.photo, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+        {{ form_widget(form.avatar, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
     </div>
     <div class="mb-6">
         {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}

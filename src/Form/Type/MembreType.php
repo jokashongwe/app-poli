@@ -27,7 +27,7 @@ class MembreType extends AbstractType
             ->add('postnom', TextType::class, [
                 'label' => "Postnom",
             ])
-            ->add('photo', FileType::class, [
+            ->add('avatar', FileType::class, [
                 'label' => 'Photo',
                 'required' => false
             ])

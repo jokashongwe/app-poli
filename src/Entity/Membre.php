@@ -6,6 +6,7 @@ use App\Repository\MembreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MembreRepository::class)]
 class Membre
@@ -51,8 +52,8 @@ class Membre
     #[ORM\Column(type: 'date', nullable: true)]
     private $dateadhesion;
 
-    #[ORM\Column(type: 'blob', nullable: true)]
-    private $photo;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $avatar;
 
     public function __construct()
     {
@@ -226,15 +227,16 @@ class Membre
         return $this;
     }
 
-    public function getPhoto()
+    public function getAvatar(): ?string
     {
-        return $this->photo;
+        return $this->avatar;
     }
 
-    public function setPhoto($photo): self
+    public function setAvatar(?string $avatar): self
     {
-        $this->photo = $photo;
+        $this->avatar = $avatar;
 
         return $this;
     }
+
 }

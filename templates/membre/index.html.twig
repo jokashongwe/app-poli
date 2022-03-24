@@ -41,12 +41,12 @@
                             {% endif %}
                             
                             <td class="px-6 py-4">
-                                {{ membre.dateadhesion | date("m/d/Y")  }}
+                                {{ membre.dateadhesion | date("d/m/Y")  }}
                             </td>
                             
                             <td class="p-3 text-center">
                                
-                                    <button onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', -1, '{{ membre.postnom }}')" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-yellow rounded-sm border border-gray-200 hover:bg-yellow-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Mettre à jour</button>
+                                    <button onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{ membre.federation.id }}', ' {{ membre.adresse }} ')" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-yellow rounded-sm border border-gray-200 hover:bg-yellow-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Mettre à jour</button>
                                
                             </td>
                         </tr>
@@ -98,22 +98,34 @@
         let modal = document.getElementById("defaultModal");
         let btn = document.getElementById("openmodal");
         let btnClose = document.getElementById("closemodal");
+        let nom = document.getElementById("membre_nom");
+        let postnom = document.getElementById("membre_postnom");
+        let prenom = document.getElementById("membre_prenom");
+        let genre = document.getElementById("membre_genre");
+        let datenaissance = document.getElementById("membre_datenaissance");
+        let photo = document.getElementById("membre_photo");
+        let telephone = document.getElementById("membre_telephone");
+        let adresse = document.getElementById("membre_adresse");
+        let avatar = document.getElementById("membre_avatar")
+        let btnSave = document.getElementById("membre_save");
+         let form = document.getElementsByName("membre")[0] ;
 
-        function updatemembre(id, nom, membreId, provinceId){
+        function updatemembre(_id, _nom, _postnom, _prenom, _genre,_telephone,  _datenaissance, _avatar, _federation, _adresse){
             
-            let form = document.getElementsByName("membre")[0] ;
+           
 
-            let nomInput = document.getElementById("membre_nom");
-            let membre = document.getElementById("membre_membre");
-            let province = document.getElementById("membre_province");
-            let btnSave = document.getElementById("membre_save");
-
-            nomInput.value = nom;
-            if(membreId >= 0){
-                membre.value = membreId;
-            }
-            province.value = provinceId;
+            nom.value = _nom;
+            postnom.value = _postnom;
+            prenom.value = _prenom;
+            genre.value = _genre;
+            datenaissance.value = _datenaissance;
+            telephone.value = _telephone;
+            adresse.value = _adresse;
+            var filepath = "{{ url('login') }}" + _avatar;
+            console.log(filepath);
+            avatar.src = filepath;
             
+
             modal.style.display = "block";
             let currentAction = `${form.action}`;
             let newIndex = currentAction.indexOf("new");
@@ -127,15 +139,32 @@
 
             btnSave.textContent = "Mettre à jour"
             
-            currentAction += `update/${id}`;
+            currentAction += `update/${_id}`;
             form.action = currentAction;
         }
         
         let membre = {}
         btn.onclick = function () {
-            let btnSave = document.getElementById("membre_save");
+            
             btnSave.textContent = "Ajouter un Membre"
+            nom.value = "";
+            postnom.value = "";
+            prenom.value = "";
+            genre.value = "" ;
+            datenaissance.value = "";
+            telephone.value = "";
+            adresse.value = "";
+            avatar.src = "";
+            let currentAction = `${form.action}`;
+            let newIndex = currentAction.indexOf("update");
+            if(newIndex > 0){
+                 currentAction = currentAction.substring(0, newIndex)
+                 currentAction += `new`;
+                form.action = currentAction;
+            }
+            
             modal.style.display = "block";
+
         }
         btnClose.onclick = function(){
             modal.style.display = "none";
