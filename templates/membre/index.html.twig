@@ -4,48 +4,57 @@
 
 {% block body %}
     <div class="container">
-        <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Fédérations Existantes
+        <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Membres
         </h3>
         
-        <table id="federation-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
+        <table id="membre-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
             <thead>
                 <tr>
                     <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 131.172px;">Nom</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 218.172px;">FEDERATION PARENTE</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">PROVINCE</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 218.172px;">POSTNOM</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">PRENOM</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">SEXE</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">FEDERATION</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">DATE ADHESION</th>
                     <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">ACTIONS</th>
-                    </tr>
+                </tr>
             </thead>
             <tbody>
-                {% for federation in federations %}
+                {% for membre in membres %}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <td class="px-6 py-4">
-                                {{ federation.nom }}
+                                {{ membre.nom }}
                             </td>
                             <td class="px-6 py-4">
-                                {% if federation.federation %}
-                                    {{ federation.federation.nom }}
-                                {% endif %}
-
+                                {{ membre.postnom }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ federation.province.nom }}
+                                {{ membre.prenom }}
                             </td>
+                            <td class="px-6 py-4">
+                                {{ membre.genre }}
+                            </td>
+                            {% if membre.federation %}
+                                <td class="px-6 py-4">
+                                    {{ membre.federation.nom }}
+                                </td>
+                            {% endif %}
+                            
+                            <td class="px-6 py-4">
+                                {{ membre.dateadhesion | date("m/d/Y")  }}
+                            </td>
+                            
                             <td class="p-3 text-center">
-                                {% if federation.federation %}
-                                    <button onclick="updateFederation('{{ federation.id }}','{{ federation.nom }}', '{{ federation.federation.id }}', '{{ federation.province.id }}')"  type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-yellow rounded-sm border border-gray-200 hover:bg-yellow-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Mettre à jour</button>
-                                {% else %}
-                                    <button onclick="updateFederation('{{ federation.id }}','{{ federation.nom }}', -1, '{{ federation.province.id }}')" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-yellow rounded-sm border border-gray-200 hover:bg-yellow-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Mettre à jour</button>
-                                
-                                {% endif %}
-                                
+                               
+                                    <button onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', -1, '{{ membre.postnom }}')" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-yellow rounded-sm border border-gray-200 hover:bg-yellow-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Mettre à jour</button>
+                               
                             </td>
                         </tr>
                     {% endfor %}
             </tbody>
         </table>
         <button id="openmodal" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button" data-modal-toggle="defaultModal">
-            Nouvelle Fédération
+            Ajouter un Membre
         </button>
 
         <!-- Main modal -->
@@ -58,7 +67,7 @@
                     <!-- Modal header -->
                     <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
-                            Nouvelle Fédération
+                            Formulaire d'identification
                         </h3>
                         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="defaultModal">
                             <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +77,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="p-6 space-y-6">
-                        {% include "federation/form.html.twig" %}
+                        {% include "membre/form.html.twig" %}
                     </div>
                 </div>
             </div>
@@ -80,7 +89,7 @@
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
-            let table = new DataTable('#federation-data', {
+            let table = new DataTable('#membre-data', {
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
                 }
@@ -90,18 +99,18 @@
         let btn = document.getElementById("openmodal");
         let btnClose = document.getElementById("closemodal");
 
-        function updateFederation(id, nom, federationId, provinceId){
+        function updatemembre(id, nom, membreId, provinceId){
             
-            let form = document.getElementsByName("federation")[0] ;
+            let form = document.getElementsByName("membre")[0] ;
 
-            let nomInput = document.getElementById("federation_nom");
-            let federation = document.getElementById("federation_federation");
-            let province = document.getElementById("federation_province");
-            let btnSave = document.getElementById("federation_save");
+            let nomInput = document.getElementById("membre_nom");
+            let membre = document.getElementById("membre_membre");
+            let province = document.getElementById("membre_province");
+            let btnSave = document.getElementById("membre_save");
 
             nomInput.value = nom;
-            if(federationId >= 0){
-                federation.value = federationId;
+            if(membreId >= 0){
+                membre.value = membreId;
             }
             province.value = provinceId;
             
@@ -122,10 +131,10 @@
             form.action = currentAction;
         }
         
-        let federation = {}
+        let membre = {}
         btn.onclick = function () {
-            let btnSave = document.getElementById("federation_save");
-            btnSave.textContent = "Créer une fédération"
+            let btnSave = document.getElementById("membre_save");
+            btnSave.textContent = "Ajouter un Membre"
             modal.style.display = "block";
         }
         btnClose.onclick = function(){

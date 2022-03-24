@@ -1,0 +1,50 @@
+<script src="https://unpkg.com/flowbite@1.4.1/dist/datepicker.js"></script>
+{% if form %}
+    {{ form_start(form) }}
+    <div class="mb-6">
+        {{ form_label(form.photo, 'Photo', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.photo, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.prenom, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.postnom, 'Postnom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.postnom, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6 relative">
+        {{ form_widget(form.datenaissance, {'attr': { 'placeholder':"Selectionner une date", 'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.adresse, 'Adresse', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.adresse, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.genre, 'Sexe', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.genre, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.telephone, 'Téléphone', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.telephone, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.numerocarte, 'Numéro de carte d\'identite (optionnel)', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.numerocarte, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.federation, 'Fédération', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.federation, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+
+        {{ form_widget(form.save, {'attr': {'class': 'mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200'}}) }}
+
+        <button id="closemodal" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-yellow-500 rounded-sm border hover:bg-yellow-600 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="defaultModal">
+            Annuler
+        </button>
+    {{ form_end(form) }}
+{% endif %}

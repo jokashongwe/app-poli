@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Federation;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,10 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'dashboard')]
-    public function index(): Response
+    public function index(ManagerRegistry $entityManager): Response
     {
+
+        $federations = $entityManager->getRepository(Federation::class)->findAll();
+
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
+            'federations' => $federations
         ]);
     }
 }

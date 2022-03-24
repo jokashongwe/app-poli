@@ -24,7 +24,7 @@ class Membre
     #[ORM\Column(type: 'string', length: 255)]
     private $postnom;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'date', nullable:true)]
     private $datenaissance;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -41,6 +41,18 @@ class Membre
 
     #[ORM\Column(type: 'string', length: 255)]
     private $genre;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $telephone;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $numerocarte;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    private $dateadhesion;
+
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private $photo;
 
     public function __construct()
     {
@@ -174,6 +186,54 @@ class Membre
     public function setGenre(string $genre): self
     {
         $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(string $telephone): self
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getNumerocarte(): ?string
+    {
+        return $this->numerocarte;
+    }
+
+    public function setNumerocarte(?string $numerocarte): self
+    {
+        $this->numerocarte = $numerocarte;
+
+        return $this;
+    }
+
+    public function getDateadhesion(): ?\DateTimeInterface
+    {
+        return $this->dateadhesion;
+    }
+
+    public function setDateadhesion(?\DateTimeInterface $dateadhesion): self
+    {
+        $this->dateadhesion = $dateadhesion;
+
+        return $this;
+    }
+
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto($photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }

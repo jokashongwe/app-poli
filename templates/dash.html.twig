@@ -8,9 +8,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
 	</head>
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Muli &display=swap');
 		@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
         body{
             font-family: 'Muli', sans-serif;
@@ -22,20 +22,20 @@
             <div class="flex-none w-60 h-full shadow-lg bg-black  absolute">
                 <ul class="relative">
                     <li class="relative">
-                        <p class="flex items-center font-semibold text-sm py-4 bg-gray-700 px-6 h-12 text-white" >
+                        <a href="{{ path('dashboard')}} " class="flex items-center font-semibold text-sm py-4 bg-gray-700 px-6 h-12 text-white" >
                         Portail d'Administration
-                        </p>
+                        </a>
                     </li>
                     <li class="relative">
-                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-300 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                        <a href="{{ path('membre_new') }}"  class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-300 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                             <i class="fas fa-users fa-1x fa-fw"></i>
                             <span class="pl-2">Gestion des Membres</span>
                         </a>
                     </li>
                     <li class="relative">
-                        <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-300 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                        <a href="{{ path('federation_new')}} " class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-300 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                             <i class="fas fa-building fa-1x fa-fw"></i>
-                            <span class="pl-2">Structures des Fédérations</span>
+                            <span class="pl-2">Gestion des Fédérations</span>
                         </a>
                     </li>
                     <li class="relative">
@@ -63,7 +63,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="flex-initial pl-64 pt-3" >
+            <div class="flex-initial pl-64 pt-3 pr-3 mb-5 w-full" >
                 {% block body %}
             
                 {% endblock %}
