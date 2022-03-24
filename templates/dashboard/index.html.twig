@@ -1,20 +1,261 @@
-{% extends 'base.html.twig' %}
+{% extends 'dash.html.twig' %}
 
-{% block title %}Hello DashboardController!{% endblock %}
+{% block title %}Administration
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<style>
+		.chartbox{
+			box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+			padding: 5px;
+		}
+	</style>
+	<div class="container mb-10">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+		<div class="grid grid-cols-3 gap-2 mb-5">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/LENOVO/projects/policapp/src/Controller/DashboardController.php'|file_link(0) }}">src/Controller/DashboardController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/LENOVO/projects/policapp/templates/dashboard/index.html.twig'|file_link(0) }}">templates/dashboard/index.html.twig</a></code></li>
-    </ul>
-</div>
+			<a href="#" class="block p-6 max-w-sm bg-blue-500 rounded border border-gray-200 shadow-md hover:bg-blue-700 dark:border-gray-700 dark:hover:bg-gray-700">
+				<h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Membres</h5>
+				<div class="grid grid-cols-2 gap-1">
+					<i class="fas fa-user-plus fa-2x fa-fw text-white"></i>
+					<p class="font-bold text-2xl text-white">200</p>
+				</div>
+
+			</a>
+
+
+			<a href="#" class="block p-6 max-w-sm bg-yellow-500 rounded border border-gray-200 shadow-md hover:bg-yellow-700 dark:border-gray-700 dark:hover:bg-gray-700">
+				<h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Fédérations</h5>
+				<div class="grid grid-cols-2 gap-1">
+					<i class="fas fa-building fa-2x fa-fw text-white"></i>
+					<p class="font-bold text-2xl text-white">20</p>
+				</div>
+
+			</a>
+
+
+			<a href="#" class="block p-6 max-w-sm bg-green-500  rounded border border-gray-200 shadow-md hover:bg-green-700 dark:border-gray-700 dark:hover:bg-gray-700">
+				<h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Cotisations Mensuelle</h5>
+				<div class="grid grid-cols-2 gap-1">
+					<i class="fas fa-wallet fa-2x fa-fw text-white"></i>
+					<p class="font-bold text-2xl text-white">300000 Fc</p>
+				</div>
+			</a>
+
+		</div>
+		<div class="grid grid-cols-2 gap-3" >
+			<div class="chartbox" >
+				<canvas id="federationchart"></canvas>
+			</div>
+			<div class="chartbox barcart" >
+				<canvas id="genderchart"></canvas>
+			</div>
+    	</div>
+		<h3 class="mb-3 text-md font-200 tracking-tight text-gray-900 dark:text-white uppercase mt-3">5 - Derniers membres inscrits
+		</h3>
+		<div class="relative overflow-x-auto shadow-md border">
+			<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+				<thead class="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
+					<tr>
+						<th scope="col" class="px-6 py-3">
+							Nom
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Postnom
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Prénom
+						</th>
+						<th scope="col" class="px-6 py-3">
+							Fédération
+						</th>
+						<th scope="col" class="px-6 py-3">
+							<span class="sr-only">Infos</span>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+						<th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"></th>
+						<td class="px-6 py-4">
+							Sliver
+						</td>
+						<td class="px-6 py-4">
+							Laptop
+						</td>
+						<td class="px-6 py-4">
+							$2999
+						</td>
+						<td class="px-6 py-4 text-right">
+							<a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Plus d'informations</a>
+						</td>
+					</tr>
+					<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+						<th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+							Microsoft Surface Pro
+						</th>
+						<td class="px-6 py-4">
+							White
+						</td>
+						<td class="px-6 py-4">
+							Laptop PC
+						</td>
+						<td class="px-6 py-4">
+							$1999
+						</td>
+						<td class="px-6 py-4 text-right">
+							<a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Plus d'informations</a>
+						</td>
+					</tr>
+					<tr class="bg-white dark:bg-gray-800">
+						<th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+							Magic Mouse 2
+						</th>
+						<td class="px-6 py-4">
+							Black
+						</td>
+						<td class="px-6 py-4">
+							Accessories
+						</td>
+						<td class="px-6 py-4">
+							$99
+						</td>
+						<td class="px-6 py-4 text-right">
+							<a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Plus d'informations</a>
+						</td>
+					</tr>
+					<tr class="bg-white dark:bg-gray-800">
+						<th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+							Magic Mouse 2
+						</th>
+						<td class="px-6 py-4">
+							Black
+						</td>
+						<td class="px-6 py-4">
+							Accessories
+						</td>
+						<td class="px-6 py-4">
+							$99
+						</td>
+						<td class="px-6 py-4 text-right">
+							<a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Plus d'informations</a>
+						</td>
+					</tr>
+					<tr class="bg-white dark:bg-gray-800">
+						<th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+							Magic Mouse 2
+						</th>
+						<td class="px-6 py-4">
+							Black
+						</td>
+						<td class="px-6 py-4">
+							Accessories
+						</td>
+						<td class="px-6 py-4">
+							$99
+						</td>
+						<td class="px-6 py-4 text-right">
+							<a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Plus d'informations</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+    
+
+    <script>
+        const data = {
+            labels: [
+                'Homme',
+                'Femme'
+            ],
+            datasets: [{
+                label: 'Homme/Femme',
+                data: [300, 50],
+                backgroundColor: [
+                'rgb(54, 162, 235)',
+                'rgb(255, 99, 132)'
+                ],
+                hoverOffset: 2,
+                responsive:true,
+            }]
+        };
+
+        const config = {
+            type: 'pie',
+            data: data,
+            options:{
+                aspectRatio: 2
+            }
+        };
+                
+        const myChart = new Chart(
+            document.getElementById('genderchart'),
+            config
+        );
+
+    </script>
+
+    <script>
+            const labels2 = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July'
+        ];
+        const data2 = {
+            labels: labels2,
+            datasets: [{
+                label: 'Membres par fédérations',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const config2 = {
+            type: 'bar',
+            data: data2,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                 responsive:true,
+            },
+        };
+
+        const federation = new Chart(
+            document.getElementById('federationchart'),
+            config2
+        );
+
+    </script>
+
+
 {% endblock %}
