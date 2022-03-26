@@ -45,6 +45,15 @@ class FederationRepository extends ServiceEntityRepository
         }
     }
 
+    public function compter()
+    {
+        $qb = $this->createQueryBuilder('m');
+        return $qb
+            ->select('count(m.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     // /**
     //  * @return Federation[] Returns an array of Federation objects
     //  */

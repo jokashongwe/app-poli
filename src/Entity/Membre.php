@@ -55,6 +55,9 @@ class Membre
     #[ORM\Column(type: 'text', nullable: true)]
     private $avatar;
 
+    #[ORM\ManyToOne(targetEntity: Qualite::class, inversedBy: 'membres')]
+    private $qualite;
+
     public function __construct()
     {
         $this->cotisations = new ArrayCollection();
@@ -235,6 +238,18 @@ class Membre
     public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getQualite(): ?Qualite
+    {
+        return $this->qualite;
+    }
+
+    public function setQualite(?Qualite $qualite): self
+    {
+        $this->qualite = $qualite;
 
         return $this;
     }

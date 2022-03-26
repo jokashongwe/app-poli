@@ -45,6 +45,21 @@ class CotisationRepository extends ServiceEntityRepository
         }
     }
 
+    public function countByAmount($value =0): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT SUM(c.montant) total
+            FROM cotisation c
+            ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Cotisation[] Returns an array of Cotisation objects
     //  */

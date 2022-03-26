@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\Province;
+use App\Entity\Qualite;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -45,6 +46,10 @@ class MembreType extends AbstractType
             ->add('federation', EntityType::class, [
                 'class' => Federation::class,
                 'choice_label' => 'nom'
+            ])
+            ->add('qualite', EntityType::class, [
+                'class' => Qualite::class,
+                'choice_label' => 'titre'
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'Téléphone',

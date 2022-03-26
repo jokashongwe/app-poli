@@ -45,6 +45,48 @@ class MembreRepository extends ServiceEntityRepository
         }
     }
 
+    public function compter()
+    {
+        $qb = $this->createQueryBuilder('m');
+        return $qb
+            ->select('count(m.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countByProvince($value =0): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT p.nom, count(*) frequence
+            FROM membre m, federation f, province p
+            WHERE m.federation_id = f.id and f.province_id = p.id
+            GROUP BY p.nom
+            ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $resultSet->fetchAllAssociative();
+    }
+
+    public function countByGenre($value = 0):array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT m.genre, count(*) frequence
+            FROM membre m
+            GROUP BY m.genre
+            ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Membre[] Returns an array of Membre objects
     //  */

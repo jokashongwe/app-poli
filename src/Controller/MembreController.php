@@ -97,6 +97,7 @@ class MembreController extends AbstractController
             $membre->setGenre($nvoMembre->getGenre());
             $membre->setDatenaissance($nvoMembre->getDatenaissance());
             $membre->setAdresse($nvoMembre->getAdresse());
+            $membre->setQualite($nvoMembre->getQualite());
             
             $file = $request->files->get("membre")["avatar"];
             

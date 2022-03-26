@@ -10,13 +10,14 @@
         <table id="membre-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
             <thead>
                 <tr>
-                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 131.172px;">Nom</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 218.172px;">POSTNOM</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">PRENOM</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">SEXE</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">FEDERATION</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">DATE ADHESION</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">ACTIONS</th>
+                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Nom</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >POSTNOM</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >PRENOM</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >SEXE</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >FEDERATION</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >QUALITE</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >DATE ADHESION</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >ACTIONS</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +40,18 @@
                                     {{ membre.federation.nom }}
                                 </td>
                             {% endif %}
+
+                            {% if membre.qualite %}
+                                <td class="px-6 py-4">
+                                    {{ membre.qualite.titre }}
+                                </td>
+                            {% else %}
+                                <td class="px-6 py-4">
+                                    
+                                </td>
+                            {% endif %}
+                            
+                            
                             
                             <td class="px-6 py-4">
                                 {{ membre.dateadhesion | date("d/m/Y")  }}
