@@ -6,70 +6,121 @@
     <div class="container">
         <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Membres
         </h3>
-        
-        <table id="membre-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
-            <thead>
+        <a href="{{ path('membre_new') }}" class="mt-5 py-2 px-5 mr-2 mb-5 text-sm font-medium text-white rounded focus:outline-none bg-gray-700 rounded-sm border border-gray-200" >
+            Rafraichir
+        </a>
+        <div style="height: 15px;"></div>
+        <table id="membre-data" class="display dataTable w-full text-sm text-left text-gray-500" style="width:100%" aria-describedby="example_info">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50" >
                 <tr>
-                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Nom</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >POSTNOM</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >PRENOM</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >SEXE</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >FEDERATION</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >QUALITE</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >DATE ADHESION</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >ACTIONS</th>
+                    <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Nom</th>
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >POSTNOM</th>
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >PRENOM</th>
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >SEXE</th>
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >FEDERATION</th>
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >QUALITE</th>
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >DATE ADHESION</th>
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" ><span class="sr-only">Edit</span></th>
                 </tr>
             </thead>
             <tbody>
                 {% for membre in membres %}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="px-6 py-4">
+                            <td class="px-6 ">
                                 {{ membre.nom }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 ">
                                 {{ membre.postnom }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 ">
                                 {{ membre.prenom }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 ">
                                 {{ membre.genre }}
                             </td>
                             {% if membre.federation %}
-                                <td class="px-6 py-4">
-                                    {{ membre.federation.nom }}
-                                </td>
+
+                                {% if membre.federation.federation %}
+                                    <td class="px-6 ">
+                                        {{ membre.federation.federation.nom }}
+                                    </td>
+                                {% else %}
+                                    <td class="px-6 ">
+                                        {{ membre.federation.nom }}
+                                    </td>    
+                                {% endif %}
+                                
                             {% endif %}
 
                             {% if membre.qualite %}
-                                <td class="px-6 py-4">
+
+                                
+                                
+                                <td class="px-6 ">
                                     {{ membre.qualite.titre }}
                                 </td>
                             {% else %}
-                                <td class="px-6 py-4">
+                                <td class="px-6 ">
                                     
                                 </td>
                             {% endif %}
                             
                             
                             
-                            <td class="px-6 py-4">
+                            <td class="px-6 ">
                                 {{ membre.dateadhesion | date("d/m/Y")  }}
                             </td>
                             
-                            <td class="p-3 text-center">
-                               
-                                    <button onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{ membre.federation.id }}', ' {{ membre.adresse }} ')" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-yellow rounded-sm border border-gray-200 hover:bg-yellow-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Mettre à jour</button>
-                               
+                            <td class="text-center">
+                                    <span onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{ membre.federation.id }}', ' {{ membre.adresse }} ')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</span>
                             </td>
                         </tr>
                     {% endfor %}
             </tbody>
+            <tfoot class="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Nom</th>
+                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >POSTNOM</th>
+                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >PRENOM</th>
+                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >SEXE</th>
+                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >FEDERATION</th>
+                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >QUALITE</th>
+                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >DATE ADHESION</th>
+                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >ACTIONS</th>
+                </tr>
+            </tfoot>
         </table>
-        <button id="openmodal" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button" data-modal-toggle="defaultModal">
-            Ajouter un Membre
-        </button>
 
+        {% if toast %}
+
+            {% if toast.isError %}
+                <script>
+                    setTimeout(() => {
+                        toastr.error("{{ toast.message }}".replaceAll("&#039;", "'"), "Averitissement");
+                    }, 1000);
+                </script>
+            {% else %}
+                <script>
+                    setTimeout(() => {
+                        toastr.success("{{ toast.message }}".replaceAll("&#039;", "'"), "Information");
+                    }, 1000);
+                </script>
+            {% endif %}
+        
+        {% endif %}
+        
+
+        <div class="grid grid-cols-6 gap-3" >
+            <button id="openmodal" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button" data-modal-toggle="defaultModal">
+                Ajouter un Membre
+            </button>
+
+            <button id="openmodalexcel" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-gray-700 rounded-sm border border-gray-200 hover:bg-gray-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="excelModal">
+                <i class="fas fa-upload"></i>
+                Importer depuis Excel
+            </button>
+        </div>
+        
         <!-- Main modal -->
         <div id="defaultModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden center fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
             <div
@@ -82,7 +133,7 @@
                         <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
                             Formulaire d'identification
                         </h3>
-                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="defaultModal">
+                        <button type="button" id="defaultCloseModalButton" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="defaultModal">
                             <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                             </svg>
@@ -95,21 +146,60 @@
                 </div>
             </div>
         </div>
+
+        <!-- Excel modal -->
+        <div id="excelModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden center fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+            <div
+                class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+                <!-- Modal content -->
+                <div
+                    class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
+                            Importation
+                        </h3>
+                        <button type="button" id="closeIconButton" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="excelModal">
+                            <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-6 space-y-6">
+                        {% include "membre/excelform.html.twig" %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"  ></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" ></script>
+    <script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js" ></script>
 
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
             let table = new DataTable('#membre-data', {
+                select: {
+                    style: 'multi'
+                },
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
-                }
+                },
+                pageLength: 10,
             });
         });
+
         let modal = document.getElementById("defaultModal");
         let btn = document.getElementById("openmodal");
+        let defaultCloseModalButton = document.getElementById("defaultCloseModalButton");
+
+        let excelModal = document.getElementById("excelModal");
+        let closeIconButton = document.getElementById("closeIconButton");
+        let btnOpenExcelModal = document.getElementById("openmodalexcel");
+        let btnCloseExcelModal = document.getElementById("openmodal");
+
         let btnClose = document.getElementById("closemodal");
         let nom = document.getElementById("membre_nom");
         let postnom = document.getElementById("membre_postnom");
@@ -125,8 +215,6 @@
 
         function updatemembre(_id, _nom, _postnom, _prenom, _genre,_telephone,  _datenaissance, _avatar, _federation, _adresse){
             
-           
-
             nom.value = _nom;
             postnom.value = _postnom;
             prenom.value = _prenom;
@@ -157,6 +245,19 @@
         }
         
         let membre = {}
+
+        btnOpenExcelModal.onclick = function() {
+            excelModal.style.display = "block";
+        }
+
+        defaultCloseModalButton.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        closeIconButton.onclick = function() {
+            excelModal.style.display = "none";
+        }
+
         btn.onclick = function () {
             
             btnSave.textContent = "Ajouter un Membre"
@@ -182,5 +283,12 @@
         btnClose.onclick = function(){
             modal.style.display = "none";
         }
+        //style de la table
+        let elementsToStyle =  document.getElementsByClassName("select-item");
+        setTimeout(() => {
+            for (let i = 0; i < elementsToStyle.length; i++) {
+                elementsToStyle.item(i).className += "text-sm text-gray-700 m-3";
+            }
+        }, 1000);
     </script>
 {% endblock %}

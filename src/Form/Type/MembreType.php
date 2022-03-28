@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\File;
 
 class MembreType extends AbstractType
 {
@@ -30,7 +31,18 @@ class MembreType extends AbstractType
             ])
             ->add('avatar', FileType::class, [
                 'label' => 'Photo',
-                'required' => false
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2048k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/jpg',
+                        ],
+                        'mimeTypesMessage' => 'Sélectionner une bonne image SVP',
+                    ])
+                ],
             ])
             ->add('datenaissance', DateType::class, [
                 'label' => "Date de naissance (Optionel)",

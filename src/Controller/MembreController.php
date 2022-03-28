@@ -4,13 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Federation;
 use App\Entity\Membre;
+use App\Form\Type\ExcelUploadType;
 use App\Form\Type\MembreType;
+use ChunkReadFilter;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Service\ExcelMembreImporter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Twig\Cache\NullCache;
 
 class MembreController extends AbstractController
 {
@@ -30,10 +35,15 @@ class MembreController extends AbstractController
         $membre = new Membre();
 
         $membres = $doctrine->getRepository(Membre::class)->findAll();
-        
+
         $form = $this->createForm(MembreType::class, $membre);
+        $excelForm = $this->createForm(ExcelUploadType::class, null, [
+            'action' => $this->generateUrl('membre_new'),
+        ]);
+
 
         $form->handleRequest($request);
+        $excelForm->handleRequest($request);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -47,12 +57,12 @@ class MembreController extends AbstractController
                 // extension cannot be guessed
                 $extension = 'bin';
             }
-            $filename = rand(1, 99999).'.'. $extension;
+            $filename = rand(1, 99999) . '.' . $extension;
             $file->move('../public/uploads', $filename);
-            $filename = "uploads" . "/". $filename;
+            $filename = "uploads" . "/" . $filename;
             $membre->setAvatar($filename);
 
-            if(is_null($membre->getGenre())){
+            if (is_null($membre->getGenre())) {
                 $membre->setGenre("Homme");
             }
             $entityManager = $doctrine->getManager();
@@ -63,12 +73,33 @@ class MembreController extends AbstractController
 
             return $this->redirectToRoute('membre_new');
         }
+        $toast = [];
+        if ($excelForm->isSubmitted() && $excelForm->isValid()) {
+            $excelFile = $excelForm->get("attachement")->getData();
+            $excelImporter = new ExcelMembreImporter($excelFile, $doctrine);
+            
+            try {
+                $excelImporter->processData();
+                $toast = [
+                    "isError" => false,
+                    "message" => "Les données ont été correctement importées"
+                ];
+            } catch (\Throwable $th) {
+                $toast = [
+                    "isError" => true,
+                    "message" => "L'erreur suivante est survenue lors du chargement: " . $th->getMessage()
+                ];
+            }
+
+        }
 
 
         return $this->renderForm('membre/index.html.twig', [
             'controller_name' => 'MembreController',
             'form'          => $form,
-            'membres' => $membres
+            'excelform'     => $excelForm,
+            'membres' => $membres,
+            'toast'   => $toast
         ]);
     }
 
@@ -82,14 +113,14 @@ class MembreController extends AbstractController
         $nvoMembre = new Membre();
 
         $form = $this->createForm(MembreType::class, $nvoMembre);
-        
+
         $form->handleRequest($request);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $nvoMembre = $form->getData();
-            
+
             $membre->setNom($nvoMembre->getNom());
             $membre->setPostnom($nvoMembre->getPostnom());
             $membre->setPrenom($nvoMembre->getPrenom());
@@ -98,24 +129,24 @@ class MembreController extends AbstractController
             $membre->setDatenaissance($nvoMembre->getDatenaissance());
             $membre->setAdresse($nvoMembre->getAdresse());
             $membre->setQualite($nvoMembre->getQualite());
-            
+
             $file = $request->files->get("membre")["avatar"];
-            
-            if(!is_null($file) && !is_null( $membre->getAvatar() ) ){
+
+            if (!is_null($file) && !is_null($membre->getAvatar())) {
                 try {
                     unlink('../public/' . $membre->getAvatar()); // supprime l'ancienne photo
                 } catch (\Throwable $th) {
                     //file already deleted
                 }
-                
+
                 $extension = $file->guessExtension();
                 if (!$extension) {
                     // extension cannot be guessed
                     $extension = 'bin';
                 }
-                $filename = rand(1, 99999).'.'. $extension;
+                $filename = rand(1, 99999) . '.' . $extension;
                 $file->move('../public/uploads', $filename);
-                $filename = "uploads" . "/". $filename;
+                $filename = "uploads" . "/" . $filename;
                 $membre->setAvatar($filename);
             }
             $membre->setFederation($nvoMembre->getFederation());

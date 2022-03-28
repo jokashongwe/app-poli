@@ -58,6 +58,9 @@ class Membre
     #[ORM\ManyToOne(targetEntity: Qualite::class, inversedBy: 'membres')]
     private $qualite;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $sousfederation;
+
     public function __construct()
     {
         $this->cotisations = new ArrayCollection();
@@ -250,6 +253,18 @@ class Membre
     public function setQualite(?Qualite $qualite): self
     {
         $this->qualite = $qualite;
+
+        return $this;
+    }
+
+    public function getSousfederation(): ?string
+    {
+        return $this->sousfederation;
+    }
+
+    public function setSousfederation(?string $sousfederation): self
+    {
+        $this->sousfederation = $sousfederation;
 
         return $this;
     }
