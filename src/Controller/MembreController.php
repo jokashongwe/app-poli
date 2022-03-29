@@ -6,11 +6,13 @@ use App\Entity\Federation;
 use App\Entity\Membre;
 use App\Form\Type\ExcelUploadType;
 use App\Form\Type\MembreType;
+use App\Service\MembreCardPrinter;
 use ChunkReadFilter;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Service\ExcelMembreImporter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -77,7 +79,7 @@ class MembreController extends AbstractController
         if ($excelForm->isSubmitted() && $excelForm->isValid()) {
             $excelFile = $excelForm->get("attachement")->getData();
             $excelImporter = new ExcelMembreImporter($excelFile, $doctrine);
-            
+
             try {
                 $excelImporter->processData();
                 $toast = [
@@ -93,13 +95,12 @@ class MembreController extends AbstractController
 
         }
 
-
         return $this->renderForm('membre/index.html.twig', [
             'controller_name' => 'MembreController',
-            'form'          => $form,
-            'excelform'     => $excelForm,
+            'form' => $form,
+            'excelform' => $excelForm,
             'membres' => $membres,
-            'toast'   => $toast
+            'toast' => $toast
         ]);
     }
 
@@ -154,9 +155,41 @@ class MembreController extends AbstractController
             $entityManager = $doctrine->getManager();
             $entityManager->persist($membre);
             $entityManager->flush();
-
-
-            return $this->redirectToRoute('membre_new');
         }
+        return $this->redirectToRoute('membre_new');
+    }
+
+    #[Route('/membre/print', name: 'membre_print', methods: ["POST"])]
+    public function printCard(Request $request, ManagerRegistry $doctrine): Response
+    {
+        $toast = ["isError" => false, "message" => ""];
+        //$response->setData(['request' => json_encode($request)]);
+        try {
+            $idenfications = array_values($request->request->all());
+            $membres = $doctrine->getRepository(Membre::class)->findBy([
+                'noidentification' => $idenfications
+            ]);
+
+            if (is_null($membres)) {
+                $toast["isError"] = true;
+                $toast["message"] = "Aucun des numeros ne correspondent à des membres existants";
+            }
+
+            $html= $this->renderView("carte.html.twig", [
+                "membres" => $membres
+            ]);
+
+            $printerService = new MembreCardPrinter();
+            $printerService->print($html);
+
+            $toast["message"] = "Le téléchargement vas débuter sous peu";
+
+        } catch (\Throwable $th) {
+            $toast["isError"] = true;
+            dd($th);
+            $toast["message"] = "L'erreur suivante est survenue: " . $th->getMessage();
+        }
+        return $this->redirectToRoute('membre_new', ["toast" => $toast]);
+
     }
 }

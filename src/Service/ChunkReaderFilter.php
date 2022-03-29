@@ -4,7 +4,7 @@ namespace App\Service;
 
 use PhpOffice\PhpSpreadsheet\Reader\IReadFilter;
 
-class ChunkReadFilter implements IReadFilter
+class ChunkReaderFilter implements IReadFilter
 {
     private $startRow = 0;
     private $endRow   = 0;

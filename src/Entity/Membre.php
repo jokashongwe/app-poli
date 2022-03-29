@@ -61,6 +61,12 @@ class Membre
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $sousfederation;
 
+    #[ORM\Column(type: 'boolean', nullable: true, options: ["default" => false])]
+    private $apayercotisation;
+
+    #[ORM\Column(type: 'boolean', nullable: true, options: ["default" => false] )]
+    private $aunecarte;
+
     public function __construct()
     {
         $this->cotisations = new ArrayCollection();
@@ -265,6 +271,30 @@ class Membre
     public function setSousfederation(?string $sousfederation): self
     {
         $this->sousfederation = $sousfederation;
+
+        return $this;
+    }
+
+    public function getApayercotisation(): ?bool
+    {
+        return $this->apayercotisation;
+    }
+
+    public function setApayercotisation(?bool $apayercotisation): self
+    {
+        $this->apayercotisation = $apayercotisation;
+
+        return $this;
+    }
+
+    public function getAunecarte(): ?bool
+    {
+        return $this->aunecarte;
+    }
+
+    public function setAunecarte(?bool $aunecarte): self
+    {
+        $this->aunecarte = $aunecarte;
 
         return $this;
     }

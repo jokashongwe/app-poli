@@ -16,7 +16,6 @@ class ExcelMembreImporter
 
     private UploadedFile $file;
     private string $filename = "";
-    private array $excelData = [];
     private ManagerRegistry $managerRegistery;
 
     function __construct(UploadedFile $file, ManagerRegistry $em)
@@ -50,7 +49,7 @@ class ExcelMembreImporter
         $inputFileType = IOFactory::identify($this->filename);
         $reader = IOFactory::createReader($inputFileType);
         $chunkSize = 50;
-        $chunkFilter = new ChunkReadFilter();
+        $chunkFilter = new ChunkReaderFilter();
         $reader->setReadFilter($chunkFilter);
         for ($startRow = 2; $startRow <= 240; $startRow += $chunkSize) {
             $chunkFilter->setRows($startRow, $chunkSize);
@@ -77,6 +76,7 @@ class ExcelMembreImporter
             }
             $this->managerRegistery->getManager()->flush();
         }
+        unlink($this->filename);
     }
 
     private function isMemberExist($telephone)
