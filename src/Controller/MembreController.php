@@ -186,7 +186,6 @@ class MembreController extends AbstractController
 
         } catch (\Throwable $th) {
             $toast["isError"] = true;
-            dd($th);
             $toast["message"] = "L'erreur suivante est survenue: " . $th->getMessage();
         }
         return $this->redirectToRoute('membre_new', ["toast" => $toast]);

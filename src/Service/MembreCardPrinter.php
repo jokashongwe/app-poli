@@ -30,7 +30,10 @@ class MembreCardPrinter
         $output = $this->pdffile->output();
         */
         $filename = 'Cartes-'. rand(20000, 99999) . '.pdf';
-        $this->pdf->generateFromHtml($html, '../public/exports/' .$filename);
+        $this->pdf->generateFromHtml($html, '../public/exports/' .$filename, [
+            'page-height' => 850,
+            'page-width'  => 1024,
+        ]);
         //file_put_contents('../public/exports/' .$filename,  $output);
     }
 
