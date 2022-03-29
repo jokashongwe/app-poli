@@ -164,7 +164,7 @@ class MembreController extends AbstractController
     {
         $toast = ["isError" => false, "message" => ""];
         //$response->setData(['request' => json_encode($request)]);
-        try {
+        /*try {*/
             $idenfications = array_values($request->request->all());
             $membres = $doctrine->getRepository(Membre::class)->findBy([
                 'noidentification' => $idenfications
@@ -175,7 +175,7 @@ class MembreController extends AbstractController
                 $toast["message"] = "Aucun des numeros ne correspondent à des membres existants";
             }
 
-            $html= $this->renderView("carte.html.twig", [
+            $html = $this->renderView("carte.html.twig", [
                 "membres" => $membres
             ]);
 
@@ -184,10 +184,10 @@ class MembreController extends AbstractController
 
             $toast["message"] = "Le téléchargement vas débuter sous peu";
 
-        } catch (\Throwable $th) {
+        /*} catch (\Throwable $th) {
             $toast["isError"] = true;
             $toast["message"] = "L'erreur suivante est survenue: " . $th->getMessage();
-        }
+        }*/
         return $this->redirectToRoute('membre_new', ["toast" => $toast]);
 
     }

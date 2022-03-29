@@ -14,27 +14,39 @@ class MembreCardPrinter
 
     public function __construct()
     {
-        /*$this->pdfOptions = new Options();
+        $this->pdfOptions = new Options();
         $this->pdfOptions->setDefaultFont('Arial');
+        $this->pdfOptions->setIsRemoteEnabled(true);
         $this->pdffile = new Dompdf($this->pdfOptions);
-        $customPaper= Array(0,0, 1920, 1048);
-        $this->pdffile->setPaper($customPaper); //*/
-        $this->pdf = new Pdf('/usr/local/bin/wkhtmltopdf');
+        $customPaper= Array(0,0, 567.00, 283.00);
+        $this->pdffile->setPaper($customPaper);
+        /*$windowsENV = "C:\Users\LENOVO\wkhtmltox-0.12.6-1.mxe-cross-win64\wkhtmltox\bin\wkhtmltopdf.exe";
+        $linuxEnv = "/usr/local/bin/wkhtmltopdf";
+        $this->pdf = new Pdf($windowsENV);*/
     }
 
     public function print($html)
     {
-        /*$this->pdffile->loadHtml($html);
+        $this->pdffile->loadHtml($html);
         $filename = 'Cartes-'. rand(20000, 99999) . '.pdf';
         $this->pdffile->render();
         $output = $this->pdffile->output();
-        */
-        $filename = 'Cartes-'. rand(20000, 99999) . '.pdf';
-        $this->pdf->generateFromHtml($html, '../public/exports/' .$filename, [
-            'page-height' => 850,
-            'page-width'  => 1024,
-        ]);
-        //file_put_contents('../public/exports/' .$filename,  $output);
+
+       /*$filename = 'Cartes-'. rand(20000, 99999) . '.pdf';
+         $this->pdf->generateFromHtml($html, '../public/exports/' .$filename, [
+           'page-width' => 567.00,
+            'page-height' => 283.00,
+            'enable-javascript' => true,
+            'javascript-delay' => 1000,
+            'no-stop-slow-scripts' => true,
+            'no-background' => false,
+            'lowquality' => false,
+            'encoding' => 'utf-8',
+            'images' => true,
+            'enable-external-links' => true,
+            'enable-internal-links' => true
+        ]);*/
+        file_put_contents('../public/exports/' .$filename,  $output);
     }
 
 }

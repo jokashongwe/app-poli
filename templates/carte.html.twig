@@ -6,9 +6,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Carte</title>
-    <link rel="stylesheet" href=" {{ asset('assets/css/styles.min.css') }}">
     <style>
-        .page_break { page-break-before: always; }
+
+        body{
+            margin: 0;
+            padding: 0;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,25 +21,17 @@
             font-size: 1.1em;
         }
 
-        body{
-            padding: 0;
-            margin: 0;
-        }
-
         .container {
             width: 100%;
         }
 
         .row {
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
+            background-color: red;
         }
 
         /* content */
         .row div {
         }
-
 
 
         /* 1/12 */
@@ -46,11 +42,13 @@
         /* 2/12 */
         .col-2 {
             width: 16.66%;
+            float:left;
         }
 
         /* 3/12 */
         .col-3 {
             width: 25%;
+            float:left;
         }
 
         /* 4/12 */
@@ -61,6 +59,7 @@
         /* 5/12 */
         .col-5 {
             width: 41.66%;
+            float:left;
         }
 
         /* 6/12 */
@@ -71,6 +70,7 @@
         /* 7/12 */
         .col-7 {
             width: 58.33%;
+            float:left;
         }
 
         /* 8/12 */
@@ -98,78 +98,61 @@
             width: 100%;
         }
 
-        /* viewport <= 1000px */
-        @media screen and (max-width: 1000px) {
-            * {
-                font-size: 1em;
-            }
-        }
-
-        /* viewport <= 630px */
-        @media screen and (max-width: 630px) {
-            .row div {
-                padding: 1.5%;
-            }
-        }
-
-        /* viewport <= 500px */
-        @media screen and (max-width: 500px) {
-            * {
-                font-size: 0.9em;
-            }
-        }
     </style>
 </head>
 
 
 
-<body >
+<body>
 {% if membres %}
 
     {% for membre in membres %}
-        <div style="height: 850px;" >
-            <div class="row" style="background-color: #1c1f23 !important;" >
-                <div class="col-3 offset-md-0"
-                     style="background: url('{{ asset('assets/img/logo.png') }}') center / contain no-repeat;"></div>
-                <div class="col-6 col-lg-6">
-                    <h1 style="text-align: center;font-size: 21.52px;margin: 5px; color: #FFF">République
+        <div style="width: 100%; height: 100%; border: 1px solid #e0e0e0; overflow:hidden;  border-radius: 5px; background-color: #fefefe" >
+            <div class="row" style="background-color: #1c1f23 !important; overflow:hidden; height: 25%; padding: 0; margin: 0;" >
+                <div class="col-2" style="padding-top: 0.5%">
+                    <img src="{{ url('login') ~ 'assets/img/logo.png' }}" style="height: 80%; object-fit: contain" >
+                </div>
+                <div class="col-7" style="padding: 1%;">
+                    <h1 style="text-align: center;font-size: 50%; color: #FFF; text-transform: uppercase">République
                         Démocratique du Congo</h1>
-                    <h1 style="color: #B33030;text-align: center;font-size: 22.52px;margin: 5px;">ACTIONS DES ALLIIES
+                    <h1 style="color: #B33030;text-align: center;font-size: 50%;">ACTIONS DES ALLIES
                         POUR LE DEVELOPPEMENT SOCIAL</h1>
-                    <h1 style="text-align: center;font-size: 25.52px;margin: 5px; color: #FFF">CARTE DE
+                    <h1 style="text-align: center;font-size: 55%;color: #FFF">CARTE DE
                         MEMBRE</h1>
                 </div>
-                <div class="col-3" style="background: url(' {{ asset('assets/img/drapeau.png') }} ') center / cover no-repeat;"></div>
+                <div class="col-3" >
+                    <img src="{{ url('login') ~  'assets/img/drapeau.png' }}" style="bject-fit: contain">
+                </div>
             </div>
-            <div class="row">
-                <div class="col-3" style="margin: auto; padding-left: 4%">
-                    <div class="card" style="height: 250px; width: 250px;border: 1px solid #f0f0f0; border-radius: 5px">
-                        <div style="text-align: center; padding: 10px; " ><img id="photo" src="/{{ membre.avatar }}" width="230" height="230" style="object-fit: fill" ></div>
+            <div class="row" style=" height: 60%; clear: both">
+                <div class="col-3" style="padding: 1%; background-color:blue">
+                    <div class="card" style=" overflow: hidden; height: 80%; width: 100%;border: 1px solid #f0f0f0; border-radius: 5px">
+                        <div style="text-align: center; height: 100%; width: 100%;" ><img id="photo" src="{{ url('login')  ~ membre.avatar }}" style="object-fit: fill; width: 100%; height: 100%" ></div>
                     </div>
                 </div>
-                <div class="col-6" style="padding: 20px;">
-                    <p style="font-size: 18px; margin-bottom: 15px;" id="infos"><span style="font-weight: bold;"> Nom: </span> {{ membre.nom }} </p>
-                    <p style="font-size: 18px; margin-bottom: 15px;" id="infos"><span style="font-weight: bold;">Postnom: </span> {{ membre.postnom }} </p>
-                    <p style="font-size: 18px; margin-bottom: 15px;" id="infos"><span style="font-weight: bold;">Prenom: </span> {{ membre.prenom }} </p>
-                    <p style="font-size: 18px; margin-bottom: 15px;" id="infos"><span style="font-weight: bold;">Date de  naissance:</span>  {{ membre.datenaissance | date("d/m/Y") }} </p>
-                    <p style="font-size: 18px; margin-bottom: 15px;" id="infos"><span style="font-weight: bold;">Sexe: </span> {{ membre.genre }} </p>
-                    <p style="font-size: 18px; margin-bottom: 15px;" id="infos"><span style="font-weight: bold;">Adresse: </span> {{ membre.adresse }} </p>
+                <div class="col-5" style="padding: 1%;background-color: green ">
+                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;"> Nom: </span> {{ membre.nom }} </p>
+                    <p style="font-size: 55%; margin-bottom: 1.5%" id="infos"><span style="font-weight: bold;">Postnom: </span> {{ membre.postnom }} </p>
+                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;">Prenom: </span> {{ membre.prenom }} </p>
+                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;">Date de  naissance:</span>  {{ membre.datenaissance | date("d/m/Y") }} </p>
+                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;">Sexe: </span> {{ membre.genre }} </p>
+                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;">Adresse: </span> {{ membre.adresse }} </p>
                     {% if membre.federation.federation %}
-                        <p style="font-size: 18px; margin-bottom: 15px;" id="infos"> <span style="font-weight: bold;"> Fédération: <span></span> {{ membre.federation.nom }} / {{ membre.federation.federation.nom }} </p>
+                        <p style="font-size: 1.8%; margin-bottom: 1.5%;" id="infos"> <span style="font-weight: bold;"> Fédération: <span></span> {{ membre.federation.nom }} / {{ membre.federation.federation.nom }} </p>
                     {% else %}
-                        <p style="font-size: 18px; margin-bottom: 15px;" id="infos"> <span style="font-weight: bold;"> Fédération: </span>  {{ membre.federation.nom }} </p>
+                        <p style="font-size: 1.8%; margin-bottom: 1.5%;" id="infos"> <span style="font-weight: bold;"> Fédération: </span>  {{ membre.federation.nom }} </p>
                     {% endif %}
 
                 </div>
-                <div class="col-3" style="padding: 10px;">
-                    <p id="numeroID" style="padding: 20px" class="h3">No. {{ membre.noidentification }}</p><img
+                <div class="col-3" style="padding: 1%;">
+                    <p id="numeroID" style="padding-top: 2%; font-size: 50%; font-weight: bold" class="h3">No. {{ membre.noidentification }}</p><img
                             src="https://chart.googleapis.com/chart?chs=300x300&amp;cht=qr&amp;chl={{ membre.noidentification }}&amp;choe=UTF-8"
-                            style="width: 200px;">
+                            style="width: 50%">
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="height: 5%; padding: 2%">
                 <div class="col-12">
-                    <p id="deliveryDate" style="text-align: center; font-size: 18px" >Délivrée le: {{ "now"|date("d/m/Y") }}</p>
+                    <p id="deliveryDate" style="text-align: center; font-size: 50%" >Délivrée le: {{ "now"|date("d/m/Y") }}</p>
                 </div>
             </div>
         </div>
