@@ -19,7 +19,7 @@ class MembreCardPrinter
         $this->pdffile = new Dompdf($this->pdfOptions);
         $customPaper= Array(0,0, 1920, 1048);
         $this->pdffile->setPaper($customPaper); //*/
-        $this->pdf = new Pdf();
+        $this->pdf = new Pdf('/usr/local/bin/wkhtmltopdf');
     }
 
     public function print($html)
