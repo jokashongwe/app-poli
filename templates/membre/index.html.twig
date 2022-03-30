@@ -76,7 +76,8 @@
                             </td>
                             
                             <td class="text-center">
-                                    <span onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{ membre.federation.id }}', ' {{ membre.adresse }} ')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</span>
+                                    <span style="text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;  " onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{ membre.federation.id }}', ' {{ membre.adresse }} ')" class="font-sm text-gray-600 hover:bg-yellow-500 hover:text-gray-100">Modifier</span>
+                                    <span style="text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;"  class="font-sm text-gray-100  bg-yellow-500 hover:bg-yellow-300 hover:text-gray-100"> <a href="{{ path('cotisation_show', {'id': membre.id })  }}" >Voir les cotisations</a> </span>
                             </td>
                         </tr>
                     {% endfor %}
@@ -182,9 +183,12 @@
                 </div>
             </div>
         </div>
+        <!-- Cotisation modal -->
+
         <form hidden id="printform" action="{{ path('membre_print') }}" method="post" >
 
         </form>
+
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"  ></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" ></script>
@@ -252,7 +256,7 @@
         let adresse = document.getElementById("membre_adresse");
         let avatar = document.getElementById("membre_avatar")
         let btnSave = document.getElementById("membre_save");
-         let form = document.getElementsByName("membre")[0] ;
+        let form = document.getElementsByName("membre")[0] ;
 
         function updatemembre(_id, _nom, _postnom, _prenom, _genre,_telephone,  _datenaissance, _avatar, _federation, _adresse){
             
@@ -284,7 +288,14 @@
             currentAction += `update/${_id}`;
             form.action = currentAction;
         }
-        
+
+        let cotisationModal = document.getElementById('cotisationModal');
+        cotisationModal.style.display = "none";
+        function cotisatioMembre(noidentification){
+            console.log(noidentification);
+            cotisationModal.style.display = "block";
+        }
+
         let membre = {}
 
         btnOpenExcelModal.onclick = function() {
@@ -324,5 +335,11 @@
         btnClose.onclick = function(){
             modal.style.display = "none";
         }
+        //cotisations
+        let closeCotisationButton = document.getElementById("closeCotisationButton");
+        closeCotisationButton.onclick = function (){
+            cotisationModal.style.display = "none";
+        }
+
     </script>
 {% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'dash.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h3 class="mb-3 text-md font-200 tracking-tight  text-gray-900 dark:text-white  mt-3">
+        Cotisations de {{ membre.prenom ~ ' ' ~ membre.nom }}
+    </h3>
+    <a href="{{ path('cotisation_show', {"id": membre.id}) }}" class="mt-5 py-2 px-5 mr-2 mb-5 text-sm font-medium text-white rounded focus:outline-none bg-gray-700 rounded-sm border border-gray-200" >
+        Rafraichir
+    </a>
+
+    <div style="height: 15px;"></div>
+    <table id="membre-data" class="display dataTable w-full text-sm text-left text-gray-500" style="width:100%" aria-describedby="example_info">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50" >
+        <tr>
+            <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >No. Identifation</th>
+            <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Montant (Fc)</th>
+            <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >Date de paiement</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cotisation in membre.cotisations %}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 ">
+                    {{ membre.noidentification }}
+                </td>
+                <td class="px-6 ">
+                    {{ cotisation.montant }}
+                </td>
+                <td class="px-6 ">
+                    {{ cotisation.datepaiement | date('d/m/Y') }}
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+            <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >No. Identifation</th>
+            <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Montant</th>
+            <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >Date de paiement</th>
+        </tr>
+        </tfoot>
+    </table>
+
+    {% for message in app.flashes('notice') %}
+        <div style="font-size: 12px; color: red" >
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="grid grid-cols-6 gap-3" >
+
+        <button id="showcotisation" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button" data-modal-toggle="defaultModal">
+            Nouvelle cotisation
+        </button>
+
+    </div>
+
+    <div id="cotisationPanel" style="width: 50%; display: none" class="center" >
+        {{ form_start(form) }}
+
+        <div class="mb-6">
+            {{ form_label(form.montant, 'Montant', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+            {{ form_widget(form.montant, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+        </div>
+
+        {{ form_widget(form.save, {'attr': {'class': 'py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200'}}) }}
+        <button id="hidecotisation" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-yellow-500 rounded-sm border hover:bg-yellow-600 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="defaultModal">
+            Annuler
+        </button>
+        {{ form_end(form) }}
+    </div>
+
+</div>
+
+    <script>
+        let showcotisation = document.getElementById("showcotisation");
+        let cotisationPanel = document.getElementById("cotisationPanel");
+        let hidecotisation = document.getElementById("hidecotisation");
+        showcotisation.onclick = function(){
+            cotisationPanel.style.display = "block";
+        }
+
+        hidecotisation.onclick = function (){
+            cotisationPanel.style.display = "none";
+        }
+    </script>
+
+{% endblock %}
