@@ -16,6 +16,8 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            entry_point: App\Security\AuthenticationEntryPoint
+            access_denied_handler: App\Security\AccessDeniedHandler
             logout:
                 path: logout
             form_login:
@@ -32,8 +34,12 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/dashboard, roles: [ROLE_USER, ROLE_ADMIN, ROLE_MEMBRE, ROLE_DIFFUSION, ROLE_COTISATION] }
+        - { path: ^/membre, roles: [ROLE_ADMIN, ROLE_MEMBRE] }
+        - { path: ^/cotisation, roles: [ROLE_ADMIN, ROLE_COTISATION] }
+        - { path: ^/federation, roles: [ROLE_ADMIN] }
+        - { path: ^/account, roles: ROLE_ADMIN }
+        - { path: ^/diffusion, roles: ROLE_DIFFUSION }
 
 when@test:
     security:

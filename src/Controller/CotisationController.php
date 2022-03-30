@@ -73,7 +73,6 @@ class CotisationController extends AbstractController
 
         }catch (\Throwable $th) {
             $ecode = 401;
-            dd($th);
         }
         return $this->redirectToRoute("cotisation_show", ["id" => $id, "ecode" => $ecode]);
     }
