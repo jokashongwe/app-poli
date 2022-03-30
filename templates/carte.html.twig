@@ -26,13 +26,7 @@
         }
 
         .row {
-            background-color: red;
         }
-
-        /* content */
-        .row div {
-        }
-
 
         /* 1/12 */
         .col-1 {
@@ -42,13 +36,11 @@
         /* 2/12 */
         .col-2 {
             width: 16.66%;
-            float:left;
         }
 
         /* 3/12 */
         .col-3 {
             width: 25%;
-            float:left;
         }
 
         /* 4/12 */
@@ -58,8 +50,7 @@
 
         /* 5/12 */
         .col-5 {
-            width: 41.66%;
-            float:left;
+            width: 50%;
         }
 
         /* 6/12 */
@@ -70,7 +61,6 @@
         /* 7/12 */
         .col-7 {
             width: 58.33%;
-            float:left;
         }
 
         /* 8/12 */
@@ -98,6 +88,22 @@
             width: 100%;
         }
 
+        #rightPanel::after{
+            content: "";
+            background: url({{ url('login') ~  'assets/img/congo.png' }});
+            background-size: contain;
+            background-repeat: no-repeat ;
+            opacity: 0.2;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            height: 55%;
+            margin-top: 15%;
+            z-index: -1;
+        }
+
     </style>
 </head>
 
@@ -109,54 +115,57 @@
     {% for membre in membres %}
         <div style="width: 100%; height: 100%; border: 1px solid #e0e0e0; overflow:hidden;  border-radius: 5px; background-color: #fefefe" >
             <div class="row" style="background-color: #1c1f23 !important; overflow:hidden; height: 25%; padding: 0; margin: 0;" >
-                <div class="col-2" style="padding-top: 0.5%">
+                <div class="col-2" style="padding-top: 0.5%; float:left;">
                     <img src="{{ url('login') ~ 'assets/img/logo.png' }}" style="height: 80%; object-fit: contain" >
                 </div>
-                <div class="col-7" style="padding: 1%;">
-                    <h1 style="text-align: center;font-size: 50%; color: #FFF; text-transform: uppercase">République
+                <div class="col-7" style="padding: 1%;float:left;">
+                    <h1 style="text-align: center;font-size: 60%; color: #FFF; text-transform: uppercase">République
                         Démocratique du Congo</h1>
-                    <h1 style="color: #B33030;text-align: center;font-size: 50%;">ACTIONS DES ALLIES
+                    <h1 style="color: #B33030;text-align: center;font-size: 60%;">ACTIONS DES ALLIES
                         POUR LE DEVELOPPEMENT SOCIAL</h1>
-                    <h1 style="text-align: center;font-size: 55%;color: #FFF">CARTE DE
+                    <h1 style="text-align: center;font-size: 65%;color: #FFF; margin-top: 1%">CARTE DE
                         MEMBRE</h1>
                 </div>
-                <div class="col-3" >
+                <div class="col-3" style="float:left;">
                     <img src="{{ url('login') ~  'assets/img/drapeau.png' }}" style="bject-fit: contain">
                 </div>
             </div>
-            <div class="row" style=" height: 60%; clear: both">
-                <div class="col-3" style="padding: 1%; background-color:blue">
-                    <div class="card" style=" overflow: hidden; height: 80%; width: 100%;border: 1px solid #f0f0f0; border-radius: 5px">
-                        <div style="text-align: center; height: 100%; width: 100%;" ><img id="photo" src="{{ url('login')  ~ membre.avatar }}" style="object-fit: fill; width: 100%; height: 100%" ></div>
-                    </div>
-                </div>
-                <div class="col-5" style="padding: 1%;background-color: green ">
-                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;"> Nom: </span> {{ membre.nom }} </p>
-                    <p style="font-size: 55%; margin-bottom: 1.5%" id="infos"><span style="font-weight: bold;">Postnom: </span> {{ membre.postnom }} </p>
-                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;">Prenom: </span> {{ membre.prenom }} </p>
-                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;">Date de  naissance:</span>  {{ membre.datenaissance | date("d/m/Y") }} </p>
-                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;">Sexe: </span> {{ membre.genre }} </p>
-                    <p style="font-size: 55%; margin-bottom: 1.5%;" id="infos"><span style="font-weight: bold;">Adresse: </span> {{ membre.adresse }} </p>
-                    {% if membre.federation.federation %}
-                        <p style="font-size: 1.8%; margin-bottom: 1.5%;" id="infos"> <span style="font-weight: bold;"> Fédération: <span></span> {{ membre.federation.nom }} / {{ membre.federation.federation.nom }} </p>
-                    {% else %}
-                        <p style="font-size: 1.8%; margin-bottom: 1.5%;" id="infos"> <span style="font-weight: bold;"> Fédération: </span>  {{ membre.federation.nom }} </p>
-                    {% endif %}
+
+            <div style=" height: 60%; width: 100%; ">
+                <div  style="padding: 2%;width: 97%; height: 93%; float:right;">
+                        <div style="float: left ; padding-bottom: 1%; padding-right: 1%;  width: 25%; " >
+                            <img id="photo" src="{{ url('login')  ~ membre.avatar }}" style="object-fit: fill; width: 75%; height: 80%; border: 1px solid #ebebeb; border-radius: 5px" >
+                        </div>
+                        <div style="float: right ; width: 80%; background-color: transparent; padding-left: 10%" >
+                            <div>
+                                <p style="font-size: 50%; margin-bottom: 1%;" id="infos"><span style="font-weight: bold;"> Nom: </span> {{ membre.nom }} </p>
+                                <p style="font-size: 50%; margin-bottom: 1%" id="infos"><span style="font-weight: bold;">Postnom: </span> {{ membre.postnom }} </p>
+                                <p style="font-size: 50%; margin-bottom: 1%;" id="infos"><span style="font-weight: bold;">Prenom: </span> {{ membre.prenom }} </p>
+                                <p style="font-size: 50%; margin-bottom: 1%;" id="infos"><span style="font-weight: bold;">Date de  naissance:</span>  {{ membre.datenaissance | date("d/m/Y") }} </p>
+                                <p style="font-size: 50%; margin-bottom: 1%;" id="infos"><span style="font-weight: bold;">Sexe: </span> {{ membre.genre }} </p>
+                                <p style="font-size: 50%; margin-bottom: 1%;" id="infos"><span style="font-weight: bold;">Adresse: </span> {{ membre.adresse }} </p>
+                                {% if membre.federation.federation %}
+                                    <p style="font-size: 50%; margin-bottom: 1%;" id="infos"> <span style="font-weight: bold;"> Fédération: <span></span> {{ membre.federation.nom }} / {{ membre.federation.federation.nom }} </p>
+                                {% else %}
+                                    <p style="font-size: 50%; margin-bottom: 1%;" id="infos"> <span style="font-weight: bold;"> Fédération: </span>  {{ membre.federation.nom }} </p>
+                                {% endif %}
+                            </div>
+                        </div>
 
                 </div>
-                <div class="col-3" style="padding: 1%;">
-                    <p id="numeroID" style="padding-top: 2%; font-size: 50%; font-weight: bold" class="h3">No. {{ membre.noidentification }}</p><img
+                <div id="rightPanel" style="padding: 1%;float: right; width: 25%; height: 93%;">
+                    <p id="numeroID" style="padding-top: 2%; margin-bottom: 1%; font-size: 50%; font-weight: bold" class="h3">No. {{ membre.noidentification }}</p><img
                             src="https://chart.googleapis.com/chart?chs=300x300&amp;cht=qr&amp;chl={{ membre.noidentification }}&amp;choe=UTF-8"
-                            style="width: 50%">
+                            style="width: 60%">
                 </div>
+
             </div>
-            <div class="row" style="height: 5%; padding: 2%">
+            <div class="row" style="height: 6%; padding: 2%; bottom: 0;background-color: #DA1212 ">
                 <div class="col-12">
                     <p id="deliveryDate" style="text-align: center; font-size: 50%" >Délivrée le: {{ "now"|date("d/m/Y") }}</p>
                 </div>
             </div>
         </div>
-        <div class="page_break"></div>
     {% endfor %}
 {% endif %}
 

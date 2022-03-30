@@ -4,13 +4,13 @@ namespace App\Service;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Knp\Snappy\Pdf;
+use Symfony\Component\HttpFoundation\Response;
 
 class MembreCardPrinter
 {
     private Options $pdfOptions;
     private Dompdf $pdffile;
-    private Pdf $pdf;
+    //private Pdf $pdf;
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class MembreCardPrinter
     public function print($html)
     {
         $this->pdffile->loadHtml($html);
-        $filename = 'Cartes-'. rand(20000, 99999) . '.pdf';
+
         $this->pdffile->render();
         $output = $this->pdffile->output();
 
@@ -46,7 +46,7 @@ class MembreCardPrinter
             'enable-external-links' => true,
             'enable-internal-links' => true
         ]);*/
-        file_put_contents('../public/exports/' .$filename,  $output);
+        return new Response($output);
     }
 
 }

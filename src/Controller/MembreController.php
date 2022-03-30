@@ -12,6 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Service\ExcelMembreImporter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -180,15 +181,15 @@ class MembreController extends AbstractController
             ]);
 
             $printerService = new MembreCardPrinter();
-            $printerService->print($html);
+            $response = $printerService->print($html);
+            $filename = 'Exports cartes-'. rand(10000, 99999) . '.pdf';
+            $disposition = HeaderUtils::makeDisposition(
+                HeaderUtils::DISPOSITION_ATTACHMENT,
+                $filename
+            );
+            $response->headers->set('Content-Disposition', $disposition);
 
-            $toast["message"] = "Le téléchargement vas débuter sous peu";
-
-        /*} catch (\Throwable $th) {
-            $toast["isError"] = true;
-            $toast["message"] = "L'erreur suivante est survenue: " . $th->getMessage();
-        }*/
-        return $this->redirectToRoute('membre_new', ["toast" => $toast]);
+        return $response;
 
     }
 }
