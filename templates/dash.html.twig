@@ -55,7 +55,7 @@
                         </li>
                     {% endif %}
 
-                    {% if is_granted("ROLE_DIFFUSION") %}
+                    {% if is_granted("ROLE_DIFFUSION") or is_granted("ROLE_ADMIN") %}
                     <li class="relative">
                         <a href="{{ path('diffusion') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-300 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                             <i class="fas fa-bullhorn fa-1x fa-fw"></i>
