@@ -87,6 +87,20 @@ class MembreRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
+    public function findByDiffusion($province, $federaion){
+        return $this->createQueryBuilder('m')
+            ->addSelect('f')
+            ->innerJoin("m.federation", "f")
+            ->where("f.id IN(:fede)")
+            ->orWhere("f.province IN(:prov)")
+            ->setParameter('fede', $federaion)
+            ->setParameter('prov', $province)
+            ->orderBy('m.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Membre[] Returns an array of Membre objects
     //  */

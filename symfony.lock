@@ -98,6 +98,9 @@
     "ezyang/htmlpurifier": {
         "version": "v4.14.0"
     },
+    "firebase/php-jwt": {
+        "version": "v5.5.1"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
@@ -127,6 +130,9 @@
     },
     "markbaker/matrix": {
         "version": "3.0.0"
+    },
+    "messagebird/php-rest-api": {
+        "version": "v3.0.0"
     },
     "monolog/monolog": {
         "version": "2.4.0"
