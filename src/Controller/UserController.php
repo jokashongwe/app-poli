@@ -31,7 +31,7 @@ class UserController extends AbstractController
     public function new(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $registry){
         $user = new user();
 
-        if(empty($request->request->all()) || !key_exists($request->request->all(), "user")){
+        if(empty($request->request->all()) || !array_key_exists("user", $request->request->all())){
             return $this->redirectToRoute("user_show");
         }
 
