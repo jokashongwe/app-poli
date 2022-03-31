@@ -46,7 +46,7 @@ class DiffusionController extends AbstractController
         try {
             if(!empty($phones)){
                 $status = $msgService->sendManySMS($diffusion["titre"] . '-' . $diffusion["contenu"], "AADS", $phones);
-                dd($status);
+
                 if($status) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");
                 }else {
