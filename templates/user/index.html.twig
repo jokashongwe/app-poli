@@ -1,5 +1,9 @@
 {% extends 'dash.html.twig' %}
 
+{% block stylesheet %}
+<link href="/assets/css/tom-select.css" rel="stylesheet"/>
+{% endblock %}
+
 {% block title %}{% endblock %}
 
 {% block body %}
@@ -121,6 +125,12 @@
             defaultModal.style.display = "none";
         }
 
+    </script>
+    <script src="assets/js/tom-select.complete.min.js"></script>
+    <script>
+        new TomSelect('#user_roles   ', {
+            maxItems: 5,
+        });
     </script>
 
 {% endblock %}
