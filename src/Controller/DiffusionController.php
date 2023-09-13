@@ -89,25 +89,30 @@ class DiffusionController extends AbstractController
             }
         }
 
-        /*
-        $msgService = new MessageService("SMS", false);
+        //dd($phones);
+
+        $message = $diffusion->getTitre() . '  ' . $diffusion->getContent();
+        //dd($message);
+
+        
+        $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
 
         try {
             if (!empty($phones)) {
-                $status = $msgService->sendManySMS($diffusion->getTitre() . '-' . $diffusion->getContent(), "BulkSMS", $phones);
-
-                if ($status) {
+                $result = $msgService->sendManySMS($message, $phones);
+                dd($result);
+                if ($result['http_status'] != 201) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");
                 } else {
                     $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
                 }
             } else {
-                $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
+                $this->addFlash("notice", "Aucun membres trouvé pour la diffusion!");
             }
         } catch (\Throwable $th) {
             $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
-        */
+        
         return sizeof($phones);
     }
 }

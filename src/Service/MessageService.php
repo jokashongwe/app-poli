@@ -9,49 +9,54 @@ use MessageBird\Objects\Message;
 class MessageService
 {
     private string $accessKey;
-    public function __construct(string $type, bool $mode)
+    public function __construct($token)
     {
-        $this->init($type, $mode);
+        $this->accessKey = $token;
     }
 
-    public function init(string $type, bool $isProduction){
-        if($type == "SMS" ){
-            if($isProduction) {
-                $this->accessKey = "BL3tsEI3LlBM7V25Kr5AxwkVJ"; // MESSAGE BIRD ACCESS KEY
-            }else{
-                $this->accessKey = "cYOrEXgOvgtIA2GEVNIoNNhDU"; // MESSAGE BIRD ACCESS TEST KEY
-            }
+    public function sendManySMS(string $message, array $listOfNumber)
+    {
+        $messages = [];
+        foreach($listOfNumber as $phone){
+            array_push($messages, ['to' => $phone, 'body' => $message]);
         }
+        
+        return $this->send_message(json_encode($messages), 'https://api.bulksms.com/v1/messages?auto-unicode=true&longMessageMaxParts=30', $this->accessKey);
     }
 
-    public function sendOneSMS(string $message, string $ssid, string $number){
-        $MessageBird = new Client($this->accessKey);
-        $Message = new Message();
-        $Message->originator = $ssid;
-        $Message->recipients = $this->transformNumbers($number);
-        $Message->body = $message;
-        $MessageBird->messages->create($Message);
-    }
-
-    public function sendManySMS(string $message, string $ssid, array $listOfNumber){
-        $MessageBird = new Client($this->accessKey);
-        $Message = new Message();
-        $Message->originator = "TestMessage";
-        $Message->recipients = $this->transformNumbers($listOfNumber);
-        $Message->body = $message;
-        return $MessageBird->messages->create($Message);
+    function send_message($post_body, $url, $token)
+    {
+        $ch = curl_init();
+        $headers = array(
+            'Content-Type:application/json',
+            'Authorization: Basic ' . $token
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_body);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        $output = array();
+        $output['server_response'] = curl_exec($ch);
+        $curl_info = curl_getinfo($ch);
+        $output['http_status'] = $curl_info['http_code'];
+        $output['error'] = curl_error($ch);
+        curl_close($ch);
+        return $output;
     }
 
     public function transformNumbers(string|array $numbers): array
     {
         $phones =  [];
-        if(gettype($numbers) == 'string'){
+        if (gettype($numbers) == 'string') {
             $phones = [$numbers];
-        }else {
+        } else {
             $phones = $numbers;
         }
-        foreach ($phones as $index => $phone){
-            if(strpos($phone,"+") or strlen($phone) > 10){
+        foreach ($phones as $index => $phone) {
+            if (strpos($phone, "+") or strlen($phone) > 10) {
                 continue;
             }
             $number = substr($phone, 1); // supprime le 0
@@ -60,5 +65,4 @@ class MessageService
         }
         return $phones;
     }
-
 }
