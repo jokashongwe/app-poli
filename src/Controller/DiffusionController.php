@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Diffusion;
 use App\Entity\Membre;
 use App\Form\Type\DiffusionType;
 use App\Repository\DiffusionRepository;
@@ -16,51 +17,97 @@ use Symfony\Component\Routing\Annotation\Route;
 class DiffusionController extends AbstractController
 {
     #[Route('/diffusion', name: 'diffusion')]
-    public function index(DiffusionRepository $diffusionRepository): Response
+    public function index(Request $request, ManagerRegistry $doctrine, DiffusionRepository $diffusionRepository, MembreRepository $membreRepository): Response
     {
 
-        $form = $this->createForm(DiffusionType::class, null,[
-            'action'=> $this->generateUrl("diffusion_send")
-        ]);
+        $diffusion = new Diffusion();
 
+        $form = $this->createForm(DiffusionType::class, $diffusion);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $diffusion = $form->getData();
+            $raw_provinces = $diffusion->getProvinces();
+            $provinces = [];
+            foreach ($raw_provinces as $rp) {
+                array_push($provinces, $rp->getNom());
+            }
+            $diffusion->setProvinces($provinces);
+            $raw_federations = $diffusion->getfederations();
+            $federations = [];
+            foreach ($raw_federations as $rp) {
+                array_push($federations, $rp->getNom());
+            }
+            $diffusion->setFederations($federations);
+            $diffusion->setVisible(true);
+            $nPhones = 0;
+            $nPhones = $this->send($diffusion, $membreRepository);
+            $diffusion->setNumberOfMembers($nPhones);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($diffusion);
+            $entityManager->flush();
+
+
+            return $this->redirectToRoute('diffusion');
+        }
 
 
         return $this->renderForm('diffusion/index.html.twig', [
+            'controller_name' => 'DiffusionController',
             'form' => $form,
-            'diffusions' => $diffusionRepository->findAll()
+            'diffusions' => $diffusionRepository->findBy(['visible' => true])
         ]);
     }
 
-    #[Route('/diffusion/send', name: 'diffusion_send', methods: ["POST"])]
-    public  function send(Request $request, ManagerRegistry $registry, MembreRepository $membreRepository){
-        $diffusion = $request->request->all()["diffusion"];
-        $membres = $membreRepository->findByDiffusion($diffusion["province"], $diffusion["federation"]);
+    #[Route('/diffusion/delete/{id}', name: 'diffusion_delete')]
+    public function delete(Request $request, ManagerRegistry $doctrine, DiffusionRepository $diffusionRepository, $id): Response
+    {
+
+        $diffusion = $diffusionRepository->find($id);
+        if (!is_null($diffusion)) {
+            $diffusion->setVisible(false);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($diffusion);
+            $entityManager->flush();
+        }
+
+
+        return $this->redirectToRoute('diffusion');
+    }
+
+    private function send(Diffusion $diffusion, MembreRepository $membreRepository)
+    {
+
+        $membres = $membreRepository->findByDiffusion($diffusion->getProvinces(), $diffusion->getFederations());
         $phones = [];
-        foreach ($membres as $membre){
+        foreach ($membres as $membre) {
             $phone = $membre->getTelephone();
-            if(!is_null($phone) && !empty($phone) && !in_array($phone, $phones)){
+            if (!is_null($phone) && !empty($phone) && !in_array($phone, $phones)) {
                 array_push($phones, $phone);
             }
         }
 
-
+        /*
         $msgService = new MessageService("SMS", false);
 
         try {
-            if(!empty($phones)){
-                $status = $msgService->sendManySMS($diffusion["titre"] . '-' . $diffusion["contenu"], "DemoPart", $phones);
+            if (!empty($phones)) {
+                $status = $msgService->sendManySMS($diffusion->getTitre() . '-' . $diffusion->getContent(), "BulkSMS", $phones);
 
-                if($status) {
+                if ($status) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");
-                }else {
+                } else {
                     $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
                 }
-            }else {
+            } else {
                 $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
             }
-        }catch (\Throwable $th){
+        } catch (\Throwable $th) {
             $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
-        return $this->redirectToRoute("diffusion");
+        */
+        return sizeof($phones);
     }
 }

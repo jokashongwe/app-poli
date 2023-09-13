@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DiffusionRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DiffusionRepository::class)]
@@ -30,6 +32,16 @@ class Diffusion
 
     #[ORM\Column(type: 'json', nullable: true)]
     private $provinces = [];
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $visible;
+
+    public function __construct()
+    {
+        if(is_null($this->startDate)){
+            $this->setStartDate(new DateTime());
+        }
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +116,18 @@ class Diffusion
     public function setProvinces(?array $provinces): self
     {
         $this->provinces = $provinces;
+
+        return $this;
+    }
+
+    public function getVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(?bool $visible): self
+    {
+        $this->visible = $visible;
 
         return $this;
     }
