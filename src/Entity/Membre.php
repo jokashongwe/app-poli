@@ -67,6 +67,9 @@ class Membre
     #[ORM\Column(type: 'boolean', nullable: true, options: ["default" => false] )]
     private $aunecarte;
 
+    #[ORM\OneToOne(mappedBy: 'membre', targetEntity: Temoin::class, cascade: ['persist', 'remove'])]
+    private $temoin;
+
     public function __construct()
     {
         $this->cotisations = new ArrayCollection();
@@ -295,6 +298,28 @@ class Membre
     public function setAunecarte(?bool $aunecarte): self
     {
         $this->aunecarte = $aunecarte;
+
+        return $this;
+    }
+
+    public function getTemoin(): ?Temoin
+    {
+        return $this->temoin;
+    }
+
+    public function setTemoin(?Temoin $temoin): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($temoin === null && $this->temoin !== null) {
+            $this->temoin->setMembre(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($temoin !== null && $temoin->getMembre() !== $this) {
+            $temoin->setMembre($this);
+        }
+
+        $this->temoin = $temoin;
 
         return $this;
     }

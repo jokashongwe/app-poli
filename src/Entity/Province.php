@@ -21,9 +21,13 @@ class Province
     #[ORM\OneToMany(mappedBy: 'province', targetEntity: Federation::class)]
     private $federations;
 
+    #[ORM\OneToMany(mappedBy: 'province', targetEntity: Circonscription::class)]
+    private $circonscriptions;
+
     public function __construct()
     {
         $this->federations = new ArrayCollection();
+        $this->circonscriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,6 +71,36 @@ class Province
             // set the owning side to null (unless already changed)
             if ($federation->getProvince() === $this) {
                 $federation->setProvince(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Circonscription>
+     */
+    public function getCirconscriptions(): Collection
+    {
+        return $this->circonscriptions;
+    }
+
+    public function addCirconscription(Circonscription $circonscription): self
+    {
+        if (!$this->circonscriptions->contains($circonscription)) {
+            $this->circonscriptions[] = $circonscription;
+            $circonscription->setProvince($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCirconscription(Circonscription $circonscription): self
+    {
+        if ($this->circonscriptions->removeElement($circonscription)) {
+            // set the owning side to null (unless already changed)
+            if ($circonscription->getProvince() === $this) {
+                $circonscription->setProvince(null);
             }
         }
 
