@@ -44,7 +44,8 @@ class FederationController extends AbstractController
         return $this->renderForm('federation/index.html.twig', [
             'controller_name' => 'FederationController',
             'form'          => $form,
-            'federations' => $federations
+            'federations' => $federations,
+            'toast' => null
         ]);
     }
 
