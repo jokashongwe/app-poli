@@ -1,6 +1,6 @@
 {% extends 'loginbase.html.twig' %}
 
-{% block title %} AADS - Portail {% endblock %}
+{% block title %} Portail Central {% endblock %}
 
 {% block body %}
 
@@ -10,7 +10,8 @@
 		@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
 
 		.image {
-			width: 150px;
+			height: 4rem;
+			margin-bottom: 0.8rem;
 		}
 
 		.btn {
@@ -27,6 +28,7 @@
 			font-family: 'Quicksand', sans-serif;
 		}
 		.img-container {
+			text-align: 'center';
 		}
 
         .form-login{
@@ -37,6 +39,10 @@
         .error{
             color: red
         }
+		.image-text{
+			margin-left: 0.4rem;
+			font-size: 1.2rem;
+		}
 		.copyright{
 			font-family: 'Quicksand', sans-serif;
 			font-size: 11px;
@@ -47,7 +53,8 @@
 		<form class="row justify-content-center" action="{{ path('login') }}" method="post">
 			<div class="col-6 form-login p-5">
 				<div class="img-container">
-					<image src="{{ asset('images/logo.png') }}" class="image"/>
+					<image src="{{ asset('images/logo_vote.png') }}" class="image"/>
+					<span class="image-text" >Bienvenue sur le Portail Central</span>
 				</div>
 				<div class="mb-4">
 					<input class="form-control" type="text" id="username" placeholder="Nom d'utilisateur" name="_username" value="{{ last_username }}"/>
@@ -65,8 +72,8 @@
                     <p class="error" >{{ error.messageKey|trans(error.messageData, 'security') }}</p>
                 {% endif %}
 
-				<button class="btn btn-danger col-4 mb-3" type="submit">Se connecter</button>
-				<p class="copyright">{{ copyrightText }} | Upcorporation</p>
+				<button class="btn btn-primary col-4 mb-3" type="submit">Se connecter</button>
+				<p class="copyright">{{ copyrightText }} | Afrisys SNI SARLU</p>
 			</div>
 		</form>
 	</div>

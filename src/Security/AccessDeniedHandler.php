@@ -12,7 +12,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
     public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
     {
-        $content = "<h1>Oops! Vous ne pouvez pas accéder à cette page!</h1>";
+        $content = "<h1>Vous ne pouvez pas accéder à cette page</h1>";
         return new Response($content, 403);
     }
 }
