@@ -26,7 +26,7 @@ class UserFixtures extends Fixture
         $user->setDatecreation(new \DateTimeImmutable());
         $user->setPrenom("-");
         $user->setPostnom("-");
-        $user->setRoles(["ADMIN", "SUPER-ADMIN", "ROLE_USER"]);
+        $user->setRoles(["ROLE_ADMIN", "SUPER-ADMIN", "ROLE_USER", "ROLE_MEMBRE", "ROLE_DIFFUSION"]);
 
         $password = $this->hasher->hashPassword($user, '05jqjes558');
         $user->setPassword($password);

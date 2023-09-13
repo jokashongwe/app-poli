@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Cotisation;
 use App\Entity\Federation;
 use App\Entity\Membre;
+use App\Repository\CotisationRepository;
+use App\Repository\MembreRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,38 +15,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends AbstractController
 {
 
-    private function compter(ManagerRegistry $em, $tableClass){
+    private function compter(ManagerRegistry $em, $tableClass)
+    {
         return $em->getRepository($tableClass)->compter();
     }
 
     #[Route('/dashboard', name: 'dashboard')]
-    public function index(ManagerRegistry $entityManager): Response
+    public function index(ManagerRegistry $entityManager, MembreRepository $membreRepository, CotisationRepository $cotisationRepository): Response
     {
 
         //$federations = $entityManager->getRepository(Federation::class)->findAll();
         $federationCount = $this->compter($entityManager, Federation::class);
         $memberCount =  $this->compter($entityManager, Membre::class);
-        $list = $entityManager->getRepository(Membre::class)->findBy(array(), null, 5, null);
-        
-        $membreData = $entityManager->getRepository(Membre::class)->countByProvince(null);
-        $membreGenre = $entityManager->getRepository(Membre::class)->countByGenre(null);
-        $total = $entityManager->getRepository(Cotisation::class)->countByAmount(null)[0]["total"];
+        $list = $membreRepository->findBy(array(), null, 5, null);
+
+        $membreData = $membreRepository->countByFederation();
+        $membreGenre = $membreRepository->countByGenre();
+        $total = $cotisationRepository->countByAmount(null)[0]["total"];
 
         $membreLabels = [];
         $membreValues = [];
 
         $membreValuesChart2 = [];
-        foreach($membreGenre as $membre)
-        {
+        foreach ($membreGenre as $membre) {
             array_push($membreValuesChart2, $membre['frequence']);
         }
-        
-        foreach($membreData as $membre)
-        {
+
+        foreach ($membreData as $membre) {
             array_push($membreLabels, $membre['nom']);
             array_push($membreValues, $membre['frequence']);
         }
-        
+
         return $this->render('dashboard/index.html.twig', [
             'controller_name' => 'DashboardController',
             'federations' => $federationCount,

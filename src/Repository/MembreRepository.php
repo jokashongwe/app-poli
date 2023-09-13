@@ -54,6 +54,23 @@ class MembreRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function countByFederation($value =0): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT f.nom, count(*) frequence
+            FROM membre m, federation f
+            WHERE m.federation_id = f.id 
+            GROUP BY f.nom
+            ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $resultSet->fetchAllAssociative();
+    }
+
     public function countByProvince($value =0): array
     {
         $conn = $this->getEntityManager()->getConnection();

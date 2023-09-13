@@ -21,6 +21,9 @@ class FederationType extends AbstractType
             ->add('federation', EntityType::class, [
                 'class' => Federation::class,
                 'choice_label' => "nom",
+                'placeholder' => 'Choisissez une option',
+                'multiple' => false,
+                'required' => false,
             ])
             ->add('province', EntityType::class, [
                 'class' => Province::class,
