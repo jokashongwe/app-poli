@@ -122,6 +122,24 @@
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
+    "lcobucci/clock": {
+        "version": "3.0.0"
+    },
+    "lcobucci/jwt": {
+        "version": "5.0.0"
+    },
+    "lexik/jwt-authentication-bundle": {
+        "version": "2.19",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.5",
+            "ref": "e9481b233a11ef7e15fe055a2b21fd3ac1aa2bb7"
+        },
+        "files": [
+            "config/packages/lexik_jwt_authentication.yaml"
+        ]
+    },
     "maennchen/zipstream-php": {
         "version": "2.1.0"
     },
@@ -139,6 +157,9 @@
     },
     "myclabs/php-enum": {
         "version": "1.8.3"
+    },
+    "namshi/jose": {
+        "version": "7.2.3"
     },
     "nikic/php-parser": {
         "version": "v4.13.2"
@@ -166,6 +187,9 @@
     },
     "psr/cache": {
         "version": "3.0.0"
+    },
+    "psr/clock": {
+        "version": "1.0.0"
     },
     "psr/container": {
         "version": "2.0.2"
@@ -407,6 +431,9 @@
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.25.0"
+    },
+    "symfony/polyfill-php56": {
+        "version": "v1.20.0"
     },
     "symfony/polyfill-php81": {
         "version": "v1.25.0"
