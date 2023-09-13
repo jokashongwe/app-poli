@@ -27,6 +27,32 @@ class UserController extends AbstractController
             'form' => $form
         ]);
     }
+
+    #[Route('/account/update/{id}', name: 'user_update')]
+    public function update(Request $request, ManagerRegistry $registry, $id): Response
+    {
+        $users = $registry->getRepository(User::class)->findAll();
+        $user = new user();
+        $form = $this->createForm(UserType::class, $user, [
+            "action" => $this->generateUrl("user_new")
+        ]);
+
+        return $this->renderForm('user/index.html.twig', [
+            'users' => $users,
+            'form' => $form
+        ]);
+    }
+
+    #[Route('/account/deactivate/{id}', name: 'user_deactivate')]
+    public function deactivate(Request $request, ManagerRegistry $registry, $id): Response
+    {
+        $user = $registry->getRepository(User::class)->find($id);
+        $user = new user();
+        $user->setActive(false);
+        return $this->redirectToRoute('user_show');
+    }
+
+
     #[Route('/account/new', name: 'user_new')]
     public function new(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $registry){
         $user = new user();

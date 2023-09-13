@@ -44,16 +44,17 @@ class MessageService
 
     public function transformNumbers(string|array $numbers): array
     {
+        $phones =  [];
         if(gettype($numbers) == 'string'){
             $phones = [$numbers];
         }else {
             $phones = $numbers;
         }
         foreach ($phones as $index => $phone){
-            if(strpos($phones[$index],"+") or strlen($phones[$index]) > 10){
+            if(strpos($phone,"+") or strlen($phone) > 10){
                 continue;
             }
-            $number = substr($phones[$index], 1); // supprime le 0
+            $number = substr($phone, 1); // supprime le 0
             $number  = '+243' . $number;
             $phones[$index] = $number;
         }

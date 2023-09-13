@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class LoginController extends AbstractController
 {
 
-    private $copyrightText = "© 2022 - Action des Alliés pour le Développement Social (AADS)";
+    private $copyrightText = "© 2022";
 
     #[Route('/', name: 'login')]
     public function index(AuthenticationUtils $authenticationUtils): Response

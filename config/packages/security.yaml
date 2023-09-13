@@ -35,7 +35,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/dashboard, roles: [ROLE_USER, ROLE_ADMIN, ROLE_MEMBRE, ROLE_DIFFUSION, ROLE_COTISATION] }
-        - { path: ^/membre, roles: [ROLE_ADMIN, ROLE_MEMBRE] }
+        - { path: ^/membre, roles: [ROLE_ADMIN, ROLE_MEMBRE, ROLE_COTISATION] }
         - { path: ^/cotisation, roles: [ROLE_ADMIN, ROLE_COTISATION] }
         - { path: ^/federation, roles: [ROLE_ADMIN] }
         - { path: ^/account, roles: ROLE_ADMIN }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Membre;
 use App\Form\Type\DiffusionType;
+use App\Repository\MembreRepository;
 use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,9 +30,9 @@ class DiffusionController extends AbstractController
     }
 
     #[Route('/diffusion/send', name: 'diffusion_send', methods: ["POST"])]
-    public  function send(Request $request, ManagerRegistry $registry){
+    public  function send(Request $request, ManagerRegistry $registry, MembreRepository $membreRepository){
         $diffusion = $request->request->all()["diffusion"];
-        $membres = $registry->getRepository(Membre::class)->findByDiffusion($diffusion["province"], $diffusion["federation"]);
+        $membres = $membreRepository->findByDiffusion($diffusion["province"], $diffusion["federation"]);
         $phones = [];
         foreach ($membres as $membre){
             $phone = $membre->getTelephone();
@@ -45,7 +46,7 @@ class DiffusionController extends AbstractController
 
         try {
             if(!empty($phones)){
-                $status = $msgService->sendManySMS($diffusion["titre"] . '-' . $diffusion["contenu"], "AADS", $phones);
+                $status = $msgService->sendManySMS($diffusion["titre"] . '-' . $diffusion["contenu"], "DemoPart", $phones);
 
                 if($status) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");

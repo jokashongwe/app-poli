@@ -6,6 +6,7 @@ use App\Entity\Federation;
 use App\Entity\Membre;
 use App\Form\Type\ExcelUploadType;
 use App\Form\Type\MembreType;
+use App\Repository\MembreRepository;
 use App\Service\MembreCardPrinter;
 use ChunkReadFilter;
 use Doctrine\Persistence\ManagerRegistry;
@@ -161,17 +162,17 @@ class MembreController extends AbstractController
     }
 
     #[Route('/membre/print', name: 'membre_print', methods: ["POST"])]
-    public function printCard(Request $request, ManagerRegistry $doctrine): Response
+    public function printCard(Request $request, ManagerRegistry $doctrine, MembreRepository $membreRepository): Response
     {
         $toast = ["isError" => false, "message" => ""];
         //$response->setData(['request' => json_encode($request)]);
         /*try {*/
             $idenfications = array_values($request->request->all());
-            $membres = $doctrine->getRepository(Membre::class)->findBy([
+            $membres = $membreRepository->findBy([
                 'noidentification' => $idenfications
             ]);
 
-            if (is_null($membres)) {
+            if (empty($membres)) {
                 $toast["isError"] = true;
                 $toast["message"] = "Aucun des numeros ne correspondent à des membres existants";
             }
@@ -179,6 +180,8 @@ class MembreController extends AbstractController
             $html = $this->renderView("carte.html.twig", [
                 "membres" => $membres
             ]);
+
+            //dd($html);
 
             $printerService = new MembreCardPrinter();
             $response = $printerService->print($html);
