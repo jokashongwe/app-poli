@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Membre;
 use App\Form\Type\DiffusionType;
+use App\Repository\DiffusionRepository;
 use App\Repository\MembreRepository;
 use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DiffusionController extends AbstractController
 {
     #[Route('/diffusion', name: 'diffusion')]
-    public function index(): Response
+    public function index(DiffusionRepository $diffusionRepository): Response
     {
 
         $form = $this->createForm(DiffusionType::class, null,[
@@ -25,7 +26,8 @@ class DiffusionController extends AbstractController
 
 
         return $this->renderForm('diffusion/index.html.twig', [
-            'form' => $form
+            'form' => $form,
+            'diffusions' => $diffusionRepository->findAll()
         ]);
     }
 
