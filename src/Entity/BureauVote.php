@@ -30,6 +30,12 @@ class BureauVote
     #[ORM\OneToMany(mappedBy: 'bureauVote', targetEntity: Temoin::class)]
     private $temoins;
 
+    #[ORM\ManyToOne(targetEntity: Circonscription::class, inversedBy: 'bureauVotes')]
+    private $cironscription;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $codeCentre;
+
     public function __construct()
     {
         $this->temoins = new ArrayCollection();
@@ -114,6 +120,30 @@ class BureauVote
                 $temoin->setBureauVote(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCironscription(): ?Circonscription
+    {
+        return $this->cironscription;
+    }
+
+    public function setCironscription(?Circonscription $cironscription): self
+    {
+        $this->cironscription = $cironscription;
+
+        return $this;
+    }
+
+    public function getCodeCentre(): ?string
+    {
+        return $this->codeCentre;
+    }
+
+    public function setCodeCentre(?string $codeCentre): self
+    {
+        $this->codeCentre = $codeCentre;
 
         return $this;
     }

@@ -30,9 +30,13 @@ class Circonscription
     #[ORM\OneToMany(mappedBy: 'circonscription', targetEntity: Temoin::class)]
     private $temoins;
 
+    #[ORM\OneToMany(mappedBy: 'cironscription', targetEntity: BureauVote::class)]
+    private $bureauVotes;
+
     public function __construct()
     {
         $this->temoins = new ArrayCollection();
+        $this->bureauVotes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -116,5 +120,40 @@ class Circonscription
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, BureauVote>
+     */
+    public function getBureauVotes(): Collection
+    {
+        return $this->bureauVotes;
+    }
+
+    public function addBureauVote(BureauVote $bureauVote): self
+    {
+        if (!$this->bureauVotes->contains($bureauVote)) {
+            $this->bureauVotes[] = $bureauVote;
+            $bureauVote->setCironscription($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBureauVote(BureauVote $bureauVote): self
+    {
+        if ($this->bureauVotes->removeElement($bureauVote)) {
+            // set the owning side to null (unless already changed)
+            if ($bureauVote->getCironscription() === $this) {
+                $bureauVote->setCironscription(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->nom;
     }
 }
