@@ -45,7 +45,7 @@ class TemoinController extends AbstractController
             $entityManager = $doctrine->getManager();
             $code =  rand(300000, 999999);
             $temoin->setBackupCode($code);
-            $message = "Bonjour, vous etes desormais temoin dans le regroupement XYZ, voici votre code de connexion: " . $code;
+            $message = "Bonjour, vous etes desormais temoin dans le regroupement XYZ, PIN: " . $code;
             $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
             $result = $msgService->sendManySMS($message, [$telephone]);
             if ($result['http_status'] == 201) {

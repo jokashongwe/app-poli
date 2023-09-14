@@ -15,10 +15,10 @@ class Candidat
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\OneToOne(targetEntity: Membre::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Membre::class, cascade: ['persist'])]
     private $membre;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable:true)]
     private $categorie;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -38,6 +38,12 @@ class Candidat
 
     #[ORM\Column(type: 'string', length: 255)]
     private $codeCENI;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $backupCode;
+
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    private $user;
 
     public function __construct()
     {
@@ -159,6 +165,30 @@ class Candidat
     public function setCodeCENI(string $codeCENI): self
     {
         $this->codeCENI = $codeCENI;
+
+        return $this;
+    }
+
+    public function getBackupCode(): ?string
+    {
+        return $this->backupCode;
+    }
+
+    public function setBackupCode(?string $backupCode): self
+    {
+        $this->backupCode = $backupCode;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
