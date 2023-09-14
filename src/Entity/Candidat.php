@@ -36,6 +36,9 @@ class Candidat
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $parti;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $codeCENI;
+
     public function __construct()
     {
         $this->temoins = new ArrayCollection();
@@ -144,6 +147,18 @@ class Candidat
     public function setParti(?string $parti): self
     {
         $this->parti = $parti;
+
+        return $this;
+    }
+
+    public function getCodeCENI(): ?string
+    {
+        return $this->codeCENI;
+    }
+
+    public function setCodeCENI(string $codeCENI): self
+    {
+        $this->codeCENI = $codeCENI;
 
         return $this;
     }

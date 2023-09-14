@@ -100,7 +100,6 @@ class DiffusionController extends AbstractController
         try {
             if (!empty($phones)) {
                 $result = $msgService->sendManySMS($message, $phones);
-                dd($result);
                 if ($result['http_status'] != 201) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");
                 } else {

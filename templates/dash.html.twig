@@ -74,6 +74,22 @@
                     </li>
 
                     {% endif %}
+                    {% if is_granted("ROLE_ELECTORAL") or is_granted("ROLE_ADMIN") %}
+                        <li class="relative">
+                            <a href="{{ path('app_bureau_vote') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-300 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                <i class="fas fa-warehouse fa-1x fa-fw"></i>
+                                <span class="pl-2"> Liste des Bureaux de Vote</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted("ROLE_ELECTORAL") or is_granted("ROLE_ADMIN") %}
+                        <li class="relative">
+                            <a href="{{ path('app_temoin') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-300 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                <i class="fas fa-user-tag fa-1x fa-fw"></i>
+                                <span class="pl-2"> Gestion des Témoins</span>
+                            </a>
+                        </li>
+                    {% endif %}
                     <li class="relative">
                         <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-300 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="{{ path('logout') }}" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                             <i class="fas fa-door-open fa-1x fa-fw"></i>

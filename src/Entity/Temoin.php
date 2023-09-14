@@ -15,7 +15,7 @@ class Temoin
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\OneToOne(inversedBy: 'temoin', targetEntity: Membre::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'temoin', targetEntity: Membre::class, cascade: ['persist'])]
     private $membre;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -32,6 +32,12 @@ class Temoin
 
     #[ORM\OneToMany(mappedBy: 'temoin', targetEntity: Resultat::class)]
     private $resultats;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $backupCode;
+
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    private $user;
 
     public function __construct()
     {
@@ -129,6 +135,30 @@ class Temoin
                 $resultat->setTemoin(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBackupCode(): ?string
+    {
+        return $this->backupCode;
+    }
+
+    public function setBackupCode(?string $backupCode): self
+    {
+        $this->backupCode = $backupCode;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

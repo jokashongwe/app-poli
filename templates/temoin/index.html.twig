@@ -1,0 +1,110 @@
+{% extends 'dash.html.twig' %}
+
+
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Liste des Témoins
+        </h3>
+        
+        <table id="federation-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
+            <thead>
+                <tr>
+                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 131.172px;">Membre</th>
+                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 131.172px;">Téléphone</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 218.172px;">Accreditation</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Circonscription</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Bureau de Vote</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Candidat</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">ACTIONS</th>
+                    </tr>
+            </thead>
+            <tbody>
+                {% for temoin in temoins %}
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-4">
+                                {{ temoin.membre }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ temoin.membre.telephone| replace({'+243':'0'}) }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ temoin.accreditation }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ temoin.circonscription }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ temoin.bureauVote }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ temoin.candidat }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="/temoin/delete/{{ temoin.id }}" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-yellow rounded-sm border border-gray-200 hover:bg-yellow-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Supprimer</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+        <button id="openmodal" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button" data-modal-toggle="defaultModal">
+            Nouveau Temoin
+        </button>
+
+        <!-- Main modal -->
+        <div id="defaultModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden center fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+            <div
+                class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+                <!-- Modal content -->
+                <div
+                    class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
+                        <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
+                            Nouveau Temoin
+                        </h3>
+                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="defaultModal">
+                            <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-6 space-y-6">
+                        {% include "temoin/form.html.twig" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"  ></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" ></script>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let table = new DataTable('#federation-data', {
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
+                }
+            });
+        });
+        let modal = document.getElementById("defaultModal");
+        let btn = document.getElementById("openmodal");
+        let btnClose = document.getElementById("closemodal");
+
+        let federation = {}
+        btn.onclick = function () {
+            let btnSave = document.getElementById("temoin_save");
+            btnSave.textContent = "Nouveau Temoin"
+            modal.style.display = "block";
+        }
+        btnClose.onclick = function(){
+            modal.style.display = "none";
+        }
+        
+    </script>
+    
+{% endblock %}
