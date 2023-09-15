@@ -49,12 +49,12 @@
 		}
 	</style>
 
-	<div class="container mt-5">
-		<form class="row justify-content-center" action="{{ path('login') }}" method="post">
-			<div class="col-6 form-login p-5">
+	<div class="container">
+		<form class="row justify-content-center mt-5" action="{{ path('login') }}" method="post">
+			<div class="col-md-8 form-login p-5">
 				<div class="img-container">
 					<image src="{{ asset('images/logo_vote.png') }}" class="image"/>
-					<span class="image-text" >Bienvenue sur le Portail Central</span>
+					<span class="image-text" >Portail Central</span>
 				</div>
 				<div class="mb-4">
 					<input class="form-control" type="text" id="username" placeholder="Nom d'utilisateur" name="_username" value="{{ last_username }}"/>
@@ -73,7 +73,7 @@
                 {% endif %}
 
 				<button class="btn btn-primary col-4 mb-3" type="submit">Se connecter</button>
-				<p class="copyright">{{ copyrightText }} | Afrisys SNI SARLU</p>
+				<p class="copyright">{{ copyrightText }}</p>
 			</div>
 		</form>
 	</div>
