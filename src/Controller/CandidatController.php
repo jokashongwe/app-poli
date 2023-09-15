@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CandidatController extends AbstractController
 {
     #[Route('/candidat', name: 'app_candidat')]
-    public function index(Request $request, ManagerRegistry $doctrine,UserRepository $userRepository, CandidatRepository $candidatRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    public function index(Request $request, ManagerRegistry $doctrine, UserRepository $userRepository, CandidatRepository $candidatRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         $candidat = new Candidat();
 
@@ -38,7 +38,7 @@ class CandidatController extends AbstractController
             $membre = $candidat->getMembre();
             $telephone = $membre->getTelephone();
             $user = $userRepository->findOneBy(['username' => str_replace("+243", "0", $telephone)]);
-            if(!is_null($user)){
+            if (!is_null($user)) {
                 $this->addFlash("notice", "Un utilisateur avec ce téléphone existe déjà");
                 return $this->redirectToRoute('app_candidat');
             }
@@ -54,7 +54,12 @@ class CandidatController extends AbstractController
             $candidat->setBackupCode($code);
             $message = "Bonjour, vous avez ete ajouter comme candidat sur la plateforme du regroupement XYZ, PIN: " . $code;
             $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
-            $result = $msgService->sendManySMS($message, [$telephone]);
+            $result = $msgService->sendManySMS(
+                $message,
+                [$telephone],
+                $this->getParameter('app.senderid'),
+                $this->getParameter('app.sendermode')
+            );
             if ($result['http_status'] == 201) {
                 $candidatUser = new User();
                 $candidatUser->setUsername(str_replace("+243", "0", $telephone));

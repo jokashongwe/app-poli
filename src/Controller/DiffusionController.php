@@ -89,17 +89,18 @@ class DiffusionController extends AbstractController
             }
         }
 
-        //dd($phones);
-
         $message = $diffusion->getTitre() . '  ' . $diffusion->getContent();
-        //dd($message);
-
         
         $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
 
         try {
             if (!empty($phones)) {
-                $result = $msgService->sendManySMS($message, $phones);
+                $result = $msgService->sendManySMS(
+                    $message, 
+                    $phones, 
+                    $this->getParameter('app.senderid'), 
+                    $this->getParameter('app.sendermode')
+                );
                 if ($result['http_status'] != 201) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");
                 } else {
@@ -111,7 +112,7 @@ class DiffusionController extends AbstractController
         } catch (\Throwable $th) {
             $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
-        
+
         return sizeof($phones);
     }
 }

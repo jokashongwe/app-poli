@@ -47,7 +47,12 @@ class TemoinController extends AbstractController
             $temoin->setBackupCode($code);
             $message = "Bonjour, vous etes desormais temoin dans le regroupement XYZ, PIN: " . $code;
             $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
-            $result = $msgService->sendManySMS($message, [$telephone]);
+            $result = $msgService->sendManySMS(
+                $message,
+                [$telephone],
+                $this->getParameter('app.senderid'),
+                $this->getParameter('app.sendermode')
+            );
             if ($result['http_status'] == 201) {
                 $temoinUser = new User();
                 $temoinUser->setUsername(str_replace("+243", "0", $telephone));
@@ -78,9 +83,10 @@ class TemoinController extends AbstractController
     }
 
     #[Route('/temoin/delete/{id}', name: 'app_temoin_delete')]
-    public function delete(Request $request,ManagerRegistry $doctrine, TemoinRepository $temoinRepository, $id){
+    public function delete(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, $id)
+    {
         $temoin = $temoinRepository->find($id);
-        if(is_null($temoin)){
+        if (is_null($temoin)) {
             return $this->redirectToRoute('app_temoin');
         }
         $user = $temoin->getUser();

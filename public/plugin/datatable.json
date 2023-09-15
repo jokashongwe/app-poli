@@ -12,12 +12,12 @@
             "1": "1 ligne sélectionnée"
         },
         "cells": {
-            "1": "1 céllules sélectionnée",
-            "_": "%d céllules sélectionnées"
+            "1": "",
+            "_": ""
         },
         "columns": {
-            "1": "1 colonnes sélectionnée",
-            "_": "%d colonnes sélectionnées"
+            "1": "",
+            "_": ""
         }
     },
     "autoFill": {

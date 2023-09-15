@@ -14,13 +14,18 @@ class MessageService
         $this->accessKey = $token;
     }
 
-    public function sendManySMS(string $message, array $listOfNumber)
+    public function sendManySMS(string $message, array $listOfNumber, string $senderID, string $senderMode)
     {
         $messages = [];
-        foreach($listOfNumber as $phone){
-            array_push($messages, ['to' => $phone, 'body' => $message]);
+        foreach ($listOfNumber as $phone) {
+            array_push($messages, [
+                'from' => [
+                    'type' => 'ALPHANUMERIC',
+                    'address' => $senderID,
+                ], 'longMessageMaxParts' => 99, 'to' => $phone, 'body' => $message, 'routingGroup' => $senderMode
+            ]);
         }
-        
+
         return $this->send_message(json_encode($messages), 'https://api.bulksms.com/v1/messages?auto-unicode=true&longMessageMaxParts=30', $this->accessKey);
     }
 
