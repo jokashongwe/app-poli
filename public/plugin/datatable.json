@@ -212,8 +212,8 @@
     "paginate": {
         "first": "Première",
         "last": "Dernière",
-        "next": "Suivante",
-        "previous": "Précédente"
+        "next": "Suivant",
+        "previous": "Précédent"
     },
     "zeroRecords": "Aucune entrée correspondante trouvée"
 }

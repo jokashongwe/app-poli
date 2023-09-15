@@ -58,10 +58,6 @@ class MembreType extends AbstractType
                 'class' => Federation::class,
                 'choice_label' => 'nom'
             ])
-            ->add('qualite', EntityType::class, [
-                'class' => Qualite::class,
-                'choice_label' => 'titre'
-            ])
             ->add('telephone', TextType::class, [
                 'label' => 'Téléphone',
             ])

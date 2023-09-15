@@ -19,7 +19,6 @@
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >Prenom</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Sexe</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Federation</th>
-                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Qualité</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Date d'adhésion</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" ><span class="sr-only">Edit</span></th>
                 </tr>
@@ -56,20 +55,6 @@
                                 
                             {% endif %}
 
-                            {% if membre.qualite %}
-
-                                
-                                
-                                <td class="px-6 ">
-                                    {{ membre.qualite.titre }}
-                                </td>
-                            {% else %}
-                                <td class="px-6 ">
-                                    
-                                </td>
-                            {% endif %}
-                            
-                            
                             
                             <td class="px-6 ">
                                 {{ membre.dateadhesion | date("d/m/Y")  }}
@@ -93,7 +78,6 @@
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >PRENOM</th>
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >SEXE</th>
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >FEDERATION</th>
-                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >QUALITE</th>
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >DATE ADHESION</th>
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >ACTIONS</th>
                 </tr>
