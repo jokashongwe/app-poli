@@ -24,8 +24,8 @@
 	<body>
         <!-- NAV BAR -->
         <div class="flex" >
-            <div class="flex-none w-60 h-full shadow-lg bg-gray-600  absolute">
-                <ul class="relative">
+            <div id="menu" class="md:flex-none w-full md:w-60 md:h-full shadow-lg bg-gray-600 hidden md:block z-0 relative md:absolute">
+                <ul class="relative ">
                     <li class="relative">
                         <a href="{{ path('dashboard')}} " class="flex items-center font-semibold text-sm py-4 bg-gray-300 px-6 h-12 text-black" >
                         Portail d'Administration
@@ -111,12 +111,40 @@
                     </li>
                 </ul>
             </div>
-            <div class="flex-initial pl-64 pt-3 pr-3 mb-5 w-full" >
-                {% block body %}
+            <div class="flex-initial md:pl-64 md:pt-3 md:pr-3 mb-5 sm:pl-3 w-full" >
+                <div class="grid grid-cols-4 block md:hidden">
+                    <button id="showMenu" class="bg-gray-100 m-3 rounded-md text-gray-800 shadow-lg p-4" >
+                        <i class="fas fa-list fa-1x fa-fw"></i>
+                    </button>
+                    <div class="col-span-3 flex items-center" >
+                        <h2 class="text-xl text-gray-700" >Portail Central</h1>
+                    </div>
+                </div>
+                <div id="content" class="z-10 relative" >
+                    {% block body %}
             
-                {% endblock %}
+                    {% endblock %}
+                </div>
             </div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script>
+            const menuBTN = document.getElementById("showMenu");
+            const content = document.getElementById("content");
+            window.menuShown = false;
+            
+            menuBTN.addEventListener('click', function(e){
+                //console.log('btn')
+                let elt = document.getElementById("menu");
+                if(!window.menuShown){  
+                    elt.style.display = 'block';
+                    window.menuShown = true;
+                }else {
+                    elt.style.display = 'none';
+                    window.menuShown = false;
+                }
+            });
+            
+        </script>
 	</body>
 </html>

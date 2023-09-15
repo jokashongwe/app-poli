@@ -25,6 +25,9 @@ class Resultat
     #[ORM\Column(type: 'json')]
     private $proceVerbaux = [];
 
+    #[ORM\ManyToOne(targetEntity: Candidat::class, inversedBy: 'resultats')]
+    private $candidat;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Resultat
     public function setProceVerbaux(array $proceVerbaux): self
     {
         $this->proceVerbaux = $proceVerbaux;
+
+        return $this;
+    }
+
+    public function getCandidat(): ?Candidat
+    {
+        return $this->candidat;
+    }
+
+    public function setCandidat(?Candidat $candidat): self
+    {
+        $this->candidat = $candidat;
 
         return $this;
     }
