@@ -1,12 +1,72 @@
-body{
+body {
     font-family: 'Roboto', sans-serif !important;
 }
-input{
-    border-radius: 0 !important;
-    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-    border: 0px !important;
+
+input,
+textarea,
+select {
+    padding: 15px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 0px !important;
+    margin-bottom: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-family: 'Roboto' sans-serif !important;
+    color: #2C3E50 !important;
+    font-size: 13px !important;
 }
 
-input:focus{
-    border: 0px !important;
+input:focus,
+textarea:focus,
+select:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid #3c22e7 !important;
+    outline-width: 0 !important;
+    transition: All 0.5s ease-in !important;
+    -webkit-transition: All 0.5s ease-in !important;
+    -moz-transition: All 0.5s ease-in !important;
+    -o-transition: All 0.5s ease-in !important;
+}
+
+.adh-img {
+    width: 15rem;
+
+    @media only screen and (max-width: 768px) {
+        width: 100%;
+    }
+}
+
+.adh-header {
+    background-color: #a99590;
+    overflow: hidden;
+    border-radius: 0.2rem;
+}
+
+.fa {
+    padding-top: 0.5rem;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50%;
+    margin-right: 0.8rem;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+/* Facebook */
+.fa-facebook {
+    background: #3B5998;
+    color: white;
+    padding-left: -2rem;
+}
+
+/* Twitter */
+.fa-twitter {
+    background: #55ACEE;
+    color: white;
 }

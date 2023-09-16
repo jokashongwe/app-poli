@@ -62,8 +62,8 @@ class MembreType extends AbstractType
                 'label' => 'Téléphone',
             ])
             ->add('numerocarte', TextType::class, [
-                'label' => 'Numéro de Carte d\'identité (Optionnel)',
-                'required' => false
+                'label' => 'Numéro de Carte d\'identité',
+                'required' => true
             ])
             ->add('save', SubmitType::class, ['label' => 'Ajouter un membre']);
     }

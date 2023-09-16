@@ -6,7 +6,7 @@
     <div class="container">
         <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Membres
         </h3>
-        <a href="{{ path('membre_new') }}" class="mt-5 py-2 px-5 mr-2 mb-5 text-sm font-medium text-white rounded focus:outline-none bg-gray-700 rounded-sm border border-gray-200" >
+        <a href="{{ path('membre_new') }}" class="mt-5 py-3 px-5 mr-2 mb-5 text-sm font-medium text-white rounded focus:outline-none bg-gray-700 rounded-sm border border-gray-200" >
             Rafraichir
         </a>
         <div style="height: 15px;"></div>
@@ -104,16 +104,16 @@
         
 
         <div class="grid grid-cols-1 md:grid-cols-6 md:gap-3" >
-            <button id="openmodal" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button" data-modal-toggle="defaultModal">
+            <button id="openmodal" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button" data-modal-toggle="defaultModal">
                 Ajouter un Membre
             </button>
 
-            <button id="openmodalexcel" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-gray-700 rounded-sm border border-gray-200 hover:bg-gray-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="excelModal">
+            <button id="openmodalexcel" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-gray-700 rounded-sm border border-gray-200 hover:bg-gray-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="excelModal">
                 <i class="fas fa-upload"></i>
                 Importer depuis Excel
             </button>
 
-            <button id="imprimercarte" class="mt-5 py-2 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-red-700 rounded-sm hover:bg-red-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="excelModal">
+            <button id="imprimercarte" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-red-700 rounded-sm hover:bg-red-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="excelModal">
                 <i class="fas fa-print"></i>
                 Imprimer les cartes
             </button>
@@ -166,6 +166,9 @@
                     <!-- Modal body -->
                     <div class="p-6 space-y-6">
                         {% include "membre/excelform.html.twig" %}
+                        <button id="closemodal" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-yellow-500 rounded-sm border hover:bg-yellow-600 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="defaultModal">
+                            Annuler
+                        </button>
                     </div>
                 </div>
             </div>
