@@ -20,7 +20,7 @@ class SettingType extends AbstractType
             ->add("president", TextType::class)
             ->add('photoPresident', FileType::class, [
                 'label' => 'Photo du Président',
-                'required' => false,
+                'required' => true,
                 'data_class' => null,
                 'constraints' => [
                     new File([
@@ -39,7 +39,7 @@ class SettingType extends AbstractType
             ->add("twitterURL", UrlType::class)
             ->add('logo', FileType::class, [
                 'label' => 'Logo',
-                'required' => false,
+                'required' => true,
                 'data_class' => null,
                 'constraints' => [
                     new File([
