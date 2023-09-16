@@ -29,7 +29,10 @@ class AdhesionController extends AbstractController
         $form = $this->createForm(MembreType::class, $membre);
 
         $setting = $settingRepository->findAll();
-        $setting = $setting[0];
+        if(!empty($setting)){
+            $setting = $setting[0];
+        }
+        
         
         $form->handleRequest($request);
 
@@ -71,8 +74,10 @@ class AdhesionController extends AbstractController
     public function onsuccess(Request $request, ManagerRegistry $doctrine, SettingRepository $settingRepository): Response
     {
         $setting = $settingRepository->findAll();
-        $setting = $setting[0];
-
+        if(!empty($setting)){
+            $setting = $setting[0];
+        }
+        
         return $this->render('adhesion/success.html.twig', [
             'controller_name' => 'AdhesionController',
             'setting' => $setting
