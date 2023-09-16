@@ -1,0 +1,21 @@
+{% extends 'dash.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                <script>
+                    toastr.error("{{ message }}".replaceAll("&#039;", "'"), "Averitissement");
+                </script>
+            </div>
+        {% endfor %}
+        
+        <div class="p-6 space-y-6">
+            {% include "setting/form.html.twig" %}
+        </div>
+
+    </div>
+{% endblock %}

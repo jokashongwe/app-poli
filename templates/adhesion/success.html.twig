@@ -11,11 +11,11 @@
 
 <div class="container">
         <div class="adh-header flex flex-col md:flex-row " >
-            <img class="adh-img" src="/images/SOS.jpg" />
+            <img class="adh-img" src="{{ setting ? setting.photoPresident :  '#' }}" />
             <div class="p-6" >
-                <h2 class="text-white text-xl font-semibold" >SYLVIE OWANGA SHEKA SOS, PRESIDENTE DE L'ASSOSIATION ADSC</h2>
-                <p class="text-white" >Formulaire d'enregistrement des membres ADSC</p>
-                <p class="text-white" >Bienvenue dans la grande association Agir pour le Développement Social des Congolais ADSC</p>
+                <h2 class="text-white text-xl font-semibold" >{{ setting ? setting.president : '' }}</h2>
+                <p class="text-white" >Formulaire d'enregistrement des membres</p>
+                <p class="text-white" >{{ setting ? setting.slogan : '' }}</p>
             </div>
         </div>
         <div class="relative p-4 text-center bg-white rounded-lg  dark:bg-gray-800 sm:p-5">
@@ -23,9 +23,7 @@
                 <svg aria-hidden="true" class="w-8 h-8 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                 <span class="sr-only">Success</span>
             </div>
-            <p class="mb-4 text-lg font-light text-gray-900 dark:text-white">Merci pour votre enregistrement, 
-            nous vous recontacterons dans les plus bref délais pour vous 
-            inviter à passer retirer votre carte de membres</p>
+            <p class="mb-4 text-lg font-light text-gray-900 dark:text-white">{{ setting ? setting.messageEnregistrement : '' }}</p>
             <p>Suivez-nous sur nos différentes plateforme</p>
             <div class="flex flex-row items-center justify-center" >
                 <a href="#" class="fa" >

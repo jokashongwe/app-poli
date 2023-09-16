@@ -57,6 +57,12 @@
                                 <span class="pl-2"> Gestion des Utilisateurs</span>
                             </a>
                         </li>
+                        <li class="relative">
+                            <a href="{{ path("app_setting") }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden {% if controller_name == 'SettingController' %} bg-blue-100 {% endif %} text-gray-600 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                <i class="fas fa-toolbox fa-1x fa-fw"></i>
+                                <span class="pl-2"> Gestion des Paramètres</span>
+                            </a>
+                        </li>
                     {% endif %}
 
                     {% if is_granted("ROLE_DIFFUSION") or is_granted("ROLE_ADMIN") %}
@@ -67,7 +73,7 @@
                         </a>
                     </li>
 
-                    {% endif %}
+                    {% endif %} 
                     
                     {% if is_granted("ROLE_ELECTORAL") %}
                     <hr/>

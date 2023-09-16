@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Membre;
+use App\Entity\Setting;
 use App\Form\Type\MembreType;
+use App\Repository\SettingRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +23,13 @@ class AdhesionController extends AbstractController
     }
 
     #[Route('/enregistrement', name: 'app_adhesion')]
-    public function index(Request $request, ManagerRegistry $doctrine): Response
+    public function index(Request $request, ManagerRegistry $doctrine, SettingRepository $settingRepository): Response
     {
         $membre = new Membre();
         $form = $this->createForm(MembreType::class, $membre);
+
+        $setting = $settingRepository->findAll();
+        $setting = $setting[0];
         
         $form->handleRequest($request);
 
@@ -57,15 +62,20 @@ class AdhesionController extends AbstractController
         
         return $this->render('adhesion/index.html.twig', [
             'controller_name' => 'AdhesionController',
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'setting' => $setting
         ]);
     }
 
     #[Route('/adhesion', name: 'app_adhesion_done')]
-    public function onsuccess(Request $request, ManagerRegistry $doctrine): Response
+    public function onsuccess(Request $request, ManagerRegistry $doctrine, SettingRepository $settingRepository): Response
     {
+        $setting = $settingRepository->findAll();
+        $setting = $setting[0];
+
         return $this->render('adhesion/success.html.twig', [
-            'controller_name' => 'AdhesionController'
+            'controller_name' => 'AdhesionController',
+            'setting' => $setting
         ]);
     }
     

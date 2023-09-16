@@ -1,0 +1,38 @@
+<script src="https://unpkg.com/flowbite@1.4.1/dist/datepicker.js"></script>
+{% if form %}
+    {{ form_start(form) }}
+    <div class="mb-6">
+        {{ form_label(form.president, 'Président(e) du parti', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.president, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.photoPresident, 'Photo President(e)', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.photoPresident, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.nomparti, 'nomparti', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.nomparti, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6 relative">
+        {{ form_label(form.messageEnregistrement, 'Message d\'enregistrement', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.messageEnregistrement, {'attr': { 'placeholder':"Selectionner une date", 'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.facebookURL, 'Lien Facebook', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.facebookURL, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.twitterURL, 'Lien Twitter', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.twitterURL, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.logo, 'Logo', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.logo, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+    <div class="mb-6">
+        {{ form_label(form.slogan, 'Slogan', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
+        {{ form_widget(form.slogan, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
+    </div>
+        {{ form_widget(form.save, {'attr': {'class': 'mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200'}}) }}
+    {{ form_end(form) }}
+{% endif %}

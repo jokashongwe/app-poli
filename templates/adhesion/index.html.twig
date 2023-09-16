@@ -5,11 +5,11 @@
 {% block body %}
 <div class="container">
     <div class="adh-header flex flex-col md:flex-row " >
-        <img class="adh-img" src="/images/SOS.jpg" />
+        <img class="adh-img" src="{{ setting ? setting.photoPresident :  '#' }}" />
         <div class="p-6" >
-            <h2 class="text-white text-xl font-semibold" >SYLVIE OWANGA SHEKA SOS, PRESIDENTE DE L'ASSOSIATION ADSC</h2>
-            <p class="text-white" >Formulaire d'enregistrement des membres ADSC</p>
-            <p class="text-white" >Bienvenue dans la grande association Agir pour le Développement Social des Congolais ADSC</p>
+            <h2 class="text-white text-xl font-semibold" >{{ setting ? setting.president : '' }}</h2>
+            <p class="text-white" >Formulaire d'enregistrement des membres</p>
+            <p class="text-white" >Bienvenue, merci de vous enregister comme membre chez  {{ setting ? setting.messageEnregistrement : '' }}</p>
         </div>
     </div>
     <h3 class="text-2xl font-light text-gray-600 mt-3" >Formulaire d'enregistrement</h3>
