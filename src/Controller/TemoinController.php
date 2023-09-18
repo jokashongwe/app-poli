@@ -6,6 +6,7 @@ use App\Entity\Temoin;
 use App\Entity\User;
 use App\Form\Type\TemoinType;
 use App\Repository\TemoinRepository;
+use App\Repository\UserRepository;
 use App\Service\MessageService;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TemoinController extends AbstractController
 {
     #[Route('/temoin', name: 'app_temoin')]
-    public function index(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    public function index(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository,UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         $temoin = new Temoin();
 
@@ -35,6 +36,7 @@ class TemoinController extends AbstractController
              */
             $membre = $temoin->getMembre();
             $telephone = $membre->getTelephone();
+            $telephone = str_replace('+243', '0', $telephone);
             /*
             $nomCandidat = null;
             $candidat = $temoin->getCandidat();
@@ -54,7 +56,10 @@ class TemoinController extends AbstractController
                 $this->getParameter('app.sendermode')
             );
             if ($result['http_status'] == 201) {
-                $temoinUser = new User();
+                $temoinUser = $userRepository->findOneBy(['username' => $telephone]);
+                if( empty($temoinUser) ){
+                    $temoinUser = new User();
+                }
                 $temoinUser->setUsername(str_replace("+243", "0", $telephone));
                 $temoinUser->setNom($membre->getNom());
                 $temoinUser->setPostnom($membre->getPostnom());
