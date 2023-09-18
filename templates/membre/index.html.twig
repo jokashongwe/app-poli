@@ -148,6 +148,9 @@
                     <!-- Modal body -->
                     <div class="p-6 space-y-6">
                         {% include "membre/form.html.twig" %}
+                        <button id="closemodal" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-yellow-500 rounded-sm border hover:bg-yellow-600 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="defaultModal">
+                            Annuler
+                        </button>
                     </div>
                 </div>
             </div>
@@ -207,7 +210,10 @@
         });
 
         let imprimercarte = document.getElementById("imprimercarte");
-        imprimercarte.addEventListener('click', tableSelected);
+        if(imprimercarte){
+            imprimercarte.addEventListener('click', tableSelected);
+        }
+        
 
         function tableSelected() {
 
