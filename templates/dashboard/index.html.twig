@@ -19,42 +19,38 @@
                 <a href="#" class="block p-6  bg-blue-500 rounded border border-gray-200 shadow-md hover:bg-blue-700 dark:border-gray-700 dark:hover:bg-gray-700">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Membres</h5>
                     <div class="grid grid-cols-2 gap-1">
-                        <i class="fas fa-user-plus fa-2x fa-fw text-white"></i>
-                        <p class="font-bold text-2xl text-white"> {{ membreCount }} </p>
+                        <p class="font-bold text-2xl text-white"><i class="fas fa-user-plus fa-x fa-fw text-white"></i> <span class="ml-5"> {{ membreCount }} </span> </p>
                     </div>
 
                 </a>
 
+                {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
+                    <a href="#" class="block p-6  bg-green-500  rounded border border-gray-200 shadow-md hover:bg-green-700 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Cotisations</h5>
+                        <div class="grid grid-cols-2 gap-1">
+                            <p class="font-bold text-2xl text-white"><i class="fas fa-wallet fa-x fa-fw text-white"></i> <span class="ml-5" >{{ totalMontant | number_format(0, '.', ' ') }}</span> FC</p>
+                        </div>
+                    </a>
+                {% endif %}
 
-                <a href="{{ path('federation_new') }}" class="block p-6  bg-yellow-500 rounded border border-gray-200 shadow-md hover:bg-yellow-700 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Fédérations</h5>
-                    <div class="grid grid-cols-2 gap-1">
-                        <i class="fas fa-building fa-2x fa-fw text-white"></i>
-                        <p class="font-bold text-2xl text-white"> {{ federations }} </p>
-                    </div>
-
-                </a>
-
-
-                <a href="#" class="block p-6  bg-green-500  rounded border border-gray-200 shadow-md hover:bg-green-700 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Cotisations Annuelle</h5>
-                    <div class="grid grid-cols-2 gap-1">
-                        <i class="fas fa-wallet fa-2x fa-fw text-white"></i>
-                        <p class="font-bold text-2xl text-white">{{ totalMontant }} Fc</p>
+                <a href="#" class="block p-6  bg-yellow-500 rounded border border-gray-200 shadow-md hover:bg-yellow-700 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Solde SMS</h5>
+                    <div class="grid grid-cols-2 gap-1">  
+                        <p class="font-bold text-2xl text-white"><i class="fas  fa-envelope-open fa-x fa-fw text-white"></i> <span class="ml-5"> 10 243 </span> </p>
                     </div>
                 </a>
-
             </div>
-
-            <div class="grid md:grid-cols-3 md:gap-2 sm:grid-cols-1 sm:gap-0" >
-                <div class="chartbox shadow-md col-span-2" >
-                    <canvas id="federationchart"></canvas>
+            {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
+                <div class="grid md:grid-cols-3 md:gap-2 sm:grid-cols-1 sm:gap-0" >
+                    <div class="chartbox shadow-md col-span-2" >
+                        <canvas id="federationchart"></canvas>
+                    </div>
+                    <div class="chartbox shadow-md barcart" >
+                        <canvas id="genderchart"></canvas>
+                    </div>
                 </div>
-                <div class="chartbox shadow-md barcart" >
-                    <canvas id="genderchart"></canvas>
-                </div>
-            </div>
-            <h3 class="mb-3 text-md font-200 tracking-tight text-gray-900 dark:text-white uppercase mt-3">5 - Derniers membres inscrits
+            {% endif %}
+            <h3 class="mb-3 text-md font-200 tracking-tight text-gray-900 dark:text-white uppercase mt-3">5 membres enregistrés
             </h3>
             <div class="relative overflow-x-auto shadow-md border">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -69,12 +65,11 @@
                             <th scope="col" class="px-6 py-3">
                                 Prénom
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                Fédération
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                <span class="sr-only">Infos</span>
-                            </th>
+                            {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
+                                <th scope="col" class="px-6 py-3">
+                                    Fédération
+                                </th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -90,11 +85,12 @@
                                 <td class="px-6 py-4">
                                     {{ membre.prenom }}
                                 </td>
-                                
-                                {% if membre.federation %}
-                                    <td class="px-6 py-4 text-right">
-                                        {{ membre.nom }}
-                                    </td>    
+                                {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
+                                    {% if membre.federation %}
+                                        <td class="px-6 py-4 text-right">
+                                            {{ membre.nom }}
+                                        </td>    
+                                    {% endif %}
                                 {% endif %}
                                 
                             </tr> 

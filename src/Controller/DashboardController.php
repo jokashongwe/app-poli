@@ -23,7 +23,7 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'dashboard')]
     public function index(ManagerRegistry $entityManager, MembreRepository $membreRepository, CotisationRepository $cotisationRepository): Response
     {
-
+        $licence = $this->getParameter('app.systemlicence');
         //$federations = $entityManager->getRepository(Federation::class)->findAll();
         $federationCount = $this->compter($entityManager, Federation::class);
         $memberCount =  $this->compter($entityManager, Membre::class);
@@ -54,7 +54,8 @@ class DashboardController extends AbstractController
             'membreLabels' => json_encode($membreLabels),
             'membreValues' => json_encode($membreValues),
             'membreValuesChart2' => json_encode($membreValuesChart2),
-            'totalMontant' => is_null($total) ? 0 : $total
+            'totalMontant' => is_null($total) ? 0 : $total,
+            'licence' => $licence
         ]);
     }
 }
