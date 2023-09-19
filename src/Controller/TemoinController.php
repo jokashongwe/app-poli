@@ -125,7 +125,7 @@ class TemoinController extends AbstractController
         ]);
     }
 
-    #[Route('api/temoin/{id}', name: 'app_temoin_upload')]
+    #[Route('api/result/{id}', name: 'app_temoin_upload')]
     public function upload_result(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, $id){
         dd($request);
     }
