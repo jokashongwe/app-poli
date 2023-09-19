@@ -28,6 +28,9 @@ class Resultat
     #[ORM\ManyToOne(targetEntity: Candidat::class, inversedBy: 'resultats')]
     private $candidat;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $autres = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,5 +94,34 @@ class Resultat
         $this->candidat = $candidat;
 
         return $this;
+    }
+
+    public function getAutres(): ?array
+    {
+        return $this->autres;
+    }
+
+    public function setAutres(?array $autres): self
+    {
+        $this->autres = $autres;
+
+        return $this;
+    }
+
+    public function getSerialize()
+    {
+        $candidat = $this->candidat;
+        $candidat_id = $candidat ? $this->candidat->getId() : '';
+        return [
+            'id' => $this->id,
+            'nombre_votants' => $this->nombreVotant,
+            'nombre_voix' => $this->nombreVoix,
+            'candidat' => $candidat ? [
+                'id' => $candidat_id,
+                'path' => '/path/candidat/' . $candidat_id
+            ]: null,
+            'photos' => $this->proceVerbaux,
+            'autres' => $this->autres
+        ];
     }
 }

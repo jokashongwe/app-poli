@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Resultat;
 use App\Entity\Temoin;
 use App\Entity\User;
 use App\Form\Type\TemoinType;
@@ -25,11 +26,14 @@ use Symfony\Component\Serializer\Serializer;
 class TemoinController extends AbstractController
 {
     #[Route('/temoin', name: 'app_temoin')]
-    public function index(Request $request, ManagerRegistry $doctrine, 
-        TemoinRepository $temoinRepository,UserRepository $userRepository,
+    public function index(
+        Request $request,
+        ManagerRegistry $doctrine,
+        TemoinRepository $temoinRepository,
+        UserRepository $userRepository,
         UserPasswordHasherInterface $userPasswordHasherInterface,
-        SettingRepository $settingRepository): Response
-    {
+        SettingRepository $settingRepository
+    ): Response {
         $temoin = new Temoin();
 
         $form = $this->createForm(TemoinType::class, $temoin);
@@ -39,7 +43,7 @@ class TemoinController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $setting = $settingRepository->findAll();
-            if(!empty($setting)){
+            if (!empty($setting)) {
                 $setting = $setting[0];
             }
 
@@ -51,11 +55,11 @@ class TemoinController extends AbstractController
              */
             $membre = $temoin->getMembre();
             $telephone = $membre->getTelephone();
-        
+
             $entityManager = $doctrine->getManager();
             $code =  rand(300000, 999999);
             $temoin->setBackupCode($code);
-            $message = "Bonjour, vous etes desormais temoin dans le regroupement ". $setting->getSigle() . ", PIN: " . $code;
+            $message = "Bonjour, vous etes desormais temoin dans le regroupement " . $setting->getSigle() . ", PIN: " . $code;
             $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
             $result = $msgService->sendManySMS(
                 $message,
@@ -66,7 +70,7 @@ class TemoinController extends AbstractController
             $telephone = str_replace('+243', '0', $telephone);
             if ($result['http_status'] == 201) {
                 $temoinUser = $userRepository->findOneBy(['username' => $telephone]);
-                if( empty($temoinUser) ){
+                if (empty($temoinUser)) {
                     $temoinUser = new User();
                 }
                 $temoinUser->setUsername(str_replace("+243", "0", $telephone));
@@ -82,12 +86,12 @@ class TemoinController extends AbstractController
                 $temoin->setUser($temoinUser);
                 $entityManager->persist($temoin);
                 $entityManager->flush();
-                
+
                 return $this->redirectToRoute('app_temoin');
-            }else {
+            } else {
                 $this->addFlash("notice", "Impossible de contacter le serveur de Messsagerie");
-            } 
-            
+            }
+
             return $this->redirectToRoute('app_temoin');
         }
 
@@ -115,8 +119,9 @@ class TemoinController extends AbstractController
     }
 
     #[Route('api/temoin/info', name: 'app_temoin_info')]
-    public function get_info(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository){
-        
+    public function get_info(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository)
+    {
+
         $temoin = $temoinRepository->findOneBy(['user' => $this->getUser()]);
         //$result = $serializer->normalize($temoin, null, [AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true]);
         return $this->json([
@@ -126,8 +131,49 @@ class TemoinController extends AbstractController
     }
 
     #[Route('api/result/{id}', name: 'app_temoin_upload')]
-    public function upload_result(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, $id){
-        dd($request);
+    public function upload_result(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, $id)
+    {
+        try {
+            $candidats = $request->get("candidats");
+            
+            $nombreVotants = $request->get("nombre_votant");
+            $nombreVoix = $request->get("nombre_voix");
+            if (!empty($candidats)) {
+                $candidats = json_decode($candidats, true);
+            }
+            $files = $request->files->all();
+            $filenames = $this->upload_files($files);
+            $resultat = new Resultat();
+            $temoin = $temoinRepository->find($id);
+            $resultat->setTemoin($temoin);
+            $resultat->setCandidat($temoin->getCandidat());
+            $resultat->setProceVerbaux($filenames);
+            $resultat->setNombreVoix(intval($nombreVoix));
+            $resultat->setNombreVotant(intval($nombreVotants));
+            $resultat->setAutres($candidats);
+            $manager = $doctrine->getManager();
+            $manager->persist($resultat);
+            $manager->flush();
+            return $this->json(['data' => $resultat->getSerialize() , 'success' => true]);
+        } catch (\Throwable $th) {
+            return $this->json(['data' => null, 'message' => $th->getMessage(), 'success' => false]);
+        }
     }
 
-}   
+    private function upload_files($files)
+    {
+        $filenames = [];
+        foreach ($files as $file) {
+            $extension = $file->guessExtension();
+            if (!$extension) {
+                // extension cannot be guessed
+                $extension = 'bin';
+            }
+            $filename = rand(1, 99999) . '.' . $extension;
+            $file->move('../public/uploads/results', $filename);
+            $filename = "uploads/results/" . $filename;
+            array_push($filenames, $filename);
+        }
+        return $filenames;
+    }
+}
