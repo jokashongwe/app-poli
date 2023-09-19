@@ -91,23 +91,13 @@
             </tfoot>
         </table>
 
-        {% if toast %}
-
-            {% if toast.isError %}
-                <script>
-                    setTimeout(() => {
-                        toastr.error("{{ toast.message }}".replaceAll("&#039;", "'"), "Averitissement");
-                    }, 1000);
-                </script>
-            {% else %}
-                <script>
-                    setTimeout(() => {
-                        toastr.success("{{ toast.message }}".replaceAll("&#039;", "'"), "Information");
-                    }, 1000);
-                </script>
-            {% endif %}
-        
-        {% endif %}
+        {% for message in app.flashes('notice') %}
+            <script>
+                setTimeout(() => {
+                    toastr.error(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
+                }, 1000);
+            </script>
+        {% endfor %}
         
 
         <div class="grid grid-cols-1 md:grid-cols-6 md:gap-3" >

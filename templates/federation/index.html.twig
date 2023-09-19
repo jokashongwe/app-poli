@@ -6,23 +6,13 @@
     <div class="container">
         <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Fédérations Existantes
         </h3>
-        {% if toast %}
-
-            {% if toast.isError %}
-                <script>
-                    setTimeout(() => {
-                        toastr.error("{{ toast.message }}".replaceAll("&#039;", "'"), "Averitissement");
-                    }, 1000);
-                </script>
-            {% else %}
-                <script>
-                    setTimeout(() => {
-                        toastr.success("{{ toast.message }}".replaceAll("&#039;", "'"), "Information");
-                    }, 1000);
-                </script>
-            {% endif %}
-        
-        {% endif %}
+        {% for message in app.flashes('notice') %}
+            <script>
+                setTimeout(() => {
+                    toastr.error(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
+                }, 1000);
+            </script>
+        {% endfor %}
         <table id="federation-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
             <thead>
                 <tr>

@@ -46,10 +46,12 @@
     </table>
 
     {% for message in app.flashes('notice') %}
-        <div style="font-size: 12px; color: red" >
-            {{ message }}
-        </div>
-    {% endfor %}
+            <script>
+                setTimeout(() => {
+                    toastr.error(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
+                }, 1000);
+            </script>
+        {% endfor %}
 
     <div class="grid grid-cols-6 gap-3" >
 

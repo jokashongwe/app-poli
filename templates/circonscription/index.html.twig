@@ -10,7 +10,13 @@
     <div class="container">
         <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Liste des circonscriptions
         </h3>
-        
+        {% for message in app.flashes('notice') %}
+            <script>
+                setTimeout(() => {
+                    toastr.error(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
+                }, 1000);
+            </script>
+        {% endfor %}
         <table id="federation-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
             <thead>
                 <tr>
