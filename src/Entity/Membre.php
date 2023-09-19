@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: MembreRepository::class)]
 class Membre
@@ -32,6 +33,7 @@ class Membre
     private $adresse;
 
     #[ORM\ManyToOne(targetEntity: Federation::class, inversedBy: 'membres')]
+    #[MaxDepth(2)]
     private $federation;
 
     #[ORM\OneToMany(mappedBy: 'membre', targetEntity: Cotisation::class)]
@@ -67,7 +69,8 @@ class Membre
     #[ORM\Column(type: 'boolean', nullable: true, options: ["default" => false] )]
     private $aunecarte;
 
-    #[ORM\OneToOne(mappedBy: 'membre', targetEntity: Temoin::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'membre', targetEntity: Temoin::class, cascade: ['persist'])]
+    #[MaxDepth(2)]
     private $temoin;
 
     public function __construct()

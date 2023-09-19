@@ -37,6 +37,9 @@ class Setting
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $slogan;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $sigle;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +137,18 @@ class Setting
     public function setSlogan(?string $slogan): self
     {
         $this->slogan = $slogan;
+
+        return $this;
+    }
+
+    public function getSigle(): ?string
+    {
+        return $this->sigle;
+    }
+
+    public function setSigle(?string $sigle): self
+    {
+        $this->sigle = $sigle;
 
         return $this;
     }

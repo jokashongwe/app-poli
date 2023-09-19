@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Temoin;
 use App\Entity\User;
 use App\Form\Type\TemoinType;
+use App\Repository\SettingRepository;
 use App\Repository\TemoinRepository;
 use App\Repository\UserRepository;
 use App\Service\MessageService;
@@ -15,11 +16,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class TemoinController extends AbstractController
 {
     #[Route('/temoin', name: 'app_temoin')]
-    public function index(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository,UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    public function index(Request $request, ManagerRegistry $doctrine, 
+        TemoinRepository $temoinRepository,UserRepository $userRepository,
+        UserPasswordHasherInterface $userPasswordHasherInterface,
+        SettingRepository $settingRepository): Response
     {
         $temoin = new Temoin();
 
@@ -29,25 +38,24 @@ class TemoinController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $setting = $settingRepository->findAll();
+            if(!empty($setting)){
+                $setting = $setting[0];
+            }
+
             $temoin = $form->getData();
+            //dd($temoin);
             /**
              * création du User
              * Notification par SMS
              */
             $membre = $temoin->getMembre();
             $telephone = $membre->getTelephone();
-            $telephone = str_replace('+243', '0', $telephone);
-            /*
-            $nomCandidat = null;
-            $candidat = $temoin->getCandidat();
-            if(!is_null($candidat)){
-                $nomCandidat = '' . $candidat->getMembre();
-            }
-            */
+        
             $entityManager = $doctrine->getManager();
             $code =  rand(300000, 999999);
             $temoin->setBackupCode($code);
-            $message = "Bonjour, vous etes desormais temoin dans le regroupement XYZ, PIN: " . $code;
+            $message = "Bonjour, vous etes desormais temoin dans le regroupement ". $setting->getSigle() . ", PIN: " . $code;
             $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
             $result = $msgService->sendManySMS(
                 $message,
@@ -55,6 +63,7 @@ class TemoinController extends AbstractController
                 $this->getParameter('app.senderid'),
                 $this->getParameter('app.sendermode')
             );
+            $telephone = str_replace('+243', '0', $telephone);
             if ($result['http_status'] == 201) {
                 $temoinUser = $userRepository->findOneBy(['username' => $telephone]);
                 if( empty($temoinUser) ){
@@ -73,9 +82,12 @@ class TemoinController extends AbstractController
                 $temoin->setUser($temoinUser);
                 $entityManager->persist($temoin);
                 $entityManager->flush();
+                
                 return $this->redirectToRoute('app_temoin');
-            }
-            $this->addFlash("notice", "Impossible de contacter le serveur de Messsagerie");
+            }else {
+                $this->addFlash("notice", "Impossible de contacter le serveur de Messsagerie");
+            } 
+            
             return $this->redirectToRoute('app_temoin');
         }
 
@@ -101,4 +113,21 @@ class TemoinController extends AbstractController
         $em->flush();
         return $this->redirectToRoute('app_temoin');
     }
-}
+
+    #[Route('api/temoin/info', name: 'app_temoin_info')]
+    public function get_info(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository){
+        
+        $temoin = $temoinRepository->findOneBy(['user' => $this->getUser()]);
+        //$result = $serializer->normalize($temoin, null, [AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true]);
+        return $this->json([
+            'data' => $temoin->getSerialized(),
+            'success' => true
+        ]);
+    }
+
+    #[Route('api/temoin/{id}', name: 'app_temoin_upload')]
+    public function upload_result(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, $id){
+        dd($request);
+    }
+
+}   

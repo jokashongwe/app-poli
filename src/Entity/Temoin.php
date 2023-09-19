@@ -6,6 +6,7 @@ use App\Repository\TemoinRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: TemoinRepository::class)]
 class Temoin
@@ -16,15 +17,18 @@ class Temoin
     private $id;
 
     #[ORM\OneToOne(inversedBy: 'temoin', targetEntity: Membre::class, cascade: ['persist'])]
+    #[MaxDepth(2)]
     private $membre;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $accreditation;
 
     #[ORM\ManyToOne(targetEntity: Circonscription::class, inversedBy: 'temoins')]
+    #[MaxDepth(2)]
     private $circonscription;
 
     #[ORM\ManyToOne(targetEntity: BureauVote::class, inversedBy: 'temoins')]
+    #[MaxDepth(2)]
     private $bureauVote;
 
     #[ORM\ManyToOne(targetEntity: Candidat::class, inversedBy: 'temoins')]
@@ -38,6 +42,9 @@ class Temoin
 
     #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
     private $user;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $sigle;
 
     public function __construct()
     {
@@ -159,6 +166,38 @@ class Temoin
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSerialized(): array
+    {
+        return [
+            'id' => $this->id,
+            
+            'bureauVote' => '/api/bureau_vote/' . $this->bureauVote->getId()
+            ,
+            'circonscription' => '/api/circonscription/' . $this->circonscription->getId(),
+            'membre' => [
+                'path' => '/api/membre/' . $this->membre->getId(),
+                'id' => $this->membre->getId(),
+                'nom' => $this->membre->getNom(),
+                'postnom' => $this->membre->getPostnom(),
+                'prenom' => $this->membre->getPrenom(),
+                'identification' => $this->membre->getNoidentification()
+            ],
+            'user' => $this->user,
+        ];
+    }
+
+    public function getSigle(): ?string
+    {
+        return $this->sigle;
+    }
+
+    public function setSigle(?string $sigle): self
+    {
+        $this->sigle = $sigle;
 
         return $this;
     }

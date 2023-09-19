@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\Type\UserType;
+use App\Repository\MembreRepository;
+use App\Repository\TemoinRepository;
+use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +47,32 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/account/newpin/{id}', name: 'user_newpin')]
+    public function newpin(Request $request, ManagerRegistry $registry, TemoinRepository $temoinRepository,UserPasswordHasherInterface $passwordHasher, $id): Response
+    {
+        $user = $registry->getRepository(User::class)->find($id);
+        $temoin = $temoinRepository->findOneBy(['user' => $user]);
+        $membre = $temoin->getMembre();
+        $service = new MessageService($this->getParameter('app.bulksmstoken'));
+        $newPIN = '' . rand(300000, 999999);
+        $message = 'Cher temoin votre nouveau PIN est le suivant: ' . $newPIN;
+        $hashedPassword = $passwordHasher->hashPassword(
+            $user,
+            $newPIN
+        );
+        $user->setPassword($hashedPassword);
+        $manager = $registry->getManager();
+        $manager->persist($user);
+        $service->sendManySMS(
+            $message,
+            [$membre->getTelephone()],
+            $this->getParameter('app.senderid'),
+            $this->getParameter('app.sendermode')
+        );
+        $manager->flush();
+        return $this->redirectToRoute('user_show');
+    }
+
     #[Route('/account/deactivate/{id}', name: 'user_deactivate')]
     public function deactivate(Request $request, ManagerRegistry $registry, $id): Response
     {
@@ -57,10 +86,11 @@ class UserController extends AbstractController
 
 
     #[Route('/account/new', name: 'user_new')]
-    public function new(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $registry){
+    public function new(Request $request, UserPasswordHasherInterface $passwordHasher, ManagerRegistry $registry)
+    {
         $user = new user();
 
-        if(empty($request->request->all()) || !array_key_exists("user", $request->request->all())){
+        if (empty($request->request->all()) || !array_key_exists("user", $request->request->all())) {
             return $this->redirectToRoute("user_show");
         }
 

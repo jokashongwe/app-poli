@@ -34,6 +34,7 @@ class SettingType extends AbstractType
                 ],
             ])
             ->add("nomparti", TextType::class)
+            ->add("sigle", TextType::class)
             ->add("messageEnregistrement", TextType::class)
             ->add("facebookURL", UrlType::class)
             ->add("twitterURL", UrlType::class)
