@@ -50,7 +50,6 @@ class DiffusionController extends AbstractController
             $entityManager->persist($diffusion);
             $entityManager->flush();
 
-
             return $this->redirectToRoute('diffusion');
         }
 
@@ -102,13 +101,11 @@ class DiffusionController extends AbstractController
                     $this->getParameter('app.senderid'), 
                     $this->getParameter('app.sendermode')
                 );
-                if ($result['http_status'] > 200) {
+                if ($result['http_status'] <= 201) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");
                 } else {
                     $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
                 }
-            } else {
-                $this->addFlash("notice", "Aucun membres trouvé pour la diffusion!");
             }
         } catch (\Throwable $th) {
             $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
