@@ -31,6 +31,9 @@ class Resultat
     #[ORM\Column(type: 'json', nullable: true)]
     private $autres = [];
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $codeBV;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,5 +126,17 @@ class Resultat
             'photos' => $this->proceVerbaux,
             'autres' => $this->autres
         ];
+    }
+
+    public function getCodeBV(): ?string
+    {
+        return $this->codeBV;
+    }
+
+    public function setCodeBV(?string $codeBV): self
+    {
+        $this->codeBV = $codeBV;
+
+        return $this;
     }
 }

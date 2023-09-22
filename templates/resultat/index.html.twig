@@ -19,29 +19,20 @@
                 <a href="#" class="block p-6  bg-blue-500 rounded border border-gray-200 shadow-md hover:bg-blue-700 dark:border-gray-700 dark:hover:bg-gray-700">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Total Votants</h5>
                     <div class="grid grid-cols-2 gap-1">
-                        <i class="fas fa-user-plus fa-2x fa-fw text-white"></i>
-                        <p class="font-bold text-2xl text-white"> {{ 0 }} </p>
+                        <i class="fas fa-user fa-2x fa-fw text-white"></i>
+                        <p class="font-bold text-2xl text-white"> {{ rapport.votants }} </p>
                     </div>
 
                 </a>
 
 
-                <a href="{{ path('federation_new') }}" class="block p-6  bg-yellow-500 rounded border border-gray-200 shadow-md hover:bg-yellow-700 dark:border-gray-700 dark:hover:bg-gray-700">
+                <a href="{{ path('federation_new') }}" class="block p-6  bg-gray-500 rounded border border-gray-200 shadow-md hover:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-700">
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Nombres Voix</h5>
                     <div class="grid grid-cols-2 gap-1">
                         <i class="fas fa-building fa-2x fa-fw text-white"></i>
-                        <p class="font-bold text-2xl text-white"> {{ 0 }} </p>
+                        <p class="font-bold text-2xl text-white"> {{ rapport.voix }} </p>
                     </div>
 
-                </a>
-
-
-                <a href="#" class="block p-6  bg-green-500  rounded border border-gray-200 shadow-md hover:bg-green-700 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Cotisations Annuelle</h5>
-                    <div class="grid grid-cols-2 gap-1">
-                        <i class="fas fa-wallet fa-2x fa-fw text-white"></i>
-                        <p class="font-bold text-2xl text-white">{{ 0 }} Fc</p>
-                    </div>
                 </a>
 
             </div>
@@ -54,14 +45,14 @@
                     <canvas id="genderchart"></canvas>
                 </div>
             </div>
-            <h3 class="mb-3 text-md font-200 tracking-tight text-gray-900 dark:text-white uppercase mt-3">5 - Derniers membres inscrits
+            <h3 class="mb-3 text-md font-200 tracking-tight text-gray-900 dark:text-white uppercase mt-3">Témoins
             </h3>
             <div class="relative overflow-x-auto shadow-md border">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3">
-                                temoin
+                                BureauVote
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 nombreVotant
@@ -79,7 +70,7 @@
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 
                                 <td class="px-6 py-4">
-                                    {{ resultat.temoin }}
+                                    {{ resultat.temoin.bureauVote }}
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ resultat.nombreVotant }}
@@ -100,14 +91,14 @@
     <script>
         const data = {
             labels: [
-                'Femme',
-                'Homme'
+                'Total Votants',
+                'Voix obtenu'
             ],
             datasets: [{
-                label: 'Homme/Femme',
-                data: {{ "[2, 3]" }},
+                label: 'Total/V.O',
+                data: [{{ rapport.votants }}, {{ rapport.voix }}],
                 backgroundColor: [
-                'rgb(255, 99, 132)',
+                'rgb(112, 111, 108)',
                 'rgb(54, 162, 235)'
                 ],
                 hoverOffset: 2,
@@ -131,31 +122,31 @@
     </script>
 
     <script>
-        let labels2 = {{ 'A, B' }};
+        let labels2 = "{{ bureau_votes }}";
         labels2 = labels2.replaceAll("&quot;", "\"");
         labels2 = JSON.parse(labels2);
 
-        const values = {{ "[2, 4]" }};
+        const values = {{ rapport_bv }};
         const data2 = {
             labels: labels2,
             datasets: [{
-                label: 'Membres par Fédération',
+                label: 'Voix par bureau de vote',
                 data: values,
                 backgroundColor: [
-                'rgba(255, 99, 132, 0.6)',
-                'rgba(255, 159, 64, 0.6)',
+                'rgba(112, 111, 108, 0.6)',
                 'rgba(200, 200, 86, 0.6)',
                 'rgba(75, 192, 192, 0.6)',
                 'rgba(54, 162, 235, 0.6)',
+                'rgba(112, 111, 95, 0.6)',
                 'rgba(153, 102, 255, 0.6)',
                 'rgba(201, 203, 207, 0.6)'
                 ],
                 borderColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
+                'rgb(112, 111, 108)',
                 'rgb(200, 205, 86)',
                 'rgb(75, 192, 192)',
                 'rgb(54, 162, 235)',
+                'rgb(112, 111, 95)',
                 'rgb(153, 102, 255)',
                 'rgb(201, 203, 207)'
                 ],

@@ -6,6 +6,7 @@ use App\Entity\Candidat;
 use App\Entity\User;
 use App\Form\Type\CandidatType;
 use App\Repository\CandidatRepository;
+use App\Repository\ResultatRepository;
 use App\Repository\UserRepository;
 use App\Service\MessageService;
 use DateTime;
@@ -20,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CandidatController extends AbstractController
 {
     #[Route('/candidat', name: 'app_candidat')]
-    public function index(Request $request, ManagerRegistry $doctrine, UserRepository $userRepository, CandidatRepository $candidatRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    public function index(Request $request, ManagerRegistry $doctrine,ResultatRepository $resultatRepository, UserRepository $userRepository, CandidatRepository $candidatRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         $candidat = new Candidat();
 
@@ -81,11 +82,30 @@ class CandidatController extends AbstractController
             $this->addFlash("notice", "Impossible de contacter le serveur de Messsagerie");
             return $this->redirectToRoute('app_candidat');
         }
+
+        $candidats = $candidatRepository->findAll();
+        $total = ['votants' => 0, 'voix' => 0];
+        foreach($candidats as $can){
+            $resultats = $resultatRepository->findBy(['candidat' => $can->getId()]);
+            $totalParCandidat = [];
+            foreach($resultats as $resultat){
+                $total['votants'] += $resultat->getNombreVotant();
+                $total['voix'] += $resultat->getNombreVoix();
+                $code = '' .$can->getCodeCENI();
+                if(!array_key_exists($code, $totalParCandidat)){
+                    $totalParCandidat[$code] = 0;
+                }
+                $totalParCandidat[$code] += $resultat->getNombreVoix();
+            }
+        }
+
         return $this->renderForm('candidat/index.html.twig', [
-            'controller_name' => 'TemoinController',
+            'controller_name' => 'CandidatController',
             'form' => $form,
-            'candidats' => $candidatRepository->findAll(),
-            'toast' => null
+            'candidats' => $candidats,
+            'rapport' => $total,
+            'rapport_bv' => json_encode(array_values($totalParCandidat)),
+            'bureau_votes' => json_encode(array_keys($totalParCandidat))
         ]);
     }
 }

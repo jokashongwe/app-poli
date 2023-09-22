@@ -3,9 +3,31 @@
 {% block title %}{% endblock %}
 
 {% block body %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <div class="container">
-        <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Liste des Candidats
-        </h3>
+            <h2>Tableau de Bord Electoral </h2>
+            <div class="grid grid-cols-2 gap-5 mb-5" >
+                <div class="m-3">
+                    <a href="#" class="block p-6  bg-blue-500 rounded border border-gray-200 shadow-md hover:bg-blue-700 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Total Votants</h5>
+                        <div class="grid grid-cols-2 gap-1">
+                            <p class="font-bold text-xl text-white"><i class="fas fa-user fa-x fa-fw text-white"></i> {{ rapport.votants }} </p>
+                        </div>
+
+                    </a>
+                    <a href="{{ path('federation_new') }}" class="block p-6  bg-gray-500 rounded border border-gray-200 shadow-md hover:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white">Nombres Voix</h5>
+                        <div class="grid grid-cols-2 gap-1">
+                            <p class="font-bold text-xl text-white"><i class="fas fa-building fa-x fa-fw text-white"></i> {{ rapport.voix }} </p>
+                        </div>
+
+                    </a>
+                </div>
+                <div class="chartbox barcart" >
+                    <canvas id="genderchart"></canvas>
+                </div>
+            </div>
+        
         {% for message in app.flashes('notice') %}
             <script>
                 setTimeout(() => {
@@ -50,7 +72,7 @@
                             </td>
                             <td class="px-6 py-4 flex flex-row">
                                 <a href="/candidat/delete/{{ candidat.id }}" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 bg-red focus:outline-none rounded-sm border border-gray-200 hover:bg-red-300 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Supprimer</button>
-                                <a href="/resultat/{{ candidat.id }}" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 bg-green-300 rounded-sm border border-green-300">Résultats</button>
+                                <a href="/resultat/{{ candidat.id }}" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 bg-green-300 rounded-sm border border-green-300">Détails</button>
                             </td>
                         </tr>
                     {% endfor %}
@@ -112,6 +134,92 @@
             modal.style.display = "none";
         }
         
+    </script>
+    <script>
+        const data = {
+            labels: [
+                'Total Votants',
+                'Voix obtenu'
+            ],
+            datasets: [{
+                label: 'Total/V.O',
+                data: [{{ rapport.votants }}, {{ rapport.voix }}],
+                backgroundColor: [
+                'rgb(112, 111, 108)',
+                'rgb(54, 162, 235)'
+                ],
+                hoverOffset: 2,
+                responsive:true,
+            }]
+        };
+
+        const config = {
+            type: 'pie',
+            data: data,
+            options:{
+                aspectRatio: 2
+            }
+        };
+                
+        const myChart = new Chart(
+            document.getElementById('genderchart'),
+            config
+        );
+
+    </script>
+
+    <script>
+        let labels2 = "{{ bureau_votes }}";
+        labels2 = labels2.replaceAll("&quot;", "\"");
+        labels2 = JSON.parse(labels2);
+
+        const values = {{ rapport_bv }};
+        const data2 = {
+            labels: labels2,
+            datasets: [{
+                label: 'Voix par candidats',
+                data: values,
+                backgroundColor: [
+                'rgba(112, 111, 108, 0.6)',
+                'rgba(200, 200, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(112, 111, 95, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(201, 203, 207, 0.6)'
+                ],
+                borderColor: [
+                'rgb(112, 111, 108)',
+                'rgb(200, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(112, 111, 95)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1,
+            }]
+        };
+
+        const config2 = {
+            type: 'bar',
+            data: data2,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                 responsive:true,
+                  aspectRatio:2
+            },
+        };
+
+        const federation = new Chart(
+            document.getElementById('federationchart'),
+            config2
+        );
+
     </script>
     
 {% endblock %}

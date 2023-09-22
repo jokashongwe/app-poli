@@ -6,6 +6,7 @@ use App\Entity\Resultat;
 use App\Entity\Temoin;
 use App\Entity\User;
 use App\Form\Type\TemoinType;
+use App\Repository\ResultatRepository;
 use App\Repository\SettingRepository;
 use App\Repository\TemoinRepository;
 use App\Repository\UserRepository;
@@ -131,25 +132,44 @@ class TemoinController extends AbstractController
     }
 
     #[Route('api/result/{id}', name: 'app_temoin_upload')]
-    public function upload_result(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, $id)
+    public function upload_result(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, ResultatRepository $resultatRepository, $id)
     {
         try {
             $candidats = $request->get("candidats");
             
-            $nombreVotants = $request->get("nombre_votant");
-            $nombreVoix = $request->get("nombre_voix");
-            if (!empty($candidats)) {
-                $candidats = json_decode($candidats, true);
+            //$nombreVotants = $request->get("nombre_votant");
+            //$nombreVoix = $request->get("nombre_voix");
+            if (empty($candidats)) {
+                //$candidats = json_decode($candidats, true);
+                return $this->json(['data' => [], 'message' => 'candidats cannot be empty', 'success' => false], 400);
             }
+            $candidats = json_decode($candidats, true);
             $files = $request->files->all();
             $filenames = $this->upload_files($files);
-            $resultat = new Resultat();
             $temoin = $temoinRepository->find($id);
+            $codeBV = '' . $temoin->getBureauVote()->getCode();
+            $resultat = $resultatRepository->findBy(['codeBV' => $codeBV]);
+            if(!empty($resultat)){
+                return $this->json(['data' => [], 'message' => 'Un résultat existe déjà pour ce Bureau de vote', 'success' => true]);
+            }
+            $resultat = new Resultat();
+            $candidat = $temoin->getCandidat();
+            $code = $candidat->getCodeCENI();
+            $nombreVoix = -1;
+            $nombreVotants = -1;
+            foreach($candidats as $can){
+                if($can['numero'] == $code){
+                    $nombreVoix = intval($can['voix']);
+                    $nombreVotants = intval($can['votants']);
+                }
+            }
             $resultat->setTemoin($temoin);
+            
             $resultat->setCandidat($temoin->getCandidat());
+            $resultat->setCodeBV($codeBV);
             $resultat->setProceVerbaux($filenames);
-            $resultat->setNombreVoix(intval($nombreVoix));
-            $resultat->setNombreVotant(intval($nombreVotants));
+            $resultat->setNombreVoix($nombreVoix);
+            $resultat->setNombreVotant($nombreVotants);
             $resultat->setAutres($candidats);
             $manager = $doctrine->getManager();
             $manager->persist($resultat);
