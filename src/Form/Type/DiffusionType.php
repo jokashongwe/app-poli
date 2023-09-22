@@ -16,7 +16,6 @@ class DiffusionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("titre", TextType::class)
             ->add("content", TextareaType::class)
             ->add("federations", EntityType::class, [
                 'class' => Federation::class,

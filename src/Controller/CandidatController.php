@@ -108,4 +108,20 @@ class CandidatController extends AbstractController
             'bureau_votes' => json_encode(array_keys($totalParCandidat))
         ]);
     }
+
+    #[Route('/candidat/delete/{id}', name: 'app_candidat_delete')]
+    public function delete(Request $request, ManagerRegistry $doctrine,CandidatRepository $candidatRepository, $id)
+    {
+        $candidat = $candidatRepository->find($id);
+        $manager = $doctrine->getManager();
+        $temoins = $candidat->getTemoins();
+        foreach($temoins as $temoin){
+            $temoin->setCandidat(null);
+            $manager->persist($temoin);
+        }
+        $resultats = $candidat->getResultats();
+        foreach($resultats as $resultat){
+            $manager->persist($resultat);
+        }
+    }
 }

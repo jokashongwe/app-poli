@@ -20,7 +20,6 @@
         <table id="federation-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
             <thead>
                 <tr>
-                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 131.172px;">Titre</th>
                     <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 218.172px;">Message</th>
                     <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Nombre de Membres</th>
                     <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Fédérations</th>
@@ -31,9 +30,7 @@
             <tbody>
                 {% for diffusion in diffusions %}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="px-6 py-4">
-                                {{ diffusion.titre }}
-                            </td>
+                            
                             <td class="px-6 py-4">
                                 {{ diffusion.content }}
                             </td>

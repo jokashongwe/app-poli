@@ -40,6 +40,7 @@ class DiffusionController extends AbstractController
             foreach ($raw_federations as $rp) {
                 array_push($federations, $rp->getNom());
             }
+            $diffusion->setTitre("No-Title");
             $diffusion->setFederations($federations);
             $diffusion->setVisible(true);
             $nPhones = 0;
@@ -89,7 +90,7 @@ class DiffusionController extends AbstractController
             }
         }
 
-        $message = $diffusion->getTitre() . '  ' . $diffusion->getContent();
+        $message = $diffusion->getContent();
         
         $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
 
@@ -101,7 +102,7 @@ class DiffusionController extends AbstractController
                     $this->getParameter('app.senderid'), 
                     $this->getParameter('app.sendermode')
                 );
-                if ($result['http_status'] != 201) {
+                if ($result['http_status'] > 200) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");
                 } else {
                     $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
