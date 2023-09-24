@@ -7,6 +7,7 @@ use App\Entity\Federation;
 use App\Entity\Membre;
 use App\Repository\CotisationRepository;
 use App\Repository\MembreRepository;
+use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,13 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'dashboard')]
     public function index(ManagerRegistry $entityManager, MembreRepository $membreRepository, CotisationRepository $cotisationRepository): Response
     {
+        $service = new MessageService($this->getParameter('app.bulksmstoken'));
+        $result = $service->getCredits();
+        $response = json_decode($result['server_response'], true);
+        $credits = 0;
+        if(!empty($result)){
+            $credits = $response['credits']['balance'];
+        }
         $licence = $this->getParameter('app.systemlicence');
         //$federations = $entityManager->getRepository(Federation::class)->findAll();
         $federationCount = $this->compter($entityManager, Federation::class);
@@ -55,7 +63,8 @@ class DashboardController extends AbstractController
             'membreValues' => json_encode($membreValues),
             'membreValuesChart2' => json_encode($membreValuesChart2),
             'totalMontant' => is_null($total) ? 0 : $total,
-            'licence' => $licence
+            'licence' => $licence,
+            'credits' => $credits
         ]);
     }
 }

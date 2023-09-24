@@ -14,6 +14,29 @@ class MessageService
         $this->accessKey = $token;
     }
 
+    public function getCredits(){
+        $token = $this->accessKey;
+        $url = "https://api.bulksms.com/v1/profile?auto-unicode=true&longMessageMaxParts=30";
+        $ch = curl_init();
+        $headers = array(
+            'Content-Type:application/json',
+            'Authorization: Basic ' . $token
+        );
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        $output = array();
+        $output['server_response'] = curl_exec($ch);
+        $curl_info = curl_getinfo($ch);
+        $output['http_status'] = $curl_info['http_code'];
+        $output['error'] = curl_error($ch);
+        curl_close($ch);
+        return $output;
+    }
+
     public function sendManySMS(string $message, array $listOfNumber, string $senderID, string $senderMode)
     {
         $messages = [];

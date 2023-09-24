@@ -28,7 +28,8 @@
                     <a href="#" class="block p-6  bg-green-500  rounded border border-gray-200 shadow-md hover:bg-green-700 dark:border-gray-700 dark:hover:bg-gray-700">
                         <h5 class="mb-2 text-2xl  tracking-tight text-white dark:text-white">Cotisations</h5>
                         <div class="grid grid-cols-2 gap-1">
-                            <p class="font-light text-2xl text-white"><i class="fas fa-wallet fa-x fa-fw text-white"></i> <span class="ml-5" >{{ totalMontant | number_format(0, '.', ' ') }}</span> FC</p>
+                            <p class="font-light text-2xl text-white"><i class="fas fa-wallet fa-x fa-fw text-white"></i> 
+                            <span class="ml-5" >{{ totalMontant | number_format(0, '.', ' ') }}</span> FC</p>
                         </div>
                     </a>
                 {% endif %}
@@ -36,7 +37,7 @@
                 <a href="#" class="block p-6  bg-yellow-500 rounded border border-gray-200 shadow-md hover:bg-yellow-700 dark:border-gray-700 dark:hover:bg-gray-700">
                     <h5 class="mb-2 text-2xl  tracking-tight text-white dark:text-white">Solde SMS</h5>
                     <div class="grid grid-cols-2 gap-1">  
-                        <p class="font-light text-2xl text-white"><i class="fas  fa-envelope-open fa-x fa-fw text-white"></i> <span class="ml-5"> 10 243 </span> </p>
+                        <p class="font-light text-2xl text-white"><i class="fas  fa-envelope-open fa-x fa-fw text-white"></i> <span class="ml-5"> {{ (credits / 3.2 ) | number_format(0, '.', ' ') }} </span> </p>
                     </div>
                 </a>
             </div>
