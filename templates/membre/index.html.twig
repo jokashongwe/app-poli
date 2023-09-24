@@ -15,7 +15,7 @@
         <table id="membre-data" class="display dataTable w-full text-sm text-left text-gray-500" style="width:100%" aria-describedby="example_info">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50" >
                 <tr>
-                    <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >No. Identifation</th>
+                    <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >N° CARTE</th>
                     <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Nom</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >Postnom</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >Prenom</th>
@@ -23,6 +23,7 @@
                     {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Federation</th>
                     {% endif %}
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Groupes</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Date adhésion</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Actions</th>
                 </tr>
@@ -45,6 +46,7 @@
                             <td class="px-6 ">
                                 {{ membre.genre }}
                             </td>
+                            
                             {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
                                 {% if membre.federation %}
 
@@ -57,20 +59,29 @@
                                             {{ membre.federation.nom }}
                                         </td>    
                                     {% endif %}
-                                    
+                                {% else %}
+                                    <td class="px-6 ">
+                                        -
+                                    </td> 
                                 {% endif %}
                             {% endif %}
+                            <td class="px-6 ">
+                                    {% for tag in membre.tags %}
+                                        <span style="display: inline-block; padding:0.3rem; background-color: #2eb050; color: #fff; margin: 0.3rem; border-radius: 2px" class="shaddow-md" >
+                                            {{ tag.name }}
+                                        </span>
+                                    {% endfor %}
 
-                            
+                            </td>
                             <td class="px-6 ">
                                 {{ membre.dateadhesion | date("d/m/Y")  }}
                             </td>
                             
                             <td class="text-center">
-                                    <span style="text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;  " onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{ membre.federation.id }}', ' {{ membre.adresse }} ', ' {{ membre.numerocarte }} ')" class="font-sm text-gray-600 hover:bg-yellow-500 hover:text-gray-100">Modifier</span>
+                                    <span style=" display: inline-block; text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;" onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{membre.federation ? membre.federation.id : '' }}', ' {{ membre.adresse }} ', ' {{ membre.numerocarte }} ')" class="cursor-pointer font-sm text-gray-600 hover:bg-yellow-500 hover:text-gray-100">Modifier</span>
                                 {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
                                     {% if is_granted('ROLE_COTISATION') or is_granted("ROLE_ADMIN") %}
-                                        <span style="text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;"  class="font-sm text-gray-100  bg-yellow-500 hover:bg-yellow-300 hover:text-gray-100"> <a href="{{ path('cotisation_show', {'id': membre.id })  }}" >Voir les cotisations</a> </span>
+                                        <span style=" display: inline-block; text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;"  class="cursor-pointer font-sm text-gray-100  bg-yellow-500 hover:bg-yellow-300 hover:text-gray-100"> <a href="{{ path('cotisation_show', {'id': membre.id })  }}" >Voir les cotisations</a> </span>
                                     {% endif %}
                                 {% endif %}
                             </td>
@@ -87,6 +98,7 @@
                     {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >FEDERATION</th>
                     {% endif  %}
+                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Groupes</th>
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >DATE ADHESION</th>
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >ACTIONS</th>
                 </tr>
@@ -340,6 +352,7 @@
     <script>
         new TomSelect('#membre_tags', {
             maxItems: 5,
+            items: ["Général"]
         });
     </script>
 {% endblock %}

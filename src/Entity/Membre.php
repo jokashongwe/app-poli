@@ -360,6 +360,16 @@ class Membre
         return $this;
     }
 
+    public function emptyTags(): self
+    {
+        foreach($this->tags as $tag){
+            if($tag->getCode() != 'GENERAL'){
+                $this->removeTag($tag);
+            }
+        }
+        return $this;
+    }
+
     public function removeTag(Tag $tag): self
     {
         if ($this->tags->removeElement($tag)) {

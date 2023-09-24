@@ -61,6 +61,7 @@ class MembreType extends AbstractType
                 'class' => Tag::class,
                 'label' => 'Groupe',
                 'choice_label' => 'name',
+                'required' => false,
                 'multiple' => true
             ])
             ->add('telephone', TextType::class, [

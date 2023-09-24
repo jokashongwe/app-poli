@@ -18,7 +18,7 @@ class TagFixtures extends Fixture
         $tag = new Tag();
         $tag->setCode('GENERAL');
         $tag->setName('Général');
-
+        $manager->persist($tag);
         $manager->flush();
     }
 }

@@ -40,7 +40,7 @@ class Temoin
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $backupCode;
 
-    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist'])]
     private $user;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
