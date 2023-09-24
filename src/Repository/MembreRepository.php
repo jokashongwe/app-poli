@@ -87,7 +87,6 @@ class MembreRepository extends ServiceEntityRepository
         // returns an array of arrays (i.e. a raw data set)
         return $resultSet->fetchAllAssociative();
     }
-
     public function countByGenre($value = 0):array
     {
         $conn = $this->getEntityManager()->getConnection();

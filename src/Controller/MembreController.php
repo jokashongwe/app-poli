@@ -68,18 +68,20 @@ class MembreController extends AbstractController
             $membre->setNoidentification($this->generateIdNumber());
             $membre->setDateadhesion(new \DateTimeImmutable());
             $file = $request->files->get("membre")["avatar"];
-            $extension = $file->guessExtension();
-            if (!$extension) {
-                // extension cannot be guessed
-                $extension = 'bin';
+            if(!is_null($file)){
+                $extension = $file->guessExtension();
+                if (!$extension) {
+                    // extension cannot be guessed
+                    $extension = 'bin';
+                }
+                $filename = rand(1, 99999) . '.' . $extension;
+                $file->move('../public/uploads', $filename);
+                $filename = "uploads" . "/" . $filename;
+                $membre->setAvatar($filename);
             }
-            $filename = rand(1, 99999) . '.' . $extension;
-            $file->move('../public/uploads', $filename);
-            $filename = "uploads" . "/" . $filename;
-            $membre->setAvatar($filename);
-
+            
             if (is_null($membre->getGenre())) {
-                $membre->setGenre("Homme");
+                $membre->setGenre("Homme"); //Homme par défaut
             }
             $entityManager = $doctrine->getManager();
 

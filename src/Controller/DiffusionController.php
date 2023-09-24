@@ -40,11 +40,21 @@ class DiffusionController extends AbstractController
             foreach ($raw_federations as $rp) {
                 array_push($federations, $rp->getNom());
             }
+            $raw_tags = $diffusion->getTags();
+            $phones = [];
+            $tags = [];
+            foreach ($raw_tags as $tag) {
+                array_push($tags, $tag->getCode());
+                $members = $tag->getMembres();
+                foreach($members as $member){
+                    array_push($phones, $member->getTelephone());
+                }
+            }
             $diffusion->setTitre("No-Title");
             $diffusion->setFederations($federations);
             $diffusion->setVisible(true);
             $nPhones = 0;
-            $nPhones = $this->send($diffusion, $membreRepository);
+            $nPhones = $this->send($phones, $diffusion);
             $diffusion->setNumberOfMembers($nPhones);
             $entityManager = $doctrine->getManager();
             $entityManager->persist($diffusion);
@@ -77,18 +87,10 @@ class DiffusionController extends AbstractController
         return $this->redirectToRoute('diffusion');
     }
 
-    private function send(Diffusion $diffusion, MembreRepository $membreRepository)
+    private function send($phones,Diffusion $diffusion)
     {
 
-        $membres = $membreRepository->findByDiffusion($diffusion->getProvinces(), $diffusion->getFederations());
-        $phones = [];
-        foreach ($membres as $membre) {
-            $phone = $membre->getTelephone();
-            if (!is_null($phone) && !empty($phone) && !in_array($phone, $phones)) {
-                array_push($phones, $phone);
-            }
-        }
-
+        
         $message = $diffusion->getContent();
         
         $msgService = new MessageService($this->getParameter('app.bulksmstoken'));

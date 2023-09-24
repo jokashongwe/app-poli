@@ -28,7 +28,7 @@
 	<body>
         <!-- NAV BAR -->
         <div class="flex" >
-            <div id="menu" class="md:flex-none w-full md:w-60 md:h-full shadow-lg bg-white-100 hidden md:block z-0 relative md:absolute">
+            <div id="menu" class="md:flex-none w-full md:w-60 md:h-full  bg-white-100 hidden md:block z-0 relative md:absolute">
                 <ul class="relative ">
                     <li class="relative">
                         <a href="{{ path('dashboard')}} " class="flex items-center text-sm py-4 {% if controller_name == 'DashboardController' %} bg-blue-100 {% endif %} px-6 h-12 text-gray" >
@@ -145,7 +145,7 @@
                         <h2 class="text-xl text-gray-700" >Portail Central</h1>
                     </div>
                 </div>
-                <div id="content" class="z-10 relative" >
+                <div id="content" class="z-10 relative md:overflow-hidden sm:overflow-scroll sm:p-5" >
                     {% block body %}
             
                     {% endblock %}
