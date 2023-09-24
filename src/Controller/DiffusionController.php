@@ -104,11 +104,11 @@ class DiffusionController extends AbstractController
                 if ($result['http_status'] <= 201) {
                     $this->addFlash("notice", "Les messages ont été correctement transférée!");
                 } else {
-                    $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
+                    $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
                 }
             }
         } catch (\Throwable $th) {
-            $this->addFlash("notice", "Une erreur lors de la transmissions, réessayez plus tard!");
+            $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
 
         return sizeof($phones);

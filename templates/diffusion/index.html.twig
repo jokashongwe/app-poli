@@ -10,10 +10,17 @@
     <div class="container">
         <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Liste des diffusions
         </h3>
-        {% for message in app.flashes('notice') %}
+        {% for message in app.flashes('error') %}
             <script>
                 setTimeout(() => {
                     toastr.error(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
+                }, 1000);
+            </script>
+        {% endfor %}
+        {% for message in app.flashes('notice') %}
+            <script>
+                setTimeout(() => {
+                    toastr.success(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
                 }, 1000);
             </script>
         {% endfor %}
