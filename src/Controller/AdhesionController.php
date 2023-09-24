@@ -6,6 +6,7 @@ use App\Entity\Membre;
 use App\Entity\Setting;
 use App\Form\Type\MembreType;
 use App\Repository\SettingRepository;
+use App\Repository\TagRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ class AdhesionController extends AbstractController
     }
 
     #[Route('/enregistrement', name: 'app_adhesion')]
-    public function index(Request $request, ManagerRegistry $doctrine, SettingRepository $settingRepository): Response
+    public function index(Request $request, ManagerRegistry $doctrine,TagRepository $tagRepository, SettingRepository $settingRepository): Response
     {
         $membre = new Membre();
         $form = $this->createForm(MembreType::class, $membre);
@@ -50,6 +51,16 @@ class AdhesionController extends AbstractController
             $file->move('../public/uploads', $filename);
             $filename = "uploads" . "/" . $filename;
             $membre->setAvatar($filename);
+            $tagGen = $tagRepository->findOneBy(['code' => 'GENERAL']);
+            if(!is_null($tagGen)){
+                $membre->addTag($tagGen);
+            }
+            $nom = $membre->getFederation()->getNom();
+            $fedTag = $tagRepository->findOneBy(['name' => $nom]); // ajout dans le groupe de la fédération
+            if (!is_null($fedTag)) {
+                $membre->addTag($fedTag);
+            }
+            
 
             if (is_null($membre->getGenre())) {
                 $membre->setGenre("Homme");

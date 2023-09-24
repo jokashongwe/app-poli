@@ -85,9 +85,10 @@ class CandidatController extends AbstractController
 
         $candidats = $candidatRepository->findAll();
         $total = ['votants' => 0, 'voix' => 0];
+        $totalParCandidat = [];
         foreach($candidats as $can){
             $resultats = $resultatRepository->findBy(['candidat' => $can->getId()]);
-            $totalParCandidat = [];
+            //$totalParCandidat = [];
             foreach($resultats as $resultat){
                 $total['votants'] += $resultat->getNombreVotant();
                 $total['voix'] += $resultat->getNombreVoix();

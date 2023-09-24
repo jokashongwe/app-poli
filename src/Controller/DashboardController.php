@@ -28,7 +28,7 @@ class DashboardController extends AbstractController
         $result = $service->getCredits();
         $response = json_decode($result['server_response'], true);
         $credits = 0;
-        if(!empty($result)){
+        if(!empty($response)){
             $credits = $response['credits']['balance'];
         }
         $licence = $this->getParameter('app.systemlicence');
