@@ -36,6 +36,9 @@ class Diffusion
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $visible;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $tags = [];
+
     public function __construct()
     {
         if(is_null($this->startDate)){
@@ -128,6 +131,18 @@ class Diffusion
     public function setVisible(?bool $visible): self
     {
         $this->visible = $visible;
+
+        return $this;
+    }
+
+    public function getTags(): ?array
+    {
+        return $this->tags;
+    }
+
+    public function setTags(?array $tags): self
+    {
+        $this->tags = $tags;
 
         return $this;
     }

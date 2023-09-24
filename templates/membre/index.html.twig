@@ -1,6 +1,8 @@
 {% extends 'dash.html.twig' %}
 
-{% block title %}{% endblock %}
+{% block stylesheet %}
+<link href="/assets/css/tom-select.css" rel="stylesheet"/>
+{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -65,7 +67,7 @@
                             </td>
                             
                             <td class="text-center">
-                                    <span style="text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;  " onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{ membre.federation.id }}', ' {{ membre.adresse }} ')" class="font-sm text-gray-600 hover:bg-yellow-500 hover:text-gray-100">Modifier</span>
+                                    <span style="text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;  " onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{ membre.federation.id }}', ' {{ membre.adresse }} ', ' {{ membre.numerocarte }} ')" class="font-sm text-gray-600 hover:bg-yellow-500 hover:text-gray-100">Modifier</span>
                                 {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
                                     {% if is_granted('ROLE_COTISATION') or is_granted("ROLE_ADMIN") %}
                                         <span style="text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;"  class="font-sm text-gray-100  bg-yellow-500 hover:bg-yellow-300 hover:text-gray-100"> <a href="{{ path('cotisation_show', {'id': membre.id })  }}" >Voir les cotisations</a> </span>
@@ -248,11 +250,12 @@
         let photo = document.getElementById("membre_photo");
         let telephone = document.getElementById("membre_telephone");
         let adresse = document.getElementById("membre_adresse");
+        let numerocarte = document.getElementById("membre_numerocarte");
         let avatar = document.getElementById("membre_avatar")
         let btnSave = document.getElementById("membre_save");
         let form = document.getElementsByName("membre")[0] ;
 
-        function updatemembre(_id, _nom, _postnom, _prenom, _genre,_telephone,  _datenaissance, _avatar, _federation, _adresse){
+        function updatemembre(_id, _nom, _postnom, _prenom, _genre,_telephone,  _datenaissance, _avatar, _federation, _adresse, _numerocarte){
             
             nom.value = _nom;
             postnom.value = _postnom;
@@ -261,6 +264,7 @@
             datenaissance.value = _datenaissance;
             telephone.value = _telephone;
             adresse.value = _adresse;
+            numerocarte.value =_numerocarte;
             var filepath = "{{ url('login') }}" + _avatar;
             console.log(filepath);
             avatar.src = filepath;
@@ -324,9 +328,18 @@
         }
         //cotisations
         let closeCotisationButton = document.getElementById("closeCotisationButton");
-        closeCotisationButton.onclick = function (){
-            cotisationModal.style.display = "none";
+        if(closeCotisationButton){
+            closeCotisationButton.onclick = function (){
+                cotisationModal.style.display = "none";
+            }
         }
+        
 
+    </script>
+    <script src="/assets/js/tom-select.complete.min.js"></script>
+    <script>
+        new TomSelect('#membre_tags', {
+            maxItems: 5,
+        });
     </script>
 {% endblock %}

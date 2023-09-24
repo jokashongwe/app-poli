@@ -1,64 +1,54 @@
 {% extends 'dash.html.twig' %}
 
-{% block stylesheet %}
-<link href="/assets/css/tom-select.css" rel="stylesheet"/>
-{% endblock %}
-
 {% block title %}{% endblock %}
 
 {% block body %}
     <div class="container">
-        <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Liste des diffusions
+        <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Fédérations Existantes
         </h3>
-        {% for message in app.flashes('error') %}
+        {% for message in app.flashes('notice') %}
             <script>
                 setTimeout(() => {
                     toastr.error(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
                 }, 1000);
             </script>
         {% endfor %}
-        {% for message in app.flashes('notice') %}
-            <script>
-                setTimeout(() => {
-                    toastr.success(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
-                }, 1000);
-            </script>
-        {% endfor %}
         <table id="federation-data" class="display dataTable w-full text-sm text-left text-gray-500 dark:text-gray-400" style="width:100%" aria-describedby="example_info">
             <thead>
                 <tr>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 218.172px;">Message</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Nombre de Membres</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Fédérations</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Provinces</th>
+                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 131.172px;">Code</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Nom du groupe</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Membres</th>
                     <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">ACTIONS</th>
                     </tr>
             </thead>
             <tbody>
-                {% for diffusion in diffusions %}
+                {% for tag in tags %}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            
                             <td class="px-6 py-4">
-                                {{ diffusion.content }}
+                                {{ tag.code }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ diffusion.numberOfMembers }}
+                                {{ tag.name }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ diffusion.federations|join(', ') }}
+                                {{ tag.membres | length }}
                             </td>
-                            <td class="px-6 py-4">
-                                {{ diffusion.provinces|join(', ') }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <a href="/diffusion/delete/{{ diffusion.id }}" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-red rounded-sm border border-gray-200 hover:bg-red-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Supprimer</button>
+                            <td class="p-3 text-center">
+                                <a 
+                                    href="/tags/update/{{ tag.id }}" 
+                                    type="button" 
+                                    class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-yellow rounded-sm border border-gray-200 hover:bg-yellow-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 ">Mettre à jour</a>
+                                
+                                
                             </td>
                         </tr>
                     {% endfor %}
             </tbody>
         </table>
-        <button id="openmodal" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button" data-modal-toggle="defaultModal">
-            Nouvelle diffusion
+        
+        <button id="openmodal" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-green-700 rounded-sm border border-gray-200 hover:bg-green-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200 " type="button" data-modal-toggle="defaultModal">
+            Nouveau Groupe
         </button>
 
         <!-- Main modal -->
@@ -71,7 +61,7 @@
                     <!-- Modal header -->
                     <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
-                            Nouvelle diffusion
+                            Nouveau Groupe
                         </h3>
                         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="defaultModal">
                             <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +71,7 @@
                     </div>
                     <!-- Modal body -->
                     <div class="p-6 space-y-6">
-                        {% include "diffusion/form.html.twig" %}
+                        {% include "tag/form.html.twig" %}
                     </div>
                 </div>
             </div>
@@ -103,26 +93,15 @@
         let btn = document.getElementById("openmodal");
         let btnClose = document.getElementById("closemodal");
 
+        
         let federation = {}
         btn.onclick = function () {
-            let btnSave = document.getElementById("diffusion_save");
-            btnSave.textContent = "Nouvelle diffusion"
+            let btnSave = document.getElementById("tag_save");
+            btnSave.textContent = "Créer un Groupe"
             modal.style.display = "block";
         }
         btnClose.onclick = function(){
             modal.style.display = "none";
         }
-        
-    </script>
-    <script src="assets/js/tom-select.complete.min.js"></script>
-    <script>
-        new TomSelect('#diffusion_federations', {
-            maxItems: 5,
-        });
-    </script>
-    <script>
-        new TomSelect('#diffusion_tags', {
-            maxItems: 5,
-        });
     </script>
 {% endblock %}

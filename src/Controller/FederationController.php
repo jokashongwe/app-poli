@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Federation;
 use App\Entity\Province;
+use App\Entity\Tag;
 use App\Form\Type\FederationType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,8 +33,14 @@ class FederationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $federation = $form->getData();
+            $tag = new Tag();
+            $nom = $federation->getNom();
+            $code = strtoupper(str_replace('_', '', $nom));
+            $tag->setCode($code);
+            $tag->setName($nom);
             $entityManager = $doctrine->getManager();
             $entityManager->persist($federation);
+            $entityManager->persist($tag);
             $entityManager->flush();
             
 

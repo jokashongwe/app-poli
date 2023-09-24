@@ -12,14 +12,14 @@ use ChunkReadFilter;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Service\ExcelMembreImporter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+//use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\HeaderUtils;
-use Symfony\Component\HttpFoundation\JsonResponse;
+//use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use Twig\Cache\NullCache;
+//use PhpOffice\PhpSpreadsheet\IOFactory;
+//use Twig\Cache\NullCache;
 
 class MembreController extends AbstractController
 {
@@ -28,8 +28,7 @@ class MembreController extends AbstractController
     {
         $part01 = rand(3000, 9999);
         $part02 = rand(300000, 999999);
-        $part03 = date("Y");
-        return '' . $part01 . '/' . $part02 . '/' . $part03;
+        return '' . $part01 . $part02;
     }
 
     #[Route('/membre/new', name: 'membre_new')]

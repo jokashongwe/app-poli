@@ -53,6 +53,14 @@
                                 </a>
                             </li>
                         {% endif %}
+                        
+                            <li class="relative">
+                                <a href="{{ path('tag_new')}} " class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden {% if controller_name == 'TagController' %} bg-blue-100 {% endif %} text-gray-600 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                    <i class="fas fa-building fa-1x fa-fw"></i>
+                                    <span class="pl-2">Gestion des Groupes</span>
+                                </a>
+                            </li>
+                        
                         <li class="relative">
                             <a href="{{ path("user_show") }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden {% if controller_name == 'UserController' %} bg-blue-100 {% endif %} text-gray-600 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                                 <i class="fas fa-cog fa-1x fa-fw"></i>
@@ -70,13 +78,12 @@
                     {% endif %}
 
                     {% if is_granted("ROLE_DIFFUSION") or is_granted("ROLE_ADMIN") %}
-                    <li class="relative">
-                        <a href="{{ path('diffusion') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-600 {% if controller_name == 'DiffusionController' %} bg-blue-100 {% endif %} text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
-                            <i class="fas fa-bullhorn fa-1x fa-fw"></i>
-                            <span class="pl-2"> Gestion des Diffusions</span>
-                        </a>
-                    </li>
-
+                        <li class="relative">
+                            <a href="{{ path('diffusion') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-600 {% if controller_name == 'DiffusionController' %} bg-blue-100 {% endif %} text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                <i class="fas fa-bullhorn fa-1x fa-fw"></i>
+                                <span class="pl-2"> Gestion des Diffusions</span>
+                            </a>
+                        </li>
                     {% endif %} 
                 
                     {% if get_env("SYSTEM_LICENCE") == 'ELECTORAL' %}
