@@ -50,6 +50,7 @@ class DiffusionController extends AbstractController
                     array_push($phones, $member->getTelephone());
                 }
             }
+            $diffusion->setTags($tags);
             $diffusion->setTitre("No-Title");
             $diffusion->setFederations($federations);
             $diffusion->setVisible(true);
