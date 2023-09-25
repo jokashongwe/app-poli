@@ -26,7 +26,7 @@ class DashboardController extends AbstractController
     {
         $user = $this->getUser();
         if(!is_null($user) && !$user->getActive()){
-            $this->redirectToRoute("logout");
+            return $this->redirectToRoute("logout");
         }
         $service = new MessageService($this->getParameter('app.bulksmstoken'));
         $result = $service->getCredits();
