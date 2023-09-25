@@ -182,7 +182,7 @@ class MembreController extends AbstractController
         }
         return $this->redirectToRoute('membre_new');
     }
-    #[Route('/membre/delete/{id}', name: 'membre_update')]
+    #[Route('/membre/delete/{id}', name: 'membre_delete')]
     public function delete(Request $request, ManagerRegistry $doctrine, TagRepository $tagRepository, int $id): Response
     {
         $membre = $doctrine->getRepository(Membre::class)->find($id);

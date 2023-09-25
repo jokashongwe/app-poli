@@ -6,6 +6,7 @@ use App\Entity\Resultat;
 use App\Entity\Temoin;
 use App\Entity\User;
 use App\Form\Type\TemoinType;
+use App\Repository\CandidatRepository;
 use App\Repository\ResultatRepository;
 use App\Repository\SettingRepository;
 use App\Repository\TemoinRepository;
@@ -132,7 +133,7 @@ class TemoinController extends AbstractController
     }
 
     #[Route('api/result/{id}', name: 'app_temoin_upload')]
-    public function upload_result(Request $request, ManagerRegistry $doctrine, TemoinRepository $temoinRepository, ResultatRepository $resultatRepository, $id)
+    public function upload_result(Request $request, ManagerRegistry $doctrine, CandidatRepository $candidatRepository, TemoinRepository $temoinRepository, ResultatRepository $resultatRepository, $id)
     {
         try {
             $candidats = $request->get("candidats");
@@ -148,31 +149,30 @@ class TemoinController extends AbstractController
             $filenames = $this->upload_files($files);
             $temoin = $temoinRepository->find($id);
             $codeBV = '' . $temoin->getBureauVote()->getCode();
-            $resultat = $resultatRepository->findBy(['codeBV' => $codeBV]);
+            $resultat = $resultatRepository->findBy(['codeBV' => $codeBV, 'temoin' => $temoin]);
             if(!empty($resultat)){
-                return $this->json(['data' => [], 'message' => 'Un résultat existe déjà pour ce Bureau de vote', 'success' => true]);
+                return $this->json(['data' => [], 'message' => 'Un résultat existe déjà pour ce temoin', 'success' => true]);
             }
-            $resultat = new Resultat();
-            $candidat = $temoin->getCandidat();
-            $code = $candidat->getCodeCENI();
             $nombreVoix = -1;
             $nombreVotants = -1;
+            $manager = $doctrine->getManager();
+            
             foreach($candidats as $can){
-                if($can['numero'] == $code){
+                $candidat = $candidatRepository->findOneBy(['codeCENI' => $can['numero']]);
+                if(!is_null($candidat)){
                     $nombreVoix = intval($can['voix']);
                     $nombreVotants = intval($can['votants']);
+                    $resultat = new Resultat();
+                    $resultat->setTemoin($temoin);
+                    $resultat->setCandidat($candidat);
+                    $resultat->setCodeBV($codeBV);
+                    $resultat->setProceVerbaux($filenames);
+                    $resultat->setNombreVoix($nombreVoix);
+                    $resultat->setNombreVotant($nombreVotants);
+                    $resultat->setAutres($candidats);
+                    $manager->persist($resultat);
                 }
             }
-            $resultat->setTemoin($temoin);
-            
-            $resultat->setCandidat($temoin->getCandidat());
-            $resultat->setCodeBV($codeBV);
-            $resultat->setProceVerbaux($filenames);
-            $resultat->setNombreVoix($nombreVoix);
-            $resultat->setNombreVotant($nombreVotants);
-            $resultat->setAutres($candidats);
-            $manager = $doctrine->getManager();
-            $manager->persist($resultat);
             $manager->flush();
             return $this->json(['data' => $resultat->getSerialize() , 'success' => true]);
         } catch (\Throwable $th) {
