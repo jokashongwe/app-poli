@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 		<title>{% block title %}{% endblock %}
 		</title>
-		<link rel="icon" href="{{ asset('images/logo_vote.png') }}">
+		<link rel="icon" href="{{ asset('assets/img/poly.png') }}">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
@@ -28,7 +28,7 @@
 	<body>
         <!-- NAV BAR -->
         <div class="flex" >
-            <div id="menu" class="md:flex-none w-full md:w-60 md:h-full shadow-lg bg-white-100 hidden md:block z-0 relative md:absolute">
+            <div id="menu" class="md:flex-none w-full md:w-60 md:h-full  bg-white-100 hidden md:block z-0 relative md:absolute">
                 <ul class="relative ">
                     <li class="relative">
                         <a href="{{ path('dashboard')}} " class="flex items-center text-sm py-4 {% if controller_name == 'DashboardController' %} bg-blue-100 {% endif %} px-6 h-12 text-gray" >
@@ -43,8 +43,8 @@
                             </a>
                         </li>
                     {% endif %}
-
-                    {% if is_granted("ROLE_ADMIN") %}
+                    
+                    
                         {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
                             <li class="relative">
                                 <a href="{{ path('federation_new')}} " class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden {% if controller_name == 'FederationController' %} bg-blue-100 {% endif %} text-gray-600 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
@@ -53,6 +53,14 @@
                                 </a>
                             </li>
                         {% endif %}
+                    {% if is_granted("ROLE_ADMIN") %}
+                            <li class="relative">
+                                <a href="{{ path('tag_new')}} " class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden {% if controller_name == 'TagController' %} bg-blue-100 {% endif %} text-gray-600 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                    <i class="fas fa-users-cog fa-1x fa-fw"></i>
+                                    <span class="pl-2">Gestion des Groupes</span>
+                                </a>
+                            </li>
+                        
                         <li class="relative">
                             <a href="{{ path("user_show") }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden {% if controller_name == 'UserController' %} bg-blue-100 {% endif %} text-gray-600 text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                                 <i class="fas fa-cog fa-1x fa-fw"></i>
@@ -70,19 +78,26 @@
                     {% endif %}
 
                     {% if is_granted("ROLE_DIFFUSION") or is_granted("ROLE_ADMIN") %}
-                    <li class="relative">
-                        <a href="{{ path('diffusion') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-600 {% if controller_name == 'DiffusionController' %} bg-blue-100 {% endif %} text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
-                            <i class="fas fa-bullhorn fa-1x fa-fw"></i>
-                            <span class="pl-2"> Gestion des Diffusions</span>
-                        </a>
-                    </li>
-
+                        <li class="relative">
+                            <a href="{{ path('diffusion') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-600 {% if controller_name == 'DiffusionController' %} bg-blue-100 {% endif %} text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                <i class="fas fa-bullhorn fa-1x fa-fw"></i>
+                                <span class="pl-2"> Gestion des Diffusions</span>
+                            </a>
+                        </li>
                     {% endif %} 
                 
                     {% if get_env("SYSTEM_LICENCE") == 'ELECTORAL' %}
-                    
+                        <hr/>
                         {% if is_granted("ROLE_ELECTORAL") or is_granted("ROLE_ADMIN") %}
-                            <hr/>
+                            <li class="relative">
+                                <a href="{{ path('app_candidat') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-600 {% if controller_name == 'CandidatController' %} bg-blue-100 {% endif %} text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                    <i class="fas fa-user-shield fa-1x fa-fw"></i>
+                                    <span class="pl-2">Tableau Electoral</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if is_granted("ROLE_ELECTORAL") or is_granted("ROLE_ADMIN") %}
+                            
                             <li class="relative">
                                 <a href="{{ path('app_circonscription') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-600 {% if controller_name == 'CirconscriptionController' %} bg-blue-100 {% endif %} text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                                     <i class="fas fa-map-marker fa-1x fa-fw"></i>
@@ -104,14 +119,6 @@
                                 <a href="{{ path('app_temoin') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-600 {% if controller_name == 'TemoinController' %} bg-blue-100 {% endif %} text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                                     <i class="fas fa-user-tag fa-1x fa-fw"></i>
                                     <span class="pl-2"> Gestion des Témoins</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if is_granted("ROLE_ELECTORAL") or is_granted("ROLE_ADMIN") %}
-                            <li class="relative">
-                                <a href="{{ path('app_candidat') }}" class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-600 {% if controller_name == 'CandidatController' %} bg-blue-100 {% endif %} text-ellipsis whitespace-nowrap  hover:text-gray-900 hover:bg-gray-100 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark">
-                                    <i class="fas fa-user-shield fa-1x fa-fw"></i>
-                                    <span class="pl-2"> Gestion des Candidats</span>
                                 </a>
                             </li>
                         {% endif %}
@@ -138,7 +145,7 @@
                         <h2 class="text-xl text-gray-700" >Portail Central</h1>
                     </div>
                 </div>
-                <div id="content" class="z-10 relative" >
+                <div id="content" class="z-10 relative md:overflow-hidden sm:overflow-scroll sm:p-5" >
                     {% block body %}
             
                     {% endblock %}

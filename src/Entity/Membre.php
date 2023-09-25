@@ -73,9 +73,19 @@ class Membre
     #[MaxDepth(2)]
     private $temoin;
 
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'membres')]
+    private $tags;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $memSection;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $pointFocal;
+
     public function __construct()
     {
         $this->cotisations = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,6 +340,67 @@ class Membre
     public function __toString()
     {
         return $this->nom . ' ' . $this->postnom . ' ' . $this->prenom;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+            $tag->addMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function emptyTags(): self
+    {
+        foreach($this->tags as $tag){
+            if($tag->getCode() != 'GENERAL'){
+                $this->removeTag($tag);
+            }
+        }
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->removeElement($tag)) {
+            $tag->removeMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function getMemSection(): ?string
+    {
+        return $this->memSection;
+    }
+
+    public function setMemSection(?string $memSection): self
+    {
+        $this->memSection = $memSection;
+
+        return $this;
+    }
+
+    public function getPointFocal(): ?string
+    {
+        return $this->pointFocal;
+    }
+
+    public function setPointFocal(?string $pointFocal): self
+    {
+        $this->pointFocal = $pointFocal;
+
+        return $this;
     }
 
 }

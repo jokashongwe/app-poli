@@ -13,10 +13,34 @@ class AppFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
 
-        $provinces = ['KINSHASA', 'Kongo-Central', 'Mai-Ndombe'];
+        $provinces = [
+            'KINSHASA', 
+            'Kongo Central', 
+            'Mai-Ndombe', 
+            'Haut-Katanga',
+            'Kwilu',
+            'Kwango',
+            'Maniema',
+            'Lualaba',
+            'Lomami',
+            'Kasai',
+            'Kasai Central',
+            'Kasai Oriental',
+            'Tshopo',
+            'Tshuapa',
+            'Bas-Uele',
+            'Haut-Uele',
+            'Nord-Ubangi',
+            'Sud-Ubangi',
+            'Mongala',
+            'Sankuru',
+            'Nord-Kivu',
+            'Sud-Kivu',
+            'Tanganyika'
+        ];
         foreach($provinces as $province){
             $pObject = new Province();
-            $pObject->setNom($province);
+            $pObject->setNom(strtoupper($province));
             $manager->persist($pObject);
         }
 

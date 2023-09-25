@@ -3,11 +3,10 @@
 namespace App\Form\Type;
 
 use App\Entity\Federation;
+use App\Entity\Tag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Entity\Province;
-use App\Entity\Qualite;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -56,7 +55,14 @@ class MembreType extends AbstractType
             ])
             ->add('federation', EntityType::class, [
                 'class' => Federation::class,
-                'choice_label' => 'nom'
+                'choice_label' => 'nom',
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'label' => 'Groupe',
+                'choice_label' => 'name',
+                'required' => false,
+                'multiple' => true
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'Téléphone',

@@ -20,7 +20,7 @@
         {% for message in app.flashes('notice') %}
             <script>
                 setTimeout(() => {
-                    toastr.success(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
+                    toastr.success(" {{ message }}".replaceAll("&#039;", "'"), "Validation");
                 }, 1000);
             </script>
         {% endfor %}
@@ -29,8 +29,7 @@
                 <tr>
                     <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 218.172px;">Message</th>
                     <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Nombre de Membres</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Fédérations</th>
-                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Provinces</th>
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 39.0156px;">Groupes</th>
                     <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"  style="width: 73.3125px;">ACTIONS</th>
                     </tr>
             </thead>
@@ -45,10 +44,11 @@
                                 {{ diffusion.numberOfMembers }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ diffusion.federations|join(', ') }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ diffusion.provinces|join(', ') }}
+                                {% for tag in diffusion.tags %}
+                                    <span style="display: inline-block; padding:0.3rem; background-color: #2eb050; color: #fff; margin: 0.3rem; border-radius: 2px" class="shaddow-md" >
+                                        {{ tag | join(" ") }}
+                                    </span>
+                                {% endfor %}
                             </td>
                             <td class="px-6 py-4">
                                 <a href="/diffusion/delete/{{ diffusion.id }}" type="button" class="py-2 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-red rounded-sm border border-gray-200 hover:bg-red-300 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Supprimer</button>
@@ -73,7 +73,7 @@
                         <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
                             Nouvelle diffusion
                         </h3>
-                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="defaultModal">
+                        <button id="iconclose" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="defaultModal">
                             <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                             </svg>
@@ -102,6 +102,7 @@
         let modal = document.getElementById("defaultModal");
         let btn = document.getElementById("openmodal");
         let btnClose = document.getElementById("closemodal");
+        let iconclose = document.getElementById("iconclose");
 
         let federation = {}
         btn.onclick = function () {
@@ -112,11 +113,16 @@
         btnClose.onclick = function(){
             modal.style.display = "none";
         }
+
+        iconclose.onclick = function(){
+            modal.style.display = "none";
+        }
         
     </script>
     <script src="assets/js/tom-select.complete.min.js"></script>
+    
     <script>
-        new TomSelect('#diffusion_federations   ', {
+        new TomSelect('#diffusion_tags', {
             maxItems: 5,
         });
     </script>

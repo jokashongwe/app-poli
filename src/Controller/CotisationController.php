@@ -42,6 +42,7 @@ class CotisationController extends AbstractController
         ]);
 
         return $this->renderForm('cotisation/index.html.twig', [
+            'controller_name' => 'MembreController',
             'membre' => $membre,
             'toast' => $toast,
             'form' => $form

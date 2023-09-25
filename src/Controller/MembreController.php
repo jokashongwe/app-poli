@@ -7,19 +7,20 @@ use App\Entity\Membre;
 use App\Form\Type\ExcelUploadType;
 use App\Form\Type\MembreType;
 use App\Repository\MembreRepository;
+use App\Repository\TagRepository;
 use App\Service\MembreCardPrinter;
 use ChunkReadFilter;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Service\ExcelMembreImporter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+//use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\HeaderUtils;
-use Symfony\Component\HttpFoundation\JsonResponse;
+//use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use Twig\Cache\NullCache;
+//use PhpOffice\PhpSpreadsheet\IOFactory;
+//use Twig\Cache\NullCache;
 
 class MembreController extends AbstractController
 {
@@ -28,17 +29,17 @@ class MembreController extends AbstractController
     {
         $part01 = rand(3000, 9999);
         $part02 = rand(300000, 999999);
-        $part03 = date("Y");
-        return '' . $part01 . '/' . $part02 . '/' . $part03;
+        return '' . $part01 . $part02;
     }
 
     #[Route('/membre/new', name: 'membre_new')]
-    public function new(Request $request, ManagerRegistry $doctrine): Response
+    public function new(Request $request, ManagerRegistry $doctrine, TagRepository $tagRepository): Response
     {
 
         $membre = new Membre();
 
         $membres = $doctrine->getRepository(Membre::class)->findAll();
+        
 
         $form = $this->createForm(MembreType::class, $membre);
         $excelForm = $this->createForm(ExcelUploadType::class, null, [
@@ -53,21 +54,34 @@ class MembreController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $membre = $form->getData();
+            
+            /**
+             * Inscription dans un groupe
+             */
+            $tagGen = $tagRepository->findOneBy(['code' => 'GENERAL']);
+            $membre->addTag($tagGen);
+            $nom = $membre->getFederation()->getNom();
+            $fedTag = $tagRepository->findOneBy(['name' => $nom]); // ajout dans le groupe de la fédération
+            if (!is_null($fedTag)) {
+                $membre->addTag($fedTag);
+            }
             $membre->setNoidentification($this->generateIdNumber());
             $membre->setDateadhesion(new \DateTimeImmutable());
             $file = $request->files->get("membre")["avatar"];
-            $extension = $file->guessExtension();
-            if (!$extension) {
-                // extension cannot be guessed
-                $extension = 'bin';
+            if(!is_null($file)){
+                $extension = $file->guessExtension();
+                if (!$extension) {
+                    // extension cannot be guessed
+                    $extension = 'bin';
+                }
+                $filename = rand(1, 99999) . '.' . $extension;
+                $file->move('../public/uploads', $filename);
+                $filename = "uploads" . "/" . $filename;
+                $membre->setAvatar($filename);
             }
-            $filename = rand(1, 99999) . '.' . $extension;
-            $file->move('../public/uploads', $filename);
-            $filename = "uploads" . "/" . $filename;
-            $membre->setAvatar($filename);
-
+            
             if (is_null($membre->getGenre())) {
-                $membre->setGenre("Homme");
+                $membre->setGenre("Homme"); //Homme par défaut
             }
             $entityManager = $doctrine->getManager();
 
@@ -94,7 +108,6 @@ class MembreController extends AbstractController
                     "message" => "L'erreur suivante est survenue lors du chargement: " . $th->getMessage()
                 ];
             }
-
         }
 
         return $this->renderForm('membre/index.html.twig', [
@@ -107,7 +120,7 @@ class MembreController extends AbstractController
     }
 
     #[Route('/membre/update/{id}', name: 'membre_update')]
-    public function update(Request $request, ManagerRegistry $doctrine, int $id): Response
+    public function update(Request $request, ManagerRegistry $doctrine, TagRepository $tagRepository, int $id): Response
     {
 
 
@@ -119,10 +132,16 @@ class MembreController extends AbstractController
 
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
 
             $nvoMembre = $form->getData();
+            $tags = $nvoMembre->getTags();
+            if ($tags) {
+                $membre->emptyTags();
+                foreach ($tags as $tag) {
+                    $membre->addTag($tag);
+                }
+            }
 
             $membre->setNom($nvoMembre->getNom());
             $membre->setPostnom($nvoMembre->getPostnom());
@@ -167,32 +186,31 @@ class MembreController extends AbstractController
         $toast = ["isError" => false, "message" => ""];
         //$response->setData(['request' => json_encode($request)]);
         /*try {*/
-            $idenfications = array_values($request->request->all());
-            $membres = $membreRepository->findBy([
-                'noidentification' => $idenfications
-            ]);
+        $idenfications = array_values($request->request->all());
+        $membres = $membreRepository->findBy([
+            'noidentification' => $idenfications
+        ]);
 
-            if (empty($membres)) {
-                $toast["isError"] = true;
-                $toast["message"] = "Aucun des numeros ne correspondent à des membres existants";
-            }
+        if (empty($membres)) {
+            $toast["isError"] = true;
+            $toast["message"] = "Aucun des numeros ne correspondent à des membres existants";
+        }
 
-            $html = $this->renderView("carte.html.twig", [
-                "membres" => $membres
-            ]);
+        $html = $this->renderView("carte.html.twig", [
+            "membres" => $membres
+        ]);
 
-            //dd($html);
+        //dd($html);
 
-            $printerService = new MembreCardPrinter();
-            $response = $printerService->print($html);
-            $filename = 'Exports cartes-'. rand(10000, 99999) . '.pdf';
-            $disposition = HeaderUtils::makeDisposition(
-                HeaderUtils::DISPOSITION_ATTACHMENT,
-                $filename
-            );
-            $response->headers->set('Content-Disposition', $disposition);
+        $printerService = new MembreCardPrinter();
+        $response = $printerService->print($html);
+        $filename = 'Exports cartes-' . rand(10000, 99999) . '.pdf';
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $filename
+        );
+        $response->headers->set('Content-Disposition', $disposition);
 
         return $response;
-
     }
 }
