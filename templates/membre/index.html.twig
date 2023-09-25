@@ -105,10 +105,17 @@
             </tfoot>
         </table>
 
-        {% for message in app.flashes('notice') %}
+        {% for message in app.flashes('error') %}
             <script>
                 setTimeout(() => {
                     toastr.error(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
+                }, 1000);
+            </script>
+        {% endfor %}
+        {% for message in app.flashes('notice') %}
+            <script>
+                setTimeout(() => {
+                    toastr.success(" {{ message }}".replaceAll("&#039;", "'"), "Validation");
                 }, 1000);
             </script>
         {% endfor %}

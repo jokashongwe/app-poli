@@ -33,7 +33,7 @@ class MembreController extends AbstractController
     }
 
     #[Route('/membre/new', name: 'membre_new')]
-    public function new(Request $request, ManagerRegistry $doctrine, TagRepository $tagRepository): Response
+    public function new(Request $request, ManagerRegistry $doctrine, TagRepository $tagRepository, MembreRepository $membreRepository): Response
     {
 
         $membre = new Membre();
@@ -54,7 +54,12 @@ class MembreController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $membre = $form->getData();
-            
+            $p_membre = $membreRepository->findOneBy(['telephone' => $membre->getTelephone()]);
+            if(!is_null($p_membre)){
+                $this->addFlash("error", "Un utilisateur avec ses informations existe déjà dans la Base de données!");
+                return $this->redirectToRoute('membre_new');
+            }
+
             /**
              * Inscription dans un groupe
              */
@@ -87,8 +92,7 @@ class MembreController extends AbstractController
 
             $entityManager->persist($membre);
             $entityManager->flush();
-
-
+            $this->addFlash("notice", "Membre ajouté avec succès!");
             return $this->redirectToRoute('membre_new');
         }
         $toast = [];
