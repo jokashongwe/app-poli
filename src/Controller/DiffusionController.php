@@ -46,8 +46,10 @@ class DiffusionController extends AbstractController
             foreach ($raw_tags as $tag) {
                 array_push($tags, $tag->getCode());
                 $members = $tag->getMembres();
-                foreach($members as $member){
-                    array_push($phones, $member->getTelephone());
+                foreach ($members as $member) {
+                    if (is_null($member->getVisible())) {
+                        array_push($phones, $member->getTelephone());
+                    }
                 }
             }
             $diffusion->setTags($tags);
@@ -88,20 +90,20 @@ class DiffusionController extends AbstractController
         return $this->redirectToRoute('diffusion');
     }
 
-    private function send($phones,Diffusion $diffusion)
+    private function send($phones, Diffusion $diffusion)
     {
 
-        
+
         $message = $diffusion->getContent();
-        
+
         $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
 
         try {
             if (!empty($phones)) {
                 $result = $msgService->sendManySMS(
-                    $message, 
-                    $phones, 
-                    $this->getParameter('app.senderid'), 
+                    $message,
+                    $phones,
+                    $this->getParameter('app.senderid'),
                     $this->getParameter('app.sendermode')
                 );
                 if ($result['http_status'] <= 201) {

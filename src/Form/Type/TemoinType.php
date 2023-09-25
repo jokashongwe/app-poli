@@ -8,6 +8,8 @@ use App\Entity\Circonscription;
 use App\Entity\Federation;
 use App\Entity\Membre;
 use App\Entity\Province;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,6 +24,10 @@ class TemoinType extends AbstractType
             ->add("accreditation", TextType::class)
             ->add("membre", EntityType::class, [
                 'class' => Membre::class,
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('m')
+                        ->where('m.visible is null');
+                },
                 'choice_label' => 'noidentification',
                 'multiple' => false,
                 'required' => true

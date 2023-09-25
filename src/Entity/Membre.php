@@ -82,6 +82,9 @@ class Membre
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $pointFocal;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $visible;
+
     public function __construct()
     {
         $this->cotisations = new ArrayCollection();
@@ -399,6 +402,18 @@ class Membre
     public function setPointFocal(?string $pointFocal): self
     {
         $this->pointFocal = $pointFocal;
+
+        return $this;
+    }
+
+    public function getVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(?bool $visible): self
+    {
+        $this->visible = $visible;
 
         return $this;
     }

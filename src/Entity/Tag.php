@@ -63,7 +63,9 @@ class Tag
      */
     public function getMembres(): Collection
     {
-        return $this->membres;
+        return $this->membres->filter(function($membre){
+            return is_null($membre->getVisible());
+        });
     }
 
     public function addMembre(Membre $membre): self

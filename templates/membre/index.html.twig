@@ -79,6 +79,10 @@
                             
                             <td class="text-center">
                                     <span style=" display: inline-block; text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;" onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{membre.federation ? membre.federation.id : '' }}', ' {{ membre.adresse }} ', ' {{ membre.numerocarte }} ')" class="cursor-pointer font-sm text-gray-600 hover:bg-yellow-500 hover:text-gray-100">Modifier</span>
+                                    <a 
+                                        style=" display: inline-block; text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;" 
+                                        href="/membre/delete/{{ membre.id }}"
+                                        class="cursor-pointer font-sm bg-red-900 text-white hover:bg-red-500 hover:text-gray-100">Supprimer</a>
                                 {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
                                     {% if is_granted('ROLE_COTISATION') or is_granted("ROLE_ADMIN") %}
                                         <span style=" display: inline-block; text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;"  class="cursor-pointer font-sm text-gray-100  bg-yellow-500 hover:bg-yellow-300 hover:text-gray-100"> <a href="{{ path('cotisation_show', {'id': membre.id })  }}" >Voir les cotisations</a> </span>

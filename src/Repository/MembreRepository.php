@@ -50,6 +50,7 @@ class MembreRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('m');
         return $qb
             ->select('count(m.id)')
+            ->where('m.visible is null')
             ->getQuery()
             ->getSingleScalarResult();
     }

@@ -38,9 +38,8 @@ class MembreController extends AbstractController
 
         $membre = new Membre();
 
-        $membres = $doctrine->getRepository(Membre::class)->findAll();
+        $membres = $doctrine->getRepository(Membre::class)->findBy(['visible' => null]);
         
-
         $form = $this->createForm(MembreType::class, $membre);
         $excelForm = $this->createForm(ExcelUploadType::class, null, [
             'action' => $this->generateUrl('membre_new'),
@@ -181,6 +180,19 @@ class MembreController extends AbstractController
             $entityManager->persist($membre);
             $entityManager->flush();
         }
+        return $this->redirectToRoute('membre_new');
+    }
+    #[Route('/membre/delete/{id}', name: 'membre_update')]
+    public function delete(Request $request, ManagerRegistry $doctrine, TagRepository $tagRepository, int $id): Response
+    {
+        $membre = $doctrine->getRepository(Membre::class)->find($id);
+        if(is_null($membre)){
+            $this->addFlash("error", "Le membre n'existe pas!");
+        }
+        $membre->setVisible(false);
+        $manager = $doctrine->getManager();
+        $manager->persist($membre);
+        $manager->flush();
         return $this->redirectToRoute('membre_new');
     }
 
