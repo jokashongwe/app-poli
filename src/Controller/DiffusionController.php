@@ -58,7 +58,7 @@ class DiffusionController extends AbstractController
                     }
                 }
             }
-            $message = $diffusion->getMessage();
+            $message = $diffusion->getContent();
             $parts = intval(strlen($message) / 153) + 1;
             $count = sizeof($phones);
             $cost = 1.5 * $parts * $count;
