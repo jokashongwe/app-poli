@@ -85,7 +85,7 @@ class UserController extends AbstractController
     public function deactivate(Request $request, ManagerRegistry $registry, $id): Response
     {
         $user = $registry->getRepository(User::class)->find($id);
-        $user->setActive(false);
+        $user->setActive(!$user->getActive());
         $manager = $registry->getManager();
         $manager->persist($user);
         $manager->flush();

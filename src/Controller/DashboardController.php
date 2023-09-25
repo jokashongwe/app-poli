@@ -24,6 +24,10 @@ class DashboardController extends AbstractController
     #[Route('/dashboard', name: 'dashboard')]
     public function index(ManagerRegistry $entityManager, MembreRepository $membreRepository, CotisationRepository $cotisationRepository): Response
     {
+        $user = $this->getUser();
+        if(!is_null($user) && !$user->getActive()){
+            $this->redirectToRoute("logout");
+        }
         $service = new MessageService($this->getParameter('app.bulksmstoken'));
         $result = $service->getCredits();
         $response = json_decode($result['server_response'], true);
