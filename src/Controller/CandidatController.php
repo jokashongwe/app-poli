@@ -124,5 +124,6 @@ class CandidatController extends AbstractController
         foreach($resultats as $resultat){
             $manager->persist($resultat);
         }
+        return $this->redirectToRoute('app_candidat');
     }
 }
