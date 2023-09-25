@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Cotisation;
 use App\Entity\Federation;
 use App\Entity\Membre;
+use App\Entity\ReferenceData;
 use App\Repository\CotisationRepository;
 use App\Repository\MembreRepository;
+use App\Repository\ReferenceDataRepository;
 use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +24,11 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/dashboard', name: 'dashboard')]
-    public function index(ManagerRegistry $entityManager, MembreRepository $membreRepository, CotisationRepository $cotisationRepository): Response
+    public function index(
+        ManagerRegistry $entityManager, 
+        MembreRepository $membreRepository, 
+        CotisationRepository $cotisationRepository,
+        ReferenceDataRepository $referenceDataRepository): Response
     {
         $user = $this->getUser();
         if(!is_null($user) && !$user->getActive()){
@@ -31,9 +37,22 @@ class DashboardController extends AbstractController
         $service = new MessageService($this->getParameter('app.bulksmstoken'));
         $result = $service->getCredits();
         $response = json_decode($result['server_response'], true);
+        $manager = $entityManager->getManager();
         $credits = 0;
         if(!empty($response)){
             $credits = $response['credits']['balance'];
+            $currentSolde = $referenceDataRepository->findOneBy(['code' => 'CREDITS']);
+            if(is_null($currentSolde)){
+                $currentSolde = new ReferenceData();
+                $currentSolde->setCode('CREDITS');
+                $currentSolde->setValue($credits);
+                $manager->persist($currentSolde);
+                $manager->flush();
+            }elseif($currentSolde->getValue() != $credits){
+                $currentSolde->setValue($credits);
+                $manager->persist($currentSolde);
+                $manager->flush();
+            }
         }
         $licence = $this->getParameter('app.systemlicence');
         //$federations = $entityManager->getRepository(Federation::class)->findAll();

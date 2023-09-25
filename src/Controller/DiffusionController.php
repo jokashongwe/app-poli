@@ -7,6 +7,7 @@ use App\Entity\Membre;
 use App\Form\Type\DiffusionType;
 use App\Repository\DiffusionRepository;
 use App\Repository\MembreRepository;
+use App\Repository\ReferenceDataRepository;
 use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,8 +18,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class DiffusionController extends AbstractController
 {
     #[Route('/diffusion', name: 'diffusion')]
-    public function index(Request $request, ManagerRegistry $doctrine, DiffusionRepository $diffusionRepository, MembreRepository $membreRepository): Response
-    {
+    public function index(
+        Request $request,
+        ManagerRegistry $doctrine,
+        DiffusionRepository $diffusionRepository,
+        MembreRepository $membreRepository,
+        ReferenceDataRepository $referenceDataRepository
+    ): Response {
 
         $diffusion = new Diffusion();
 
@@ -51,6 +57,18 @@ class DiffusionController extends AbstractController
                         array_push($phones, $member->getTelephone());
                     }
                 }
+            }
+            $message = $diffusion->getMessage();
+            $parts = intval(strlen($message) / 153) + 1;
+            $count = sizeof($phones);
+            $cost = 1.5 * $parts * $count;
+            $currentSolde = $referenceDataRepository->findOneBy(['code' => 'CREDITS']);
+            if (is_null($currentSolde)) {
+                $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
+                return $this->redirectToRoute('diffusion');
+            } else if (intval($currentSolde->getValue()) < $cost){
+                $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
+                return $this->redirectToRoute('diffusion');
             }
             $diffusion->setTags($tags);
             $diffusion->setTitre("No-Title");
