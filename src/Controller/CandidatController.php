@@ -122,8 +122,11 @@ class CandidatController extends AbstractController
         }
         $resultats = $candidat->getResultats();
         foreach($resultats as $resultat){
+            $resultat->setCandidat(null);
             $manager->persist($resultat);
         }
+        $manager->remove($candidat);
+        $manager->flush();
         return $this->redirectToRoute('app_candidat');
     }
 }
