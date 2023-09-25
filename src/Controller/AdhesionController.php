@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Membre;
 use App\Entity\Setting;
 use App\Form\Type\MembreType;
+use App\Repository\MembreRepository;
 use App\Repository\SettingRepository;
 use App\Repository\TagRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,7 +25,7 @@ class AdhesionController extends AbstractController
     }
 
     #[Route('/enregistrement', name: 'app_adhesion')]
-    public function index(Request $request, ManagerRegistry $doctrine,TagRepository $tagRepository, SettingRepository $settingRepository): Response
+    public function index(Request $request, ManagerRegistry $doctrine,TagRepository $tagRepository, SettingRepository $settingRepository, MembreRepository $membreRepository): Response
     {
         $membre = new Membre();
         $form = $this->createForm(MembreType::class, $membre);
@@ -40,6 +41,11 @@ class AdhesionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $membre = $form->getData();
+            $p_membre = $membreRepository->findOneBy(['telephone' => $membre->getTelephone()]);
+            if(!is_null($p_membre)){
+                $this->addFlash("error", "Un utilisateur avec ses informations existe déjà dans la Base de données!");
+                return $this->redirectToRoute('membre_new');
+            }
             $membre->setNoidentification($this->generateIdNumber());
             $membre->setDateadhesion(new \DateTimeImmutable());
             $file = $request->files->get("membre")["avatar"];
