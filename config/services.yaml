@@ -8,6 +8,8 @@ parameters:
     app.senderid: '%env(SENDER_ID)%'
     app.sendermode: '%env(SENDER_MODE)%'
     app.systemlicence: '%env(SYSTEM_LICENCE)%'
+    app.vonagekey: '%env(VONAGE_API_KEY)%'
+    app.vonagesecret: '%env(VONAGE_API_SECRET)%'
 
 services:
     # default configuration for services in *this* file

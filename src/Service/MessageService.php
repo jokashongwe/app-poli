@@ -14,7 +14,20 @@ class MessageService
         $this->accessKey = $token;
     }
 
-    public function getCredits(){
+    public function sendOneWhatsappMesssage(string $phone, $message, $key)
+    {
+        $post_body = [
+            "from" => '14157386102',
+            'to' => $phone,
+            "message_type" => "text",
+            "text" => $message,
+            "channel" => "whatsapp"
+        ];
+        return $this->send_message(json_encode($post_body), 'https://messages-sandbox.nexmo.com/v1/messages', $key);
+    }
+
+    public function getCredits()
+    {
         $token = $this->accessKey;
         $url = "https://api.bulksms.com/v1/profile?auto-unicode=true&longMessageMaxParts=30";
         $ch = curl_init();
@@ -24,7 +37,7 @@ class MessageService
         );
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);

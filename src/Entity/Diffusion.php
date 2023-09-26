@@ -39,6 +39,12 @@ class Diffusion
     #[ORM\Column(type: 'json', nullable: true)]
     private $tags = [];
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $canal = [];
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $richText;
+
     public function __construct()
     {
         if(is_null($this->startDate)){
@@ -143,6 +149,30 @@ class Diffusion
     public function setTags(?array $tags): self
     {
         $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function getCanal(): ?array
+    {
+        return $this->canal;
+    }
+
+    public function setCanal(?array $canal): self
+    {
+        $this->canal = $canal;
+
+        return $this;
+    }
+
+    public function getRichText(): ?string
+    {
+        return $this->richText;
+    }
+
+    public function setRichText(?string $richText): self
+    {
+        $this->richText = $richText;
 
         return $this;
     }

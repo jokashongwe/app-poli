@@ -125,5 +125,40 @@
         new TomSelect('#diffusion_tags', {
             maxItems: 5,
         });
+        new TomSelect('#diffusion_canal', {
+            maxItems: 5,
+        });
+    </script>
+    <script>
+        const messageArea = document.getElementById("diffusion_content");
+        const smsCounter = document.getElementById("sms_counter");
+        messageArea.onkeyup = function(val){
+            let no_chars = messageArea.value.length;
+            if(no_chars == 0){
+                smsCounter.innerText = ''
+            }else {
+                const count = parseInt(no_chars / 150) + 1;
+                smsCounter.innerText = count + ' SMS';
+            }
+            
+        }
+        const diffusion_canal = document.getElementById("diffusion_canal");
+        const richtext_container = document.getElementById("richtext_container");
+        const normal_content = document.getElementById("normal_content");
+
+        diffusion_canal.addEventListener("change", (event) => {
+            var options = document.getElementById('diffusion_canal').selectedOptions;
+            var values = Array.from(options).map(({ value }) => value);
+            if(values.includes('WHA')){
+                richtext_container.style.display = 'block';
+            }else {
+                richtext_container.style.display = 'none';
+            }
+            if(values.includes('SMS')){
+                normal_content.style.display = 'block';
+            }else {
+                normal_content.style.display = 'none';
+            }
+        });
     </script>
 {% endblock %}

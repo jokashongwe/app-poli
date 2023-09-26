@@ -10,6 +10,7 @@ use App\Repository\MembreRepository;
 use App\Repository\ReferenceDataRepository;
 use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpOffice\PhpSpreadsheet\Calculation\Web\Service;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,24 +59,41 @@ class DiffusionController extends AbstractController
                     }
                 }
             }
-            $message = $diffusion->getContent();
-            $parts = intval(strlen($message) / 153) + 1;
-            $count = sizeof($phones);
-            $cost = 1.5 * $parts * $count;
-            $currentSolde = $referenceDataRepository->findOneBy(['code' => 'CREDITS']);
-            if (is_null($currentSolde)) {
-                $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
-                return $this->redirectToRoute('diffusion');
-            } else if (intval($currentSolde->getValue()) < $cost){
-                $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
-                return $this->redirectToRoute('diffusion');
+            $cannaux = $diffusion->getCanal();
+            $nPhones = sizeof($phones);
+            if(in_array("SMS", $cannaux)){
+                $message = $diffusion->getContent();
+                $parts = intval(strlen($message) / 153) + 1;
+                $count = sizeof($phones);
+                $cost = 1.5 * $parts * $count;
+                $currentSolde = $referenceDataRepository->findOneBy(['code' => 'CREDITS']);
+                if (is_null($currentSolde)) {
+                    $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
+                    return $this->redirectToRoute('diffusion');
+                } else if (intval($currentSolde->getValue()) < $cost){
+                    $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
+                    return $this->redirectToRoute('diffusion');
+                }
+                $this->send($phones, $diffusion);
+            }
+            if (in_array("WHA", $cannaux)){
+                $message = $diffusion->getRichText();
+                $service = new MessageService('no-token');
+                $secret = $this->getParameter('app.vonagekey') .':'. $this->getParameter('app.vonagesecret');
+                $result = $service->sendOneWhatsappMesssage(str_replace('+', '', $phones[0]), $message, base64_encode($secret));
+                if ($result['http_status'] <= 300) {
+                    $this->addFlash("notice", "Les messages whatsapp ont été correctement transférée!");
+                } else {
+                    $this->addFlash("error", "Une erreur lors de l'envoie via whatsapp, réessayez plus tard!");
+                }
+            }
+            if(is_null($diffusion->getContent())){
+                $diffusion->setContent("voir vontenu enrichie...");
             }
             $diffusion->setTags($tags);
             $diffusion->setTitre("No-Title");
             $diffusion->setFederations($federations);
             $diffusion->setVisible(true);
-            $nPhones = 0;
-            $nPhones = $this->send($phones, $diffusion);
             $diffusion->setNumberOfMembers($nPhones);
             $entityManager = $doctrine->getManager();
             $entityManager->persist($diffusion);
@@ -124,10 +142,10 @@ class DiffusionController extends AbstractController
                     $this->getParameter('app.senderid'),
                     $this->getParameter('app.sendermode')
                 );
-                if ($result['http_status'] <= 201) {
-                    $this->addFlash("notice", "Les messages ont été correctement transférée!");
+                if ($result['http_status'] <= 300) {
+                    $this->addFlash("notice", "Les SMS ont été correctement transférée!");
                 } else {
-                    $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
+                    $this->addFlash("error", "Une erreur lors de la transmissions des SMS, réessayez plus tard!");
                 }
             }
         } catch (\Throwable $th) {
