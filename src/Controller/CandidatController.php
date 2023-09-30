@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\Type\CandidatType;
 use App\Repository\CandidatRepository;
 use App\Repository\ResultatRepository;
+use App\Repository\SettingRepository;
 use App\Repository\UserRepository;
 use App\Service\MessageService;
 use DateTime;
@@ -21,7 +22,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class CandidatController extends AbstractController
 {
     #[Route('/candidat', name: 'app_candidat')]
-    public function index(Request $request, ManagerRegistry $doctrine,ResultatRepository $resultatRepository, UserRepository $userRepository, CandidatRepository $candidatRepository, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    public function index(
+        Request $request, 
+        ManagerRegistry $doctrine, 
+        ResultatRepository $resultatRepository, 
+        UserRepository $userRepository, 
+        CandidatRepository $candidatRepository, 
+        UserPasswordHasherInterface $userPasswordHasherInterface,
+        SettingRepository $settingRepository
+    ): Response
     {
         $candidat = new Candidat();
 
@@ -53,7 +62,13 @@ class CandidatController extends AbstractController
             $entityManager = $doctrine->getManager();
             $code =  rand(300000, 999999);
             $candidat->setBackupCode($code);
-            $message = "Bonjour, vous avez ete ajouter comme candidat sur la plateforme du regroupement XYZ, PIN: " . $code;
+            $setting = $settingRepository->findAll();
+            $sigle = "";
+            if (!empty($setting)) {
+                $setting = $setting[0];
+                $sigle = $setting->getSigle();
+            }
+            $message = "Bonjour, vous avez ete ajouter comme candidat sur la plateforme du regroupement/parti $sigle, PIN: " . $code;
             $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
             $result = $msgService->sendManySMS(
                 $message,

@@ -45,8 +45,10 @@ class TemoinController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $setting = $settingRepository->findAll();
+            $sigle = "";
             if (!empty($setting)) {
                 $setting = $setting[0];
+                $sigle = $setting->getSigle();
             }
 
             $temoin = $form->getData();
@@ -61,7 +63,7 @@ class TemoinController extends AbstractController
             $entityManager = $doctrine->getManager();
             $code =  rand(300000, 999999);
             $temoin->setBackupCode($code);
-            $message = "Bonjour, vous etes desormais temoin dans le regroupement " . $setting->getSigle() . ", PIN: " . $code;
+            $message = "Bonjour, vous etes desormais temoin dans le regroupement/parti $sigle, PIN: " . $code;
             $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
             $result = $msgService->sendManySMS(
                 $message,
