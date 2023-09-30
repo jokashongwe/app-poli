@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Membre;
 use App\Entity\Setting;
+use App\Form\Type\AdhestionType;
 use App\Form\Type\MembreType;
 use App\Repository\MembreRepository;
 use App\Repository\SettingRepository;
@@ -28,7 +29,7 @@ class AdhesionController extends AbstractController
     public function index(Request $request, ManagerRegistry $doctrine,TagRepository $tagRepository, SettingRepository $settingRepository, MembreRepository $membreRepository): Response
     {
         $membre = new Membre();
-        $form = $this->createForm(MembreType::class, $membre);
+        $form = $this->createForm(AdhestionType::class, $membre);
 
         $setting = $settingRepository->findAll();
         if(!empty($setting)){
@@ -49,14 +50,16 @@ class AdhesionController extends AbstractController
             $membre->setNoidentification($this->generateIdNumber());
             $membre->setDateadhesion(new \DateTimeImmutable());
             $file = $request->files->get("membre")["avatar"];
-            $extension = $file->guessExtension();
-            if (!$extension) {
-                $extension = 'bin';
+            if(!is_null($file)){
+                $extension = $file->guessExtension();
+                if (!$extension) {
+                    $extension = 'bin';
+                }
+                $filename = rand(1, 99999) . '.' . $extension;
+                $file->move('../public/uploads', $filename);
+                $filename = "uploads" . "/" . $filename;
+                $membre->setAvatar($filename);
             }
-            $filename = rand(1, 99999) . '.' . $extension;
-            $file->move('../public/uploads', $filename);
-            $filename = "uploads" . "/" . $filename;
-            $membre->setAvatar($filename);
             $tagGen = $tagRepository->findOneBy(['code' => 'GENERAL']);
             if(!is_null($tagGen)){
                 $membre->addTag($tagGen);

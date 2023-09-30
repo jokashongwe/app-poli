@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class LoginController extends AbstractController
 {
 
-    private $copyrightText = "© 2022";
+    private $copyrightText = "© 2023";
 
     #[Route('/', name: 'login')]
     public function index(AuthenticationUtils $authenticationUtils): Response
@@ -18,13 +18,21 @@ class LoginController extends AbstractController
 
         //Recuperer les erreurs de login, s'il y en a 
         $error = $authenticationUtils->getLastAuthenticationError();
+        $message = null;
+        if(!is_null($error)){
+            $message = $error->getMessage();
+            if(strpos($message, "credentials") >= 0){
+                $message = "Identifiants invalides";
+            }
+        }
+        
       
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('login/index.html.twig', [
             'controller_name' => 'LoginController',
             'last_username'   => $lastUsername,
-            'error'           => $error,
+            'error'           => $message,
             'copyrightText'   => $this->copyrightText  
         ]);
     }

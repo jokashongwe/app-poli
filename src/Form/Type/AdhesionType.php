@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\File;
 
-class MembreType extends AbstractType
+class AdhestionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -52,13 +52,6 @@ class MembreType extends AbstractType
             ->add('federation', EntityType::class, [
                 'class' => Federation::class,
                 'choice_label' => 'nom',
-            ])
-            ->add('tags', EntityType::class, [
-                'class' => Tag::class,
-                'label' => 'Groupe',
-                'choice_label' => 'name',
-                'required' => false,
-                'multiple' => true
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'Téléphone',

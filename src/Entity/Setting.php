@@ -16,7 +16,7 @@ class Setting
     #[ORM\Column(type: 'string', length: 255)]
     private $president;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $photoPresident;
 
     #[ORM\Column(type: 'string', length: 255)]

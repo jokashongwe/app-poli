@@ -48,7 +48,7 @@
             <h3 class="mb-3 text-md font-200 tracking-tight text-gray-900 dark:text-white uppercase mt-3">Témoins
             </h3>
             <div class="relative overflow-x-auto shadow-md border">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <table id="resultat_vote" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3">
@@ -83,12 +83,21 @@
                     </tbody>
                 </table>
             </div>
-
+            <td class="px-6 py-4">
+                <a href="/resultats/pvs/{{ resultat.id }}" >Afficher les PVs</a>
+            </td>
          </div>
 
     
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let table = new DataTable('#resultat_vote', {
+                language: {
+                    url: '/plugin/datatable.json'
+                }
+            });
+        });
         const data = {
             labels: [
                 'Total Votants',
@@ -172,6 +181,8 @@
             document.getElementById('federationchart'),
             config2
         );
+
+        
 
     </script>
 

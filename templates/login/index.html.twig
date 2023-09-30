@@ -6,9 +6,23 @@
 	<style>
 		.gradient-custom-2 {
 			/* fallback for old browsers */
-			background: rgb(2,0,36);
-      background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 0%, rgba(0,212,255,1) 90%);
+			background: rgb(10, 10,10, 0.6);
+      background-image: url("/images/banner.jpeg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-blend-mode: multiply;
 		}
+
+    .text-small{
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    .error{
+      color: red;
+      font-size: 14px;
+      font-weight: 300;
+    }
 
 		@media (min-width: 768px) {
 			.gradient-form {
@@ -29,22 +43,21 @@
 
 {% block body %}
 <section class="h-100 gradient-form" style="background-color: #e3f1fc;">
-  <div class="container py-5 h-100">
+  <div class="h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-xl-10">
-        <div class="card rounded-3 text-black">
-          <div class="row g-0">
+      <div class="col-xl-12 h-100">
+        <div class="card rounded-3 text-black h-100">
+          <div class="row g-0 h-100">
             <div class="col-lg-6">
               <div class="card-body p-md-5 mx-md-4">
 
-                <div class="text-center">
-                  <img src="/images/draw2.webp"
-                    style="width: 150px;" alt="logo">
-                  <h4 class="mt-1 mb-5 pb-1">Portail Central</h4>
+                <div class="text-black mt-5 mb-5 pb-1">
+                  <h1>Connexion</h1>
+                  <p class="text-small" >Gérer tout votre parcours éléctoral en quelques cliques de la mobilisation au échéances éléctoral</p>
                 </div>
 
                 <form action="{{ path('login') }}" method="post" >
-                  <p>Connectez-vous à votre compte</p>
+                  
 
                   <div class="form-outline mb-4">
                     <input type="text" id="form2Example11" class="form-control"
@@ -56,14 +69,14 @@
                     <input type="password" name="_password" id="form2Example22" class="form-control" />
                     <label class="form-label" for="form2Example22">Mot de passe</label>
                   </div>
-
+                  {% if error %}
+                    <p class="error" >{{ error }}</p>
+                  {% endif %}
                   <div class="text-center pt-1 mb-5 pb-1">
                     <button class="btn btn-primary btn-block fa-lg py-3 mb-3" type="submit">Se Connecter</button>
                     <a class="text-muted" href="#!">Mot de passe oublié ? Contactez l'administrateur</a>
                   </div>
-                  {% if error %}
-                    <p class="error" >{{ error.messageKey|trans(error.messageData, 'security') }}</p>
-                {% endif %}
+                  
                   <input type="hidden" name="_target_path" value="{{ path('dashboard') }}"/>
 
 				    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -72,15 +85,9 @@
 
               </div>
             </div>
-            <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+            <div class="col-lg-6 d-flex align-items-center pb-5 gradient-custom-2">
               <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                <h4 class="mb-4">Portail de Gestion</h4>
-                <p class="small mb-0 justify">
-                    Ce portail vous permet de gérer votre bases de données des membres, 
-                    créer des campagnes de diffusion SMS filtrer suivant vos provinces et fédérations d'activitées.
-                    Ce portail vise à vous accompagner efficacement dans toutes les phases d'une éléction vous donnant
-                    de ce fait les meilleurs cartes entre les mains tant pour la mobilisation que pour la phase électorale
-                </p>
+                
               </div>
             </div>
           </div>

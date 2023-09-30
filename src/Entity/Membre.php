@@ -39,10 +39,10 @@ class Membre
     #[ORM\OneToMany(mappedBy: 'membre', targetEntity: Cotisation::class)]
     private $cotisations;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $noidentification;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $genre;
 
     #[ORM\Column(type: 'string', length: 255)]

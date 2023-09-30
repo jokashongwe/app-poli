@@ -269,11 +269,11 @@
         let postnom = document.getElementById("membre_postnom");
         let prenom = document.getElementById("membre_prenom");
         let genre = document.getElementById("membre_genre");
-        let datenaissance = document.getElementById("membre_datenaissance");
+        //let datenaissance = document.getElementById("membre_datenaissance");
         let photo = document.getElementById("membre_photo");
         let telephone = document.getElementById("membre_telephone");
         let adresse = document.getElementById("membre_adresse");
-        let numerocarte = document.getElementById("membre_numerocarte");
+        //let numerocarte = document.getElementById("membre_numerocarte");
         let avatar = document.getElementById("membre_avatar")
         let btnSave = document.getElementById("membre_save");
         let form = document.getElementsByName("membre")[0] ;
@@ -284,10 +284,10 @@
             postnom.value = _postnom;
             prenom.value = _prenom;
             genre.value = _genre;
-            datenaissance.value = _datenaissance;
+            //datenaissance.value = _datenaissance;
             telephone.value = _telephone;
             adresse.value = _adresse;
-            numerocarte.value =_numerocarte;
+            //numerocarte.value =_numerocarte;
             var filepath = "{{ url('login') }}" + _avatar;
             console.log(filepath);
             avatar.src = filepath;
@@ -331,7 +331,7 @@
             postnom.value = "";
             prenom.value = "";
             genre.value = "" ;
-            datenaissance.value = "";
+            //datenaissance.value = "";
             telephone.value = "";
             adresse.value = "";
             avatar.src = "";

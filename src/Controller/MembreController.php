@@ -64,6 +64,10 @@ class MembreController extends AbstractController
              */
             $tagGen = $tagRepository->findOneBy(['code' => 'GENERAL']);
             $membre->addTag($tagGen);
+            if(is_null($membre->getFederation())){
+                $this->addFlash("error", "La fédération du membre est obligatoire");
+                return $this->redirectToRoute('membre_new');
+            }
             $nom = $membre->getFederation()->getNom();
             $fedTag = $tagRepository->findOneBy(['name' => $nom]); // ajout dans le groupe de la fédération
             if (!is_null($fedTag)) {
@@ -151,7 +155,9 @@ class MembreController extends AbstractController
             $membre->setPrenom($nvoMembre->getPrenom());
             $membre->setTelephone($nvoMembre->getTelephone());
             $membre->setGenre($nvoMembre->getGenre());
-            $membre->setDatenaissance($nvoMembre->getDatenaissance());
+            if(!is_null($nvoMembre->getDatenaissance())){
+                $membre->setDatenaissance($nvoMembre->getDatenaissance());
+            }
             $membre->setAdresse($nvoMembre->getAdresse());
             $membre->setQualite($nvoMembre->getQualite());
 

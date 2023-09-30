@@ -32,25 +32,26 @@ class SettingController extends AbstractController
 
             $photoPresident = $request->files->get("setting")["photoPresident"];
             $logo = $request->files->get("setting")["logo"];
-            $extension = $photoPresident->guessExtension();
-            $extensionLogo = $logo->guessExtension();
-            if (!$extension) {
-                // extension cannot be guessed
-                $extension = 'bin';
+            if(!is_null($logo)){
+                $extension = $photoPresident->guessExtension();
+                $extensionLogo = $logo->guessExtension();
+                if (!$extension) {
+                    // extension cannot be guessed
+                    $extension = 'bin';
+                }
+                if (!$extensionLogo) {
+                    // extension cannot be guessed
+                    $extensionLogo = 'bin';
+                }
+                $filename = rand(200000, 999990) . '.' . $extension;
+                $filenameLogo = rand(200000, 999990) . '.' . $extensionLogo;
+                $photoPresident->move('../public/uploads', $filename);
+                $logo->move('../public/uploads', $filenameLogo);
+                $filename = "uploads" . "/" . $filename;
+                $filenameLogo = "uploads" . "/" . $filenameLogo;
+                $setting->setPhotoPresident($filename);
+                $setting->setLogo($filenameLogo);
             }
-            if (!$extensionLogo) {
-                // extension cannot be guessed
-                $extensionLogo = 'bin';
-            }
-            $filename = rand(200000, 999990) . '.' . $extension;
-            $filenameLogo = rand(200000, 999990) . '.' . $extensionLogo;
-            $photoPresident->move('../public/uploads', $filename);
-            $logo->move('../public/uploads', $filenameLogo);
-            $filename = "uploads" . "/" . $filename;
-            $filenameLogo = "uploads" . "/" . $filenameLogo;
-            $setting->setPhotoPresident($filename);
-            $setting->setLogo($filenameLogo);
-            
             $entityManager = $doctrine->getManager();
             $entityManager->persist($setting);
             $entityManager->flush();
