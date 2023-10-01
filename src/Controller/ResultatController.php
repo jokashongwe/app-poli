@@ -49,7 +49,7 @@ class ResultatController extends AbstractController
         $candidat = $candidatRepository->find($id);
         if(is_null($candidat)){
             $this->addFlash('error', "Identifiant du candidat non valide");
-            $this->redirectToRoute('app_candidat');
+            return $this->redirectToRoute('app_candidat');
         }
         $resultats = $resultatRepository->findBy(['candidat' => $id]);
         $all_pv = [];
