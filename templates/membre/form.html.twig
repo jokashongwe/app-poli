@@ -1,7 +1,7 @@
 <script src="https://unpkg.com/flowbite@1.4.1/dist/datepicker.js"></script>
 {% if form %}
     {{ form_start(form) }}
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid md:grid-cols-2 gap-2 grid-cols-1">
         
             <div class="mb-6">
                 {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
@@ -14,7 +14,7 @@
             </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid md:grid-cols-2 gap-2 grid-cols-1">
         <div class="mb-6">
             {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
             {{ form_widget(form.prenom, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid md:grid-cols-2 gap-2 grid-cols-1">
         <div class="mb-6">
         {{ form_label(form.adresse, 'Adresse', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
         {{ form_widget(form.adresse, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
@@ -36,7 +36,7 @@
         </div>
     </div>
     
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid md:grid-cols-2 gap-2">
         <div class="mb-6">
             {{ form_label(form.telephone, 'Téléphone', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
             {{ form_widget(form.telephone, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
