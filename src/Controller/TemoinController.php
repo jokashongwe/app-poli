@@ -74,6 +74,7 @@ class TemoinController extends AbstractController
                     $this->getParameter('app.senderid'),
                     $this->getParameter('app.sendermode')
                 );
+                $temoinUser = new User();
                 //$telephone = str_replace('+243', '0', $telephone);
                 if ($result['http_status'] < 300 && !is_null($temoinUser)) {
                     $temoinUser->setUsername(str_replace("+243", "0", $telephone));
