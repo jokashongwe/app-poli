@@ -24,7 +24,7 @@
 
                 </a>
 
-                {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
+                {% if get_env("SYSTEM_LICENCE") != 'CHURCH' and  get_env("FIN_APPLY") == "YES"  %}
                     <a href="#" class="block p-6  bg-green-500  rounded border border-gray-200 shadow-md hover:bg-green-700 dark:border-gray-700 dark:hover:bg-gray-700">
                         <h5 class="mb-2 text-2xl  tracking-tight text-white dark:text-white">Cotisations</h5>
                         <div class="grid grid-cols-2 gap-1">
