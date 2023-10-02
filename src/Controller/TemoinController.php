@@ -158,6 +158,9 @@ class TemoinController extends AbstractController
             $files = $request->files->all();
             $filenames = $this->upload_files($files);
             $temoin = $temoinRepository->find($id);
+            if(is_null($temoin)){
+                return $this->json(['data' => [], 'message' => "temoin n'existe pas avec id $id", 'success' => false], 400);
+            }
             $codeBV = '' . $temoin->getBureauVote()->getCode();
             $resultatObject = $resultatRepository->findBy(['codeBV' => $codeBV, 'temoin' => $temoin]);
             if (!empty($resultatObject)) {
