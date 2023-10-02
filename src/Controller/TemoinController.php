@@ -58,7 +58,11 @@ class TemoinController extends AbstractController
                  */
                 $membre = $temoin->getMembre();
                 $telephone = $membre->getTelephone();
-
+                $temoinUser = $userRepository->findOneBy(['username' => str_replace("+243", "0", $telephone)]);
+                if (!is_null($temoinUser)) {
+                    $this->addFlash("notice", "Un erreur est survenue, témoin déjà existant");
+                    return $this->redirectToRoute('app_temoin');
+                }
                 $entityManager = $doctrine->getManager();
                 $code =  rand(300000, 999999);
                 $temoin->setBackupCode($code);
@@ -70,12 +74,8 @@ class TemoinController extends AbstractController
                     $this->getParameter('app.senderid'),
                     $this->getParameter('app.sendermode')
                 );
-                $telephone = str_replace('+243', '0', $telephone);
-                if ($result['http_status'] == 201) {
-                    $temoinUser = $userRepository->findOneBy(['username' => $telephone]);
-                    if (empty($temoinUser)) {
-                        $temoinUser = new User();
-                    }
+                //$telephone = str_replace('+243', '0', $telephone);
+                if ($result['http_status'] < 300 && !is_null($temoinUser)) {
                     $temoinUser->setUsername(str_replace("+243", "0", $telephone));
                     $temoinUser->setNom($membre->getNom());
                     $temoinUser->setPostnom($membre->getPostnom());
