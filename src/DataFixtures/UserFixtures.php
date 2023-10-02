@@ -20,7 +20,7 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $user = new User();
-        $user->setUsername('admin');
+        $user->setUsername('admin_243');
         $user->setNom('Administrateur');
         
         $user->setDatecreation(new \DateTimeImmutable());
