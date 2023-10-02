@@ -25,14 +25,6 @@ class DiffusionType extends AbstractType
                 'multiple' => true,
                 'required' => false
             ])
-            ->add("canal", ChoiceType::class, [
-                'choices'  => [
-                    'SMS' => "SMS",
-                    'Whatapp' => "WHA"
-                ],
-                'multiple' => true,
-            ])
-            ->add("richText", TextareaType::class, ['required' => false])
             ->add('save', SubmitType::class, ['label' => 'Envoyer une diffusion']);
         ;
     }

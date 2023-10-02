@@ -1,53 +1,18 @@
 <script src="https://unpkg.com/flowbite@1.4.1/dist/datepicker.js"></script>
 {% if form %}
     {{ form_start(form) }}
-    <div class="grid md:grid-cols-2 gap-2 grid-cols-1">
-        
+    
             <div class="mb-6">
                 {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
                 {{ form_widget(form.nom, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
             </div>
-
-            <div class="mb-6">
-                {{ form_label(form.postnom, 'Postnom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
-                {{ form_widget(form.postnom, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
-            </div>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-2 grid-cols-1">
-        <div class="mb-6">
-            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
-            {{ form_widget(form.prenom, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
-        </div>
-        <div class="mb-6">
-            {{ form_label(form.avatar, 'Photo', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
-            {{ form_widget(form.avatar, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
-        </div>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-2 grid-cols-1">
-        <div class="mb-6">
-        {{ form_label(form.adresse, 'Adresse', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
-        {{ form_widget(form.adresse, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
-        </div>
-        <div class="mb-6">
-            {{ form_label(form.genre, 'Sexe', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
-            {{ form_widget(form.genre, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
-        </div>
-    </div>
     
-    <div class="grid md:grid-cols-2 gap-2">
+    
         <div class="mb-6">
             {{ form_label(form.telephone, 'Téléphone', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
             {{ form_widget(form.telephone, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
         </div>
         
-        <div class="mb-6">
-            {{ form_label(form.federation, 'Fédération', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
-            {{ form_widget(form.federation, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}
-        </div>
-    </div>
-
     <div class="mb-6">
         {{ form_label(form.tags, 'Groupes', {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'}}) }}
         {{ form_widget(form.tags, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700'}}) }}

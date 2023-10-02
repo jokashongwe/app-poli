@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Diffusion;
 use App\Entity\Membre;
+use App\Entity\ReferenceData;
 use App\Form\Type\DiffusionType;
 use App\Repository\DiffusionRepository;
 use App\Repository\MembreRepository;
@@ -61,7 +62,7 @@ class DiffusionController extends AbstractController
             }
             $cannaux = $diffusion->getCanal();
             $nPhones = sizeof($phones);
-            if(in_array("SMS", $cannaux)){
+            if (in_array("SMS", $cannaux)) {
                 $message = $diffusion->getContent();
                 $parts = intval(strlen($message) / 153) + 1;
                 $count = sizeof($phones);
@@ -70,16 +71,16 @@ class DiffusionController extends AbstractController
                 if (is_null($currentSolde)) {
                     $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
                     return $this->redirectToRoute('diffusion');
-                } else if (intval($currentSolde->getValue()) < $cost){
+                } else if (intval($currentSolde->getValue()) < $cost) {
                     $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
                     return $this->redirectToRoute('diffusion');
                 }
                 $this->send($phones, $diffusion);
             }
-            if (in_array("WHA", $cannaux)){
+            if (in_array("WHA", $cannaux)) {
                 $message = $diffusion->getRichText();
                 $service = new MessageService('no-token');
-                $secret = $this->getParameter('app.vonagekey') .':'. $this->getParameter('app.vonagesecret');
+                $secret = $this->getParameter('app.vonagekey') . ':' . $this->getParameter('app.vonagesecret');
                 $result = $service->sendOneWhatsappMesssage(str_replace('+', '', $phones[0]), $message, base64_encode($secret));
                 if ($result['http_status'] <= 300) {
                     $this->addFlash("notice", "Les messages whatsapp ont été correctement transférée!");
@@ -87,7 +88,7 @@ class DiffusionController extends AbstractController
                     $this->addFlash("error", "Une erreur lors de l'envoie via whatsapp, réessayez plus tard!");
                 }
             }
-            if(is_null($diffusion->getContent())){
+            if (is_null($diffusion->getContent())) {
                 $diffusion->setContent("voir vontenu enrichie...");
             }
             $diffusion->setTags($tags);
@@ -102,11 +103,29 @@ class DiffusionController extends AbstractController
             return $this->redirectToRoute('diffusion');
         }
 
-
+        $credits = 50 * 1.5;
+        $manager = $doctrine->getManager();
+        if (!empty($response)) {
+            $credits = $response['credits']['balance'];
+            $currentSolde = $referenceDataRepository->findOneBy(['code' => 'CREDITS']);
+            if (is_null($currentSolde)) {
+                $currentSolde = new ReferenceData();
+                $currentSolde->setCode('CREDITS');
+                $currentSolde->setValue($credits);
+                $manager->persist($currentSolde);
+                $manager->flush();
+            } elseif ($currentSolde->getValue() != $credits) {
+                $currentSolde->setValue($credits);
+                $manager->persist($currentSolde);
+                $manager->flush();
+            }
+        }
         return $this->renderForm('diffusion/index.html.twig', [
             'controller_name' => 'DiffusionController',
             'form' => $form,
-            'diffusions' => $diffusionRepository->findBy(['visible' => true])
+            'membreCount' => $membreRepository->count(['visible' => null]),
+            'diffusions' => $diffusionRepository->findBy(['visible' => true]),
+            'credits' => $credits
         ]);
     }
 

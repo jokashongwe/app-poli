@@ -6,8 +6,6 @@
 
 {% block body %}
     <div class="container">
-        <h3 class="mb-3 text-md font-200 tracking-tight uppercase text-gray-900 dark:text-white  mt-3">Membres
-        </h3>
         <a href="{{ path('membre_new') }}" class="mt-5 py-3 px-5 mr-2 mb-5 text-sm font-medium text-white rounded focus:outline-none bg-gray-700 rounded-sm border border-gray-200" >
             Rafraichir
         </a>
@@ -15,16 +13,10 @@
         <table id="membre-data" class="display dataTable w-full text-sm text-left text-gray-500" style="width:100%" aria-describedby="example_info">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50" >
                 <tr>
-                    <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >N° CARTE</th>
                     <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Nom</th>
-                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >Postnom</th>
-                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >Prenom</th>
-                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Sexe</th>
-                    {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
-                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Federation</th>
-                    {% endif %}
+                    <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Téléphone</th>
+                    
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Groupes</th>
-                    <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Date adhésion</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Actions</th>
                 </tr>
             </thead>
@@ -32,39 +24,11 @@
                 {% for membre in membres %}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <td class="px-6 ">
-                                {{ membre.noidentification }}
-                            </td>
-                            <td class="px-6 ">
                                 {{ membre.nom }}
                             </td>
                             <td class="px-6 ">
-                                {{ membre.postnom }}
-                            </td>
-                            <td class="px-6 ">
-                                {{ membre.prenom }}
-                            </td>
-                            <td class="px-6 ">
-                                {{ membre.genre }}
-                            </td>
-                            
-                            {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
-                                {% if membre.federation %}
-
-                                    {% if membre.federation.federation %}
-                                        <td class="px-6 ">
-                                            {{ membre.federation.federation.nom }}
-                                        </td>
-                                    {% else %}
-                                        <td class="px-6 ">
-                                            {{ membre.federation.nom }}
-                                        </td>    
-                                    {% endif %}
-                                {% else %}
-                                    <td class="px-6 ">
-                                        -
-                                    </td> 
-                                {% endif %}
-                            {% endif %}
+                                {{ membre.telephone }}
+                            </td> 
                             <td class="px-6 ">
                                     {% for tag in membre.tags %}
                                         <span style="display: inline-block; padding:0.3rem; background-color: #2eb050; color: #fff; margin: 0.3rem; border-radius: 2px" class="shaddow-md" >
@@ -73,9 +37,6 @@
                                     {% endfor %}
 
                             </td>
-                            <td class="px-6 ">
-                                {{ membre.dateadhesion | date("d/m/Y")  }}
-                            </td>
                             
                             <td class="text-center">
                                     <span style=" display: inline-block; text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;" onclick="updatemembre('{{ membre.id }}','{{ membre.nom }}', '{{ membre.postnom }}','{{ membre.prenom }}','{{ membre.genre }}','{{ membre.telephone }}', '{{ membre.datenaissance | date("Y-m-d") }}', '{{ membre.avatar }}','{{membre.federation ? membre.federation.id : '' }}', ' {{ membre.adresse }} ', ' {{ membre.numerocarte }} ')" class="cursor-pointer font-sm text-gray-600 hover:bg-yellow-500 hover:text-gray-100">Modifier</span>
@@ -83,7 +44,7 @@
                                         style=" display: inline-block; text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;" 
                                         href="/membre/delete/{{ membre.id }}"
                                         class="cursor-pointer font-sm bg-red-900 text-white hover:bg-red-500 hover:text-gray-100">Supprimer</a>
-                                {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
+                                {% if get_env("SYSTEM_LICENCE") != 'CHURCH' and  get_env("SYSTEM_LICENCE") != 'MARKETING' %}
                                     {% if is_granted('ROLE_COTISATION') or is_granted("ROLE_ADMIN") %}
                                         <span style=" display: inline-block; text-decoration: none; border: 1px solid #e0e0e0; padding: 8px;"  class="cursor-pointer font-sm text-gray-100  bg-yellow-500 hover:bg-yellow-300 hover:text-gray-100"> <a href="{{ path('cotisation_show', {'id': membre.id })  }}" >Voir les cotisations</a> </span>
                                     {% endif %}
@@ -94,16 +55,10 @@
             </tbody>
             <tfoot class="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                    <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >No. Identifation</th>
-                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Nom</th>
-                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" >POSTNOM</th>
-                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" >PRENOM</th>
-                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >SEXE</th>
-                    {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
-                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >FEDERATION</th>
-                    {% endif  %}
+                    <th scope="col"  class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Nom</th>
+                    <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" >Numéro</th>
                     <th scope="col" class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" >Groupes</th>
-                    <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >DATE ADHESION</th>
+                    
                     <th tabindex="0" aria-controls="example" rowspan="1" colspan="1" >ACTIONS</th>
                 </tr>
             </tfoot>
@@ -134,12 +89,7 @@
                 <i class="fas fa-upload"></i>
                 Importer depuis Excel
             </button>
-            {% if get_env("SYSTEM_LICENCE") == 'FULL' %}
-            <button id="imprimercarte" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-red-700 rounded-sm hover:bg-red-200 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200" type="button" data-modal-toggle="excelModal">
-                <i class="fas fa-print"></i>
-                Imprimer les cartes
-            </button>
-            {% endif %}
+            
         </div>
         
         <!-- Main modal -->
@@ -266,31 +216,31 @@
 
         let btnClose = document.getElementById("closemodal");
         let nom = document.getElementById("membre_nom");
-        let postnom = document.getElementById("membre_postnom");
-        let prenom = document.getElementById("membre_prenom");
-        let genre = document.getElementById("membre_genre");
+        //let postnom = document.getElementById("membre_postnom");
+        //let prenom = document.getElementById("membre_prenom");
+        //let genre = document.getElementById("membre_genre");
         //let datenaissance = document.getElementById("membre_datenaissance");
-        let photo = document.getElementById("membre_photo");
+        //let photo = document.getElementById("membre_photo");
         let telephone = document.getElementById("membre_telephone");
-        let adresse = document.getElementById("membre_adresse");
+        //let adresse = document.getElementById("membre_adresse");
         //let numerocarte = document.getElementById("membre_numerocarte");
-        let avatar = document.getElementById("membre_avatar")
+        //let avatar = document.getElementById("membre_avatar")
         let btnSave = document.getElementById("membre_save");
         let form = document.getElementsByName("membre")[0] ;
 
         function updatemembre(_id, _nom, _postnom, _prenom, _genre,_telephone,  _datenaissance, _avatar, _federation, _adresse, _numerocarte){
             
             nom.value = _nom;
-            postnom.value = _postnom;
-            prenom.value = _prenom;
-            genre.value = _genre;
+            //postnom.value = _postnom;
+            //prenom.value = _prenom;
+            //genre.value = _genre;
             //datenaissance.value = _datenaissance;
             telephone.value = _telephone;
-            adresse.value = _adresse;
+            //adresse.value = _adresse;
             //numerocarte.value =_numerocarte;
             var filepath = "{{ url('login') }}" + _avatar;
-            console.log(filepath);
-            avatar.src = filepath;
+            ///console.log(filepath);
+            //avatar.src = filepath;
             
 
             modal.style.display = "block";
@@ -301,7 +251,7 @@
             }else{
                 newIndex = currentAction.indexOf("update");
                 //boutton modifier deja cliquer une fois
-                currentAction = currentAction.substring(0, newIndex)
+                currentAction = currentAction.substring(0, newIndex)//
             }
 
             btnSave.textContent = "Mettre à jour"
@@ -328,13 +278,13 @@
             
             btnSave.textContent = "Ajouter un Membre"
             nom.value = "";
-            postnom.value = "";
-            prenom.value = "";
-            genre.value = "" ;
+            //postnom.value = "";
+            //prenom.value = "";
+            //genre.value = "" ;
             //datenaissance.value = "";
             telephone.value = "";
-            adresse.value = "";
-            avatar.src = "";
+            //adresse.value = "";
+            //avatar.src = "";
             let currentAction = `${form.action}`;
             let newIndex = currentAction.indexOf("update");
             if(newIndex > 0){

@@ -20,16 +20,16 @@ class Membre
     #[ORM\Column(type: 'string', length: 255)]
     private $nom;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $prenom;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $postnom;
 
     #[ORM\Column(type: 'date', nullable:true)]
     private $datenaissance;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable:true)]
     private $adresse;
 
     #[ORM\ManyToOne(targetEntity: Federation::class, inversedBy: 'membres')]
@@ -113,7 +113,7 @@ class Membre
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setPrenom(?string $prenom): self
     {
         $this->prenom = $prenom;
 
@@ -125,7 +125,7 @@ class Membre
         return $this->postnom;
     }
 
-    public function setPostnom(string $postnom): self
+    public function setPostnom(?string $postnom): self
     {
         $this->postnom = $postnom;
 
@@ -149,7 +149,7 @@ class Membre
         return $this->adresse;
     }
 
-    public function setAdresse(string $adresse): self
+    public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
 
@@ -215,7 +215,7 @@ class Membre
         return $this->genre;
     }
 
-    public function setGenre(string $genre): self
+    public function setGenre(?string $genre): self
     {
         $this->genre = $genre;
 

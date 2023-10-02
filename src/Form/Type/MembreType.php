@@ -22,37 +22,6 @@ class MembreType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => "Nom",
             ])
-            ->add('prenom', TextType::class, [
-                'label' => "Prénom",
-            ])
-            ->add('postnom', TextType::class, [
-                'label' => "Postnom",
-            ])
-            ->add('avatar', FileType::class, [
-                'label' => 'Photo',
-                'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '5M',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                        ],
-                        'mimeTypesMessage' => 'Sélectionner une bonne image SVP',
-                    ])
-                ],
-            ])
-            ->add('adresse', TextType::class, [
-                'label' => "Adresse de résidence",
-            ])
-            ->add('genre', ChoiceType::class, [
-                'label' => "Sexe",
-                'choices' => ["Homme" => "Homme", "Femme" => "Femme"],
-            ])
-            ->add('federation', EntityType::class, [
-                'class' => Federation::class,
-                'choice_label' => 'nom',
-            ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'label' => 'Groupe',

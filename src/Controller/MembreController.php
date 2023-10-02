@@ -64,18 +64,21 @@ class MembreController extends AbstractController
              */
             $tagGen = $tagRepository->findOneBy(['code' => 'GENERAL']);
             $membre->addTag($tagGen);
-            if(is_null($membre->getFederation())){
-                $this->addFlash("error", "La fédération du membre est obligatoire");
-                return $this->redirectToRoute('membre_new');
+            if(!is_null($membre->getFederation())){
+                $nom = $membre->getFederation()->getNom();
+                $fedTag = $tagRepository->findOneBy(['name' => $nom]); // ajout dans le groupe de la fédération
+                if (!is_null($fedTag)) {
+                    $membre->addTag($fedTag);
+                }
             }
-            $nom = $membre->getFederation()->getNom();
-            $fedTag = $tagRepository->findOneBy(['name' => $nom]); // ajout dans le groupe de la fédération
-            if (!is_null($fedTag)) {
-                $membre->addTag($fedTag);
-            }
+            
             $membre->setNoidentification($this->generateIdNumber());
             $membre->setDateadhesion(new \DateTimeImmutable());
-            $file = $request->files->get("membre")["avatar"];
+            $file = null;
+            if(!is_null($request->files->get("membre"))){
+                $file = $request->files->get("membre")["avatar"];
+            }
+            
             if(!is_null($file)){
                 $extension = $file->guessExtension();
                 if (!$extension) {
@@ -95,7 +98,7 @@ class MembreController extends AbstractController
 
             $entityManager->persist($membre);
             $entityManager->flush();
-            $this->addFlash("notice", "Membre ajouté avec succès!");
+            $this->addFlash("notice", "Contact ajouté avec succès!");
             return $this->redirectToRoute('membre_new');
         }
         $toast = [];
@@ -150,18 +153,21 @@ class MembreController extends AbstractController
                 }
             }
 
-            $membre->setNom($nvoMembre->getNom());
-            $membre->setPostnom($nvoMembre->getPostnom());
-            $membre->setPrenom($nvoMembre->getPrenom());
-            $membre->setTelephone($nvoMembre->getTelephone());
-            $membre->setGenre($nvoMembre->getGenre());
+            $membre->setNom(is_null($nvoMembre->getNom()) ? $membre->getNom() : $nvoMembre->getNom());
+            $membre->setPostnom(is_null($nvoMembre->getPostnom()) ? $membre->getPostnom() : $nvoMembre->getPostnom());
+            $membre->setPrenom(is_null($nvoMembre->getPrenom()) ? $membre->getPrenom() : $nvoMembre->getPrenom());
+            $membre->setTelephone(is_null($nvoMembre->getTelephone()) ? $membre->getTelephone() : $nvoMembre->getTelephone());
+            $membre->setGenre(is_null($nvoMembre->getGenre()) ? $membre->getGenre() : $nvoMembre->getGenre());
             if(!is_null($nvoMembre->getDatenaissance())){
                 $membre->setDatenaissance($nvoMembre->getDatenaissance());
             }
-            $membre->setAdresse($nvoMembre->getAdresse());
+            $membre->setAdresse(is_null($nvoMembre->getAdresse()) ? $membre->getAdresse(): $nvoMembre->getAdresse());
             $membre->setQualite($nvoMembre->getQualite());
 
-            $file = $request->files->get("membre")["avatar"];
+            $file = null;
+            if(!is_null($request->files->get("membre"))){
+                $file = $request->files->get("membre")["avatar"];
+            }
 
             if (!is_null($file) && !is_null($membre->getAvatar())) {
                 try {
@@ -180,7 +186,10 @@ class MembreController extends AbstractController
                 $filename = "uploads" . "/" . $filename;
                 $membre->setAvatar($filename);
             }
-            $membre->setFederation($nvoMembre->getFederation());
+            if(!is_null($nvoMembre->getFederation())){
+                $membre->setFederation($nvoMembre->getFederation());
+            }
+            
 
             $entityManager = $doctrine->getManager();
             $entityManager->persist($membre);
