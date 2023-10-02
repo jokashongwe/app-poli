@@ -48,6 +48,8 @@ class TemoinController extends AbstractController
                 $setting = $settingRepository->findAll();
                 if (!empty($setting)) {
                     $setting = $setting[0];
+                }else {
+                    $setting = "";
                 }
 
                 $temoin = $form->getData();
