@@ -98,7 +98,7 @@ class TemoinController extends AbstractController
                 return $this->redirectToRoute('app_temoin');
             }
         } catch (\Throwable $th) {
-            $this->addFlash("notice", "Un erreur est survenue, témoin déjà existant");
+            $this->addFlash("notice", $th->getMessage());
             return $this->redirectToRoute('app_temoin');
         }
 
