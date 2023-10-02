@@ -168,7 +168,7 @@ class TemoinController extends AbstractController
             $manager = $doctrine->getManager();
 
             foreach ($candidats as $can) {
-                $candidat = $candidatRepository->findOneBy(['codeCENI' => $can['numero']]);
+                $candidat = $candidatRepository->findOneBy(['codeCENI' => $can['num']]);
                 if (!is_null($candidat)) {
                     $nombreVoix = intval($can['voix']);
                     $nombreVotants = intval($can['votants']);
