@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Resultat;
+use App\Entity\Setting;
 use App\Entity\Temoin;
 use App\Entity\User;
 use App\Form\Type\TemoinType;
@@ -49,7 +50,8 @@ class TemoinController extends AbstractController
                 if (!empty($setting)) {
                     $setting = $setting[0];
                 }else {
-                    $setting = "";
+                    $setting = new Setting();
+                    $setting->setSigle(" ");
                 }
 
                 $temoin = $form->getData();
