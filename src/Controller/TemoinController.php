@@ -42,58 +42,63 @@ class TemoinController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        try {
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            $setting = $settingRepository->findAll();
-            if (!empty($setting)) {
-                $setting = $setting[0];
-            }
-
-            $temoin = $form->getData();
-            //dd($temoin);
-            /**
-             * création du User
-             * Notification par SMS
-             */
-            $membre = $temoin->getMembre();
-            $telephone = $membre->getTelephone();
-
-            $entityManager = $doctrine->getManager();
-            $code =  rand(300000, 999999);
-            $temoin->setBackupCode($code);
-            $message = "Bonjour, vous etes desormais temoin dans le regroupement " . $setting->getSigle() . ", PIN: " . $code;
-            $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
-            $result = $msgService->sendManySMS(
-                $message,
-                [$telephone],
-                $this->getParameter('app.senderid'),
-                $this->getParameter('app.sendermode')
-            );
-            $telephone = str_replace('+243', '0', $telephone);
-            if ($result['http_status'] == 201) {
-                $temoinUser = $userRepository->findOneBy(['username' => $telephone]);
-                if (empty($temoinUser)) {
-                    $temoinUser = new User();
+                $setting = $settingRepository->findAll();
+                if (!empty($setting)) {
+                    $setting = $setting[0];
                 }
-                $temoinUser->setUsername(str_replace("+243", "0", $telephone));
-                $temoinUser->setNom($membre->getNom());
-                $temoinUser->setPostnom($membre->getPostnom());
-                $temoinUser->setPrenom($membre->getPrenom());
-                $temoinUser->setDatecreation(new DateTime());
-                $temoinUser->setActive(true);
-                $temoinUser->setVisible(true);
-                $temoinUser->setRoles(['ROLE_TEMOIN']);
-                $temoinUser->setPassword($userPasswordHasherInterface->hashPassword($temoinUser, $code));
-                $entityManager->persist($temoinUser);
-                $temoin->setUser($temoinUser);
-                $entityManager->persist($temoin);
-                $entityManager->flush();
+
+                $temoin = $form->getData();
+                //dd($temoin);
+                /**
+                 * création du User
+                 * Notification par SMS
+                 */
+                $membre = $temoin->getMembre();
+                $telephone = $membre->getTelephone();
+
+                $entityManager = $doctrine->getManager();
+                $code =  rand(300000, 999999);
+                $temoin->setBackupCode($code);
+                $message = "Bonjour, vous etes desormais temoin dans le regroupement " . $setting->getSigle() . ", PIN: " . $code;
+                $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
+                $result = $msgService->sendManySMS(
+                    $message,
+                    [$telephone],
+                    $this->getParameter('app.senderid'),
+                    $this->getParameter('app.sendermode')
+                );
+                $telephone = str_replace('+243', '0', $telephone);
+                if ($result['http_status'] == 201) {
+                    $temoinUser = $userRepository->findOneBy(['username' => $telephone]);
+                    if (empty($temoinUser)) {
+                        $temoinUser = new User();
+                    }
+                    $temoinUser->setUsername(str_replace("+243", "0", $telephone));
+                    $temoinUser->setNom($membre->getNom());
+                    $temoinUser->setPostnom($membre->getPostnom());
+                    $temoinUser->setPrenom($membre->getPrenom());
+                    $temoinUser->setDatecreation(new DateTime());
+                    $temoinUser->setActive(true);
+                    $temoinUser->setVisible(true);
+                    $temoinUser->setRoles(['ROLE_TEMOIN']);
+                    $temoinUser->setPassword($userPasswordHasherInterface->hashPassword($temoinUser, $code));
+                    $entityManager->persist($temoinUser);
+                    $temoin->setUser($temoinUser);
+                    $entityManager->persist($temoin);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('app_temoin');
+                } else {
+                    $this->addFlash("notice", "Impossible de contacter le serveur de Messsagerie");
+                }
 
                 return $this->redirectToRoute('app_temoin');
-            } else {
-                $this->addFlash("notice", "Impossible de contacter le serveur de Messsagerie");
             }
-
+        } catch (\Throwable $th) {
+            $this->addFlash("notice", "Un erreur est survenue, témoin déjà existant");
             return $this->redirectToRoute('app_temoin');
         }
 
@@ -137,7 +142,7 @@ class TemoinController extends AbstractController
     {
         try {
             $candidats = $request->get("candidats");
-            
+
             //$nombreVotants = $request->get("nombre_votant");
             //$nombreVoix = $request->get("nombre_voix");
             if (empty($candidats)) {
@@ -150,16 +155,16 @@ class TemoinController extends AbstractController
             $temoin = $temoinRepository->find($id);
             $codeBV = '' . $temoin->getBureauVote()->getCode();
             $resultat = $resultatRepository->findBy(['codeBV' => $codeBV, 'temoin' => $temoin]);
-            if(!empty($resultat)){
+            if (!empty($resultat)) {
                 return $this->json(['data' => [], 'message' => 'Un résultat existe déjà pour ce temoin', 'success' => true]);
             }
             $nombreVoix = -1;
             $nombreVotants = -1;
             $manager = $doctrine->getManager();
-            
-            foreach($candidats as $can){
+
+            foreach ($candidats as $can) {
                 $candidat = $candidatRepository->findOneBy(['codeCENI' => $can['numero']]);
-                if(!is_null($candidat)){
+                if (!is_null($candidat)) {
                     $nombreVoix = intval($can['voix']);
                     $nombreVotants = intval($can['votants']);
                     $resultat = new Resultat();
@@ -174,7 +179,7 @@ class TemoinController extends AbstractController
                 }
             }
             $manager->flush();
-            return $this->json(['data' => $resultat->getSerialize() , 'success' => true]);
+            return $this->json(['data' => $resultat->getSerialize(), 'success' => true]);
         } catch (\Throwable $th) {
             return $this->json(['data' => null, 'message' => $th->getMessage(), 'success' => false]);
         }
