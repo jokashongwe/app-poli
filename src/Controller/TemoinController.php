@@ -189,7 +189,7 @@ class TemoinController extends AbstractController
             $manager->flush();
             return $this->json(['data' => $resultat->getSerialize(), 'success' => true]);
         } catch (\Throwable $th) {
-            return $this->json(['data' => null, 'message' => $th->getMessage(), 'success' => false]);
+            return $this->json(['data' => null, 'message' => $th->getMessage(), 'success' => false], 400);
         }
     }
 
