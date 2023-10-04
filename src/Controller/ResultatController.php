@@ -33,7 +33,8 @@ class ResultatController extends AbstractController
             'resultats' => $resultats,
             'rapport' => $total,
             'rapport_bv' => json_encode(array_values($totalParBureauVote)),
-            'bureau_votes' => json_encode(array_keys($totalParBureauVote))
+            'bureau_votes' => json_encode(array_keys($totalParBureauVote)),
+            'candidat_id' => $id 
         ]);
     }
     
