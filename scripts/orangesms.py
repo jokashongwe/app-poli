@@ -1,5 +1,4 @@
 import requests
-import progressbar
 import multiprocessing
 import time
 import mysql.connector as connector
@@ -86,9 +85,7 @@ class BulkOrange:
 
     def send_messages(self, destinationList = None):
         print("Starting processing")
-        message_progress_bar = progressbar.ProgressBar(
-            max_value=len(destinationList), min_value=0
-        )
+        
         tps = int(self.config.get("TPS", 5))
         numbers = destinationList[:tps]
         destinationList = destinationList[tps:]
@@ -100,12 +97,9 @@ class BulkOrange:
                 self.credentials = self._get_credentials()
             with multiprocessing.Pool(tps) as p:
                 p.map(self._send_message, numbers)
-            current_value = int(message_progress_bar.value)
-            message_progress_bar.update(current_value + len(numbers))
             time.sleep(1.01)
             numbers = destinationList[:tps]
             destinationList = destinationList[tps:]
-        message_progress_bar.finish()
         print("End processing")
 
 
