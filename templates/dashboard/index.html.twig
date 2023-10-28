@@ -51,7 +51,7 @@
                     </div>
                 </div>
             {% endif %}
-            <form>
+            <form method="POST" action="{{ path('dashboard_send') }}" >
                 <div class="bg-gray-300 p-6 rounded" >
                     <h3 class="text-xl text-gray-600 mb-3" >Nouveau Message</h3>
                     <input type="text" id="phone" placeholder="Tél: +243..." />

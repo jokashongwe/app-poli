@@ -13,6 +13,7 @@ use App\Repository\ReferenceDataRepository;
 use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -85,4 +86,40 @@ class DashboardController extends AbstractController
         }
         return $this->redirectToRoute('diffusion');
     }
+
+    private function is_windows()
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    #[Route('/dashboard/send_message', name: 'dashboard_send')]
+    public function send_message(Request $request)
+    {
+        $message = $request->get("message");
+        $phone = $request->get("phone");
+        $this->send($message, $phone);
+        return $this->redirectToRoute('dashboard');
+    }
+
+    private function send($message, $phone)
+    {
+
+        $token = $this->getParameter('app.bulksmstoken');
+        try {
+            $script_path = dirname(getcwd()) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR;
+            $lang = "python3 ";
+            if($this->is_windows()){
+                $lang = "python ";
+            }
+            $command = $lang . $script_path . "orangesms.py --auth $token --message \"$message\" --phone $phone";
+            exec($command);
+        } catch (\Throwable $th) {
+            $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
+        }
+    }
 }
+

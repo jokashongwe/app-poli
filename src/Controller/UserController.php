@@ -101,6 +101,9 @@ class UserController extends AbstractController
         if (empty($request->request->all()) || !array_key_exists("user", $request->request->all())) {
             return $this->redirectToRoute("user_show");
         }
+        
+        $connectedUser = $this->getUser();
+        $organisation = $connectedUser->getOrganisation();
 
         $userAr = $request->request->all()["user"];
 
@@ -109,6 +112,7 @@ class UserController extends AbstractController
         $user->setPostnom($userAr["postnom"]);
         $user->setPrenom($userAr["prenom"]);
         $user->setRoles($userAr["roles"]);
+        $user->setOrganisation($organisation);
         $user->setDatecreation(new \DateTimeImmutable());
 
         $hashedPassword = $passwordHasher->hashPassword(
