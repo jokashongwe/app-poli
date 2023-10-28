@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Federation;
 use App\Entity\Membre;
+use App\Entity\User;
 use App\Form\Type\ExcelUploadType;
 use App\Form\Type\MembreType;
 use App\Repository\MembreRepository;
@@ -38,8 +39,14 @@ class MembreController extends AbstractController
 
         $membre = new Membre();
 
-        $membres = $doctrine->getRepository(Membre::class)->findBy(['visible' => null]);
-        
+
+        $user = $this->getUser();
+        $organisation = $user->getOrganisation();
+
+        $membres = $doctrine->getRepository(Membre::class)->findBy([
+            'visible' => null, 'organisation' => $organisation
+        ]);
+
         $form = $this->createForm(MembreType::class, $membre);
         $excelForm = $this->createForm(ExcelUploadType::class, null, [
             'action' => $this->generateUrl('membre_new'),
@@ -54,7 +61,7 @@ class MembreController extends AbstractController
 
             $membre = $form->getData();
             $p_membre = $membreRepository->findOneBy(['telephone' => $membre->getTelephone()]);
-            if(!is_null($p_membre)){
+            if (!is_null($p_membre)) {
                 $this->addFlash("error", "Un utilisateur avec ses informations existe déjà dans la Base de données!");
                 return $this->redirectToRoute('membre_new');
             }
@@ -62,24 +69,16 @@ class MembreController extends AbstractController
             /**
              * Inscription dans un groupe
              */
-            $tagGen = $tagRepository->findOneBy(['code' => 'GENERAL']);
+            $tagGen = $tagRepository->findOneBy(['code' => 'GENERAL', 'organisation' => $organisation]);
             $membre->addTag($tagGen);
-            if(!is_null($membre->getFederation())){
-                $nom = $membre->getFederation()->getNom();
-                $fedTag = $tagRepository->findOneBy(['name' => $nom]); // ajout dans le groupe de la fédération
-                if (!is_null($fedTag)) {
-                    $membre->addTag($fedTag);
-                }
-            }
-            
             $membre->setNoidentification($this->generateIdNumber());
             $membre->setDateadhesion(new \DateTimeImmutable());
             $file = null;
-            if(!is_null($request->files->get("membre"))){
+            if (!is_null($request->files->get("membre"))) {
                 $file = $request->files->get("membre")["avatar"];
             }
-            
-            if(!is_null($file)){
+
+            if (!is_null($file)) {
                 $extension = $file->guessExtension();
                 if (!$extension) {
                     // extension cannot be guessed
@@ -90,11 +89,13 @@ class MembreController extends AbstractController
                 $filename = "uploads" . "/" . $filename;
                 $membre->setAvatar($filename);
             }
-            
+
             if (is_null($membre->getGenre())) {
                 $membre->setGenre("Homme"); //Homme par défaut
             }
             $entityManager = $doctrine->getManager();
+            //get user organisation
+            $membre->setOrganisation($organisation);
 
             $entityManager->persist($membre);
             $entityManager->flush();
@@ -158,14 +159,14 @@ class MembreController extends AbstractController
             $membre->setPrenom(is_null($nvoMembre->getPrenom()) ? $membre->getPrenom() : $nvoMembre->getPrenom());
             $membre->setTelephone(is_null($nvoMembre->getTelephone()) ? $membre->getTelephone() : $nvoMembre->getTelephone());
             $membre->setGenre(is_null($nvoMembre->getGenre()) ? $membre->getGenre() : $nvoMembre->getGenre());
-            if(!is_null($nvoMembre->getDatenaissance())){
+            if (!is_null($nvoMembre->getDatenaissance())) {
                 $membre->setDatenaissance($nvoMembre->getDatenaissance());
             }
-            $membre->setAdresse(is_null($nvoMembre->getAdresse()) ? $membre->getAdresse(): $nvoMembre->getAdresse());
+            $membre->setAdresse(is_null($nvoMembre->getAdresse()) ? $membre->getAdresse() : $nvoMembre->getAdresse());
             $membre->setQualite($nvoMembre->getQualite());
 
             $file = null;
-            if(!is_null($request->files->get("membre"))){
+            if (!is_null($request->files->get("membre"))) {
                 $file = $request->files->get("membre")["avatar"];
             }
 
@@ -186,10 +187,10 @@ class MembreController extends AbstractController
                 $filename = "uploads" . "/" . $filename;
                 $membre->setAvatar($filename);
             }
-            if(!is_null($nvoMembre->getFederation())){
+            if (!is_null($nvoMembre->getFederation())) {
                 $membre->setFederation($nvoMembre->getFederation());
             }
-            
+
 
             $entityManager = $doctrine->getManager();
             $entityManager->persist($membre);
@@ -201,7 +202,7 @@ class MembreController extends AbstractController
     public function delete(Request $request, ManagerRegistry $doctrine, TagRepository $tagRepository, int $id): Response
     {
         $membre = $doctrine->getRepository(Membre::class)->find($id);
-        if(is_null($membre)){
+        if (is_null($membre)) {
             $this->addFlash("error", "Le membre n'existe pas!");
         }
         $membre->setVisible(false);

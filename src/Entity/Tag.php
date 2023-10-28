@@ -24,6 +24,9 @@ class Tag
     #[ORM\ManyToMany(targetEntity: Membre::class, inversedBy: 'tags')]
     private $membres;
 
+    #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'tags')]
+    private $organisation;
+
     public function __construct()
     {
         $this->membres = new ArrayCollection();
@@ -80,6 +83,18 @@ class Tag
     public function removeMembre(Membre $membre): self
     {
         $this->membres->removeElement($membre);
+
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): self
+    {
+        $this->organisation = $organisation;
 
         return $this;
     }

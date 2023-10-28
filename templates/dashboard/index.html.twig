@@ -17,14 +17,14 @@
             <div class="grid md:grid-cols-3 md:gap-1 sm:grid-cols-1 sm:gap-0 mb-5">
 
                 <a href="#" class="block p-6  bg-blue-500 rounded border border-blue-200 shadow-md hover:bg-blue-700 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <h5 class="mb-2 text-2xl tracking-tight text-white dark:text-white">Membres</h5>
+                    <h5 class="mb-2 text-2xl tracking-tight text-white dark:text-white">Contacts</h5>
                     <div class="grid grid-cols-2 gap-1">
                         <p class="font-light text-2xl text-white"><i class="fas fa-user fa-x fa-fw text-white"></i> <span class="ml-5"> {{ membreCount }} </span> </p>
                     </div>
 
                 </a>
 
-                {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
+                {% if get_env("SYSTEM_LICENCE") != 'STANDARD' %}
                     <a href="#" class="block p-6  bg-green-500  rounded border border-gray-200 shadow-md hover:bg-green-700 dark:border-gray-700 dark:hover:bg-gray-700">
                         <h5 class="mb-2 text-2xl  tracking-tight text-white dark:text-white">Cotisations</h5>
                         <div class="grid grid-cols-2 gap-1">
@@ -41,7 +41,7 @@
                     </div>
                 </a>
             </div>
-            {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
+            {% if get_env("SYSTEM_LICENCE") != 'STANDARD' %}
                 <div class="grid md:grid-cols-3 md:gap-2 sm:grid-cols-1 sm:gap-0" >
                     <div class="chartbox shadow-md col-span-2" >
                         <canvas id="federationchart"></canvas>
@@ -51,55 +51,16 @@
                     </div>
                 </div>
             {% endif %}
-            <h3 class="mb-3 text-md font-200 tracking-tight text-gray-900 dark:text-white uppercase mt-3">5 membres enregistrés
-            </h3>
-            <div class="relative overflow-x-auto shadow-md border">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Nom
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Postnom
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Prénom
-                            </th>
-                            {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
-                                <th scope="col" class="px-6 py-3">
-                                    Fédération
-                                </th>
-                            {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for membre in membres %}
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                
-                                <td class="px-6 py-4">
-                                    {{ membre.nom }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ membre.postnom }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ membre.prenom }}
-                                </td>
-                                {% if get_env("SYSTEM_LICENCE") != 'CHURCH' %}
-                                    {% if membre.federation %}
-                                        <td class="px-6 py-4 text-right">
-                                            {{ membre.nom }}
-                                        </td>    
-                                    {% endif %}
-                                {% endif %}
-                                
-                            </tr> 
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
+            <form>
+                <div class="bg-gray-300 p-6 rounded" >
+                    <h3 class="text-xl text-gray-600 mb-3" >Nouveau Message</h3>
+                    <input type="text" id="phone" placeholder="Tél: +243..." />
+                    <p>Message</p>
+                    <textarea id="diffusion_content"></textarea>
+                    <p style="font-size: 10px" class="text-gray-600" id="sms_counter"></p>
+                    <button type="submit" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-blue-500 rounded-sm border hover:bg-blue-600 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200">Envoyer</button> 
+                </div>
+            </form>
          </div>
 
     
@@ -191,5 +152,19 @@
 
     </script>
 
+    <script>
+        const messageArea = document.getElementById("diffusion_content");
+        const smsCounter = document.getElementById("sms_counter");
+        messageArea.onkeyup = function(val){
+            let no_chars = messageArea.value.length;
+            if(no_chars == 0){
+                smsCounter.innerText = ''
+            }else {
+                const count = parseInt(no_chars / 150) + 1;
+                smsCounter.innerText = count + ' SMS';
+            }
+            
+        }
+    </script>
 
 {% endblock %}

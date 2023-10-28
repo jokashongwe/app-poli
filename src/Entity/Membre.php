@@ -85,6 +85,9 @@ class Membre
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $visible;
 
+    #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'membres')]
+    private $organisation;
+
     public function __construct()
     {
         $this->cotisations = new ArrayCollection();
@@ -414,6 +417,18 @@ class Membre
     public function setVisible(?bool $visible): self
     {
         $this->visible = $visible;
+
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): self
+    {
+        $this->organisation = $organisation;
 
         return $this;
     }

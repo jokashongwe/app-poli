@@ -34,8 +34,12 @@ class DiffusionController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $user = $this->getUser();
+        $organisation = $user->getOrganisation();
+        
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            
             $diffusion = $form->getData();
             $raw_provinces = $diffusion->getProvinces();
             $provinces = [];
@@ -49,34 +53,42 @@ class DiffusionController extends AbstractController
                 array_push($federations, $rp->getNom());
             }
             $raw_tags = $diffusion->getTags();
-            $phones = [];
+            //$phones = [];
             $tags = [];
             foreach ($raw_tags as $tag) {
-                array_push($tags, $tag->getCode());
-                $members = $tag->getMembres();
-                foreach ($members as $member) {
-                    if (is_null($member->getVisible())) {
-                        array_push($phones, $member->getTelephone());
+                array_push($tags, $tag->getId());
+            }
+            /*
+                foreach ($raw_tags as $tag) {
+                    array_push($tags, $tag->getCode());
+                    $members = $tag->getMembres();
+                    foreach ($members as $member) {
+                        if (is_null($member->getVisible())) {
+                            array_push($phones, $member->getTelephone());
+                        }
                     }
                 }
+            */
+
+            //$cannaux = $diffusion->getCanal();
+            $tag_list = implode(",", $tags);
+            $result = $diffusionRepository->countMembers($tag_list)[0];
+            $nPhones = intval($result['compte']);
+
+            $message = $diffusion->getContent();
+            $parts = intval(strlen($message) / 153) + 1;
+            $cost = 1.5 * $parts * $nPhones;
+            $currentSolde = $organisation->getCredits();
+            if (is_null($currentSolde)) {
+                $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
+                return $this->redirectToRoute('diffusion');
+            } else if (intval($currentSolde) < $cost) {
+                $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
+                return $this->redirectToRoute('diffusion');
             }
-            $cannaux = $diffusion->getCanal();
-            $nPhones = sizeof($phones);
-            if (in_array("SMS", $cannaux)) {
-                $message = $diffusion->getContent();
-                $parts = intval(strlen($message) / 153) + 1;
-                $count = sizeof($phones);
-                $cost = 1.5 * $parts * $count;
-                $currentSolde = $referenceDataRepository->findOneBy(['code' => 'CREDITS']);
-                if (is_null($currentSolde)) {
-                    $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
-                    return $this->redirectToRoute('diffusion');
-                } else if (intval($currentSolde->getValue()) < $cost) {
-                    $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
-                    return $this->redirectToRoute('diffusion');
-                }
-                $this->send($phones, $diffusion);
-            }
+            $this->send($diffusion, $tag_list);
+
+            /*
             if (in_array("WHA", $cannaux)) {
                 $message = $diffusion->getRichText();
                 $service = new MessageService('no-token');
@@ -91,10 +103,12 @@ class DiffusionController extends AbstractController
             if (is_null($diffusion->getContent())) {
                 $diffusion->setContent("voir vontenu enrichie...");
             }
-            $diffusion->setTags($tags);
+            */
+            //$diffusion->setTags($tags);
             $diffusion->setTitre("No-Title");
             $diffusion->setFederations($federations);
             $diffusion->setVisible(true);
+            $diffusion->setOrganisation($organisation);
             $diffusion->setNumberOfMembers($nPhones);
             $entityManager = $doctrine->getManager();
             $entityManager->persist($diffusion);
@@ -103,29 +117,12 @@ class DiffusionController extends AbstractController
             return $this->redirectToRoute('diffusion');
         }
 
-        $credits = 50 * 1.5;
-        $manager = $doctrine->getManager();
-        if (!empty($response)) {
-            $credits = $response['credits']['balance'];
-            $currentSolde = $referenceDataRepository->findOneBy(['code' => 'CREDITS']);
-            if (is_null($currentSolde)) {
-                $currentSolde = new ReferenceData();
-                $currentSolde->setCode('CREDITS');
-                $currentSolde->setValue($credits);
-                $manager->persist($currentSolde);
-                $manager->flush();
-            } elseif ($currentSolde->getValue() != $credits) {
-                $currentSolde->setValue($credits);
-                $manager->persist($currentSolde);
-                $manager->flush();
-            }
-        }
         return $this->renderForm('diffusion/index.html.twig', [
             'controller_name' => 'DiffusionController',
             'form' => $form,
             'membreCount' => $membreRepository->count(['visible' => null]),
-            'diffusions' => $diffusionRepository->findBy(['visible' => true]),
-            'credits' => $credits
+            'diffusions' => $diffusionRepository->findBy(['visible' => true, 'organisation' => $organisation]),
+            'credits' => 0
         ]);
     }
 
@@ -145,32 +142,17 @@ class DiffusionController extends AbstractController
         return $this->redirectToRoute('diffusion');
     }
 
-    private function send($phones, Diffusion $diffusion)
+    private function send(Diffusion $diffusion, string $tag_list)
     {
 
-
         $message = $diffusion->getContent();
-
-        $msgService = new MessageService($this->getParameter('app.bulksmstoken'));
-
+        $token = $this->getParameter('app.bulksmstoken');
         try {
-            if (!empty($phones)) {
-                $result = $msgService->sendManySMS(
-                    $message,
-                    $phones,
-                    $this->getParameter('app.senderid'),
-                    $this->getParameter('app.sendermode')
-                );
-                if ($result['http_status'] <= 300) {
-                    $this->addFlash("notice", "Les SMS ont été correctement transférée!");
-                } else {
-                    $this->addFlash("error", "Une erreur lors de la transmissions des SMS, réessayez plus tard!");
-                }
-            }
+            $script_path = dirname(getcwd()) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR;
+            $command = "python " . $script_path . "orangesms.py --auth $token --message \"$message\" --group $tag_list";
+            exec($command);
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
-
-        return sizeof($phones);
     }
 }

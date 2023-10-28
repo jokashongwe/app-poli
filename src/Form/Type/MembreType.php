@@ -31,7 +31,6 @@ class MembreType extends AbstractType
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'Téléphone',
-            ])
-            ->add('save', SubmitType::class, ['label' => 'Ajouter un membre']);
+            ]);
     }
 }

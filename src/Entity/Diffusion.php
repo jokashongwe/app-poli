@@ -45,6 +45,9 @@ class Diffusion
     #[ORM\Column(type: 'text', nullable: true)]
     private $richText;
 
+    #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'diffusions')]
+    private $organisation;
+
     public function __construct()
     {
         if(is_null($this->startDate)){
@@ -173,6 +176,18 @@ class Diffusion
     public function setRichText(?string $richText): self
     {
         $this->richText = $richText;
+
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): self
+    {
+        $this->organisation = $organisation;
 
         return $this;
     }

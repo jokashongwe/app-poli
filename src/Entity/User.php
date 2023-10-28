@@ -46,6 +46,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $visible;
 
+    #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'users')]
+    private $organisation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -208,6 +211,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVisible(?bool $visible): self
     {
         $this->visible = $visible;
+
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): self
+    {
+        $this->organisation = $organisation;
 
         return $this;
     }

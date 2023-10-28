@@ -31,6 +31,9 @@ class Federation
     #[ORM\OneToMany(mappedBy: 'federation', targetEntity: Membre::class)]
     private $membres;
 
+    #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'federations')]
+    private $organisation;
+
     public function __construct()
     {
         $this->parent = new ArrayCollection();
@@ -134,6 +137,18 @@ class Federation
                 $membre->setFederation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): self
+    {
+        $this->organisation = $organisation;
 
         return $this;
     }

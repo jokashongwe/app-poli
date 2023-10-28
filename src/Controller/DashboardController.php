@@ -32,33 +32,22 @@ class DashboardController extends AbstractController
         ReferenceDataRepository $referenceDataRepository,
         DiffusionRepository $diffusionRepository,
     ): Response {
-        $licence = $this->getParameter('app.systemlicence');
-        if ($licence != 'MARKETING') {
+        $license = $this->getParameter('app.systemlicence');
+        if ($license != 'MARKETING') {
             $user = $this->getUser();
             if (!is_null($user) && !$user->getActive()) {
                 return $this->redirectToRoute("logout");
             }
-            $service = new MessageService($this->getParameter('app.bulksmstoken'));
-            $result = $service->getCredits();
-            $response = json_decode($result['server_response'], true);
-            $manager = $entityManager->getManager();
+            //$service = new MessageService($this->getParameter('app.bulksmstoken'));
+            //$result = $service->getCredits();
+            ///$response = json_decode($result['server_response'], true);
+            
             $credits = 0;
-            if (!empty($response)) {
-                $credits = $response['credits']['balance'];
-                $currentSolde = $referenceDataRepository->findOneBy(['code' => 'CREDITS']);
-                if (is_null($currentSolde)) {
-                    $currentSolde = new ReferenceData();
-                    $currentSolde->setCode('CREDITS');
-                    $currentSolde->setValue($credits);
-                    $manager->persist($currentSolde);
-                    $manager->flush();
-                } elseif ($currentSolde->getValue() != $credits) {
-                    $currentSolde->setValue($credits);
-                    $manager->persist($currentSolde);
-                    $manager->flush();
-                }
+            $organisation = $user->getOrganisation();
+            if (!is_null($organisation)) {
+                //$credits = $response['credits']['balance'];
+                $credits = $organisation->getCredits();
             }
-            $licence = $this->getParameter('app.systemlicence');
             //$federations = $entityManager->getRepository(Federation::class)->findAll();
             $federationCount = $this->compter($entityManager, Federation::class);
             $memberCount =  $this->compter($entityManager, Membre::class);
@@ -90,7 +79,7 @@ class DashboardController extends AbstractController
                 'membreValues' => json_encode($membreValues),
                 'membreValuesChart2' => json_encode($membreValuesChart2),
                 'totalMontant' => is_null($total) ? 0 : $total,
-                'licence' => $licence,
+                'licence' => $license,
                 'credits' => $credits
             ]);
         }

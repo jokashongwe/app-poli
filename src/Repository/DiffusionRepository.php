@@ -45,6 +45,14 @@ class DiffusionRepository extends ServiceEntityRepository
         }
     }
 
+    public function countMembers($tags){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT count(membre.telephone) as compte  FROM membre, tag_membre WHERE tag_membre.membre_id = membre.id AND tag_membre.tag_id IN ($tags);";
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Diffusion[] Returns an array of Diffusion objects
     //  */

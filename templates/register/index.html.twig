@@ -1,0 +1,112 @@
+{% extends 'loginbase.html.twig' %}
+
+
+{% block stylesheets %}
+
+	<style>
+	.gradient-custom-2 {
+			/* fallback for old browsers */
+        background-image: url("/images/banner.png");
+        vertical-align: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-blend-mode: multiply;
+	}
+
+    .text-small{
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    .error{
+      color: red;
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+	@media (min-width: 768px) {
+		.gradient-form {
+			height: 100vh !important;
+		}
+        .gradient-custom-2 {
+			border-top-right-radius: .3rem;
+			border-bottom-right-radius: .3rem;
+		}
+	}
+    @media (max-width: 768px) {
+		.gradient-custom-2 {
+            object-fit: cover;
+			height: 10rem;
+		}
+        .login-space{
+            margin-top: -3rem !important;
+        }
+	}
+	</style>
+
+{% endblock %}
+{% block body %}
+<section class="h-100 gradient-form" style="background-color: #e3f1fc;">
+  <div class="h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-xl-12 h-100">
+        <div class="card rounded-3 text-black h-100">
+          <div class="row g-0 h-100">
+            <div class="col-lg-6 d-flex align-items-center pb-5 gradient-custom-2">
+              <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                
+              </div>
+            </div>
+            <div class="col-lg-6 login-space">
+              <div class="card-body p-md-5 mx-md-4">
+                {% for message in app.flashes('error') %}
+                  <script>
+                      setTimeout(() => {
+                          toastr.error(" {{ message }}".replaceAll("&#039;", "'"), "Erreur");
+                      }, 1000);
+                  </script>
+               {% endfor %}
+
+                <div class="text-black mt-5 mb-5 pb-1">
+                  <h1>Marketa<span style="font-weight: 400 !important; font-size: 13px; margin-left:5px"></span></h1>
+                  <p class="text-small">Créer un compte</p>
+                </div>
+
+                <form id="register_form" action="{{ path('app_register_validate') }}" method="post" >
+                  
+                  <div class="form-outline mb-4">
+                    <input type="email" id="_username" class="form-control"
+                      placeholder="Nom d'utilisateur ou téléphone" name="_username"/>
+                    <label class="form-label" for="_username">Email</label>
+                  </div>
+
+                  <div class="form-outline mb-4">
+                    <input type="password" name="_password" id="_password" class="form-control"  required />
+                    <label class="form-label" for="_password">Mot de passe</label>
+                  </div>
+
+                   <div class="form-outline mb-4">
+                    <input type="password" name="_password_confirm" id="_password_confirm" class="form-control" required />
+                    <label class="form-label" for="_password_confirm">Confirmer le mot de passe</label>
+                  </div>
+                  <div class="text-center pt-1 mb-5 pb-1">
+                    <button class="btn btn-primary btn-block fa-lg py-3 mb-3" type="submit">Créer un compte</button>
+                    <a class="text-muted" href="{{ path('login') }}">Déjà utilisateur ? Se connecter</a>
+                  </div>
+                  
+                  <input type="hidden" name="_target_path" value="{{ path('dashboard') }}"/>
+
+				    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                </form>
+
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -8,24 +8,6 @@
 
 {% block body %}
     <div class="container">
-        <div class="grid md:grid-cols-3 md:gap-1 sm:grid-cols-1 sm:gap-0 mb-5">
-
-                <a href="#" class="block p-6  bg-blue-500 rounded border border-blue-200 shadow-md hover:bg-blue-700 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <h5 class="mb-2 text-2xl tracking-tight text-white dark:text-white">Contacts</h5>
-                    <div class="grid grid-cols-2 gap-1">
-                        <p class="font-light text-2xl text-white"><i class="fas fa-user fa-x fa-fw text-white"></i> <span class="ml-5"> {{ membreCount }} </span> </p>
-                    </div>
-
-                </a>
-
-                <a href="#" class="block p-6  bg-yellow-500 rounded border border-gray-200 shadow-md hover:bg-yellow-700 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <h5 class="mb-2 text-2xl  tracking-tight text-white dark:text-white">Solde SMS</h5>
-                    <div class="grid grid-cols-2 gap-1">  
-                        <p class="font-light text-2xl text-white"><i class="fas  fa-envelope-open fa-x fa-fw text-white"></i> <span class="ml-5"> {{ (credits / 1.5 ) | number_format(0, '.', ' ') }} </span> </p>
-                    </div>
-                </a>
-            </div>
-        
         {% for message in app.flashes('error') %}
             <script>
                 setTimeout(() => {
