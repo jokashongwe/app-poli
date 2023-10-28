@@ -54,9 +54,9 @@
             <form method="POST" action="{{ path('dashboard_send') }}" >
                 <div class="bg-gray-300 p-6 rounded" >
                     <h3 class="text-xl text-gray-600 mb-3" >Nouveau Message</h3>
-                    <input type="text" id="phone" placeholder="Tél: +243..." />
+                    <input type="text" id="phone" name="phone" placeholder="Tél: +243..." />
                     <p>Message</p>
-                    <textarea id="diffusion_content"></textarea>
+                    <textarea name="message" id="diffusion_content"></textarea>
                     <p style="font-size: 10px" class="text-gray-600" id="sms_counter"></p>
                     <button type="submit" class="mt-5 py-3 px-5 mr-2 mb-2 text-sm font-medium text-white focus:outline-none bg-blue-500 rounded-sm border hover:bg-blue-600 hover:text-gray-800 focus:z-10 focus:ring-4 focus:ring-gray-200">Envoyer</button> 
                 </div>

@@ -79,6 +79,7 @@ class DiffusionController extends AbstractController
             $parts = intval(strlen($message) / 153) + 1;
             $cost = 1.5 * $parts * $nPhones;
             $currentSolde = $organisation->getCredits();
+            
             if (is_null($currentSolde)) {
                 $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
                 return $this->redirectToRoute('diffusion');
@@ -111,7 +112,9 @@ class DiffusionController extends AbstractController
             $diffusion->setOrganisation($organisation);
             $diffusion->setNumberOfMembers($nPhones);
             $entityManager = $doctrine->getManager();
+            $organisation->setCredits($currentSolde - $cost);
             $entityManager->persist($diffusion);
+            $entityManager->persist($organisation);
             $entityManager->flush();
 
             return $this->redirectToRoute('diffusion');

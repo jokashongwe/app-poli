@@ -45,10 +45,7 @@ class DashboardController extends AbstractController
             
             $credits = 0;
             $organisation = $user->getOrganisation();
-            if (!is_null($organisation)) {
-                //$credits = $response['credits']['balance'];
-                $credits = $organisation->getCredits();
-            }
+            $credits = $organisation->getCredits();
             //$federations = $entityManager->getRepository(Federation::class)->findAll();
             $federationCount = $this->compter($entityManager, Federation::class);
             $memberCount =  $this->compter($entityManager, Membre::class);
@@ -97,11 +94,26 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/dashboard/send_message', name: 'dashboard_send')]
-    public function send_message(Request $request)
+    public function send_message(Request $request, ManagerRegistry $managerRegistry)
     {
         $message = $request->get("message");
         $phone = $request->get("phone");
         $this->send($message, $phone);
+        $user = $this->getUser();
+        $organisation = $user->getOrganisation();
+        $current = $organisation->getCredits();
+
+        $parts = intval(strlen($message) / 156) + 1;
+        $cost = 1.5 * $parts;
+        if($current < $cost){
+            $this->addFlash('error', 'solde insuffisant');
+            return $this->redirectToRoute('dashboard');
+        }
+        $organisation->setCredits($current - $cost);
+        $manager = $managerRegistry->getManager();
+        $manager->persist($organisation);
+        $manager->flush();
+
         return $this->redirectToRoute('dashboard');
     }
 
@@ -116,6 +128,7 @@ class DashboardController extends AbstractController
                 $lang = "python ";
             }
             $command = $lang . $script_path . "orangesms.py --auth $token --message \"$message\" --phone $phone";
+            //dd($command);
             exec($command);
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
