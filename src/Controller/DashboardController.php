@@ -127,9 +127,9 @@ class DashboardController extends AbstractController
             if(!$this->is_windows()){
                 $lang = "source /var/www/marketo/venv/bin/activate & python3 ";
             }
-            $command = $lang . $script_path . "orangesms.py --auth $token --message \"$message\" --phone $phone";
+            $command = escapeshellcmd($lang . $script_path . "orangesms.py --auth $token --message \"$message\" --phone $phone");
             //dd($command);
-            exec($command);
+            dd(shell_exec($command));
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
