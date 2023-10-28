@@ -129,8 +129,7 @@ class DashboardController extends AbstractController
                 $lang = "python3 ";
             }
             $command = escapeshellcmd($lang . $script_path . "orangesms.py --auth $token --message \"$message\" --phone $phone");
-            //dd($command);
-            dd(shell_exec($command));
+            exec($command);
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
