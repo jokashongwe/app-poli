@@ -125,7 +125,7 @@ class DashboardController extends AbstractController
             $script_path = dirname(getcwd()) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR;
             $lang = "python ";
             if(!$this->is_windows()){
-                putenv("/home/marketo");
+                putenv('HOME=/home/marketo');
                 $lang = "python3 ";
             }
             $command = escapeshellcmd($lang . $script_path . "orangesms.py --auth $token --message \"$message\" --phone $phone");
