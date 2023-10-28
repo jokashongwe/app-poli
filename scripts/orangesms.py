@@ -72,8 +72,10 @@ class BulkOrange:
                 "senderAddress": f"tel:{self.country_sender_number}"
             }
         }
+        token_type = self.credentials.get("token_type")
+        access_token = self.credentials.get("access_token")
         headers = {
-            "Authorization": f"{self.credentials.get("token_type")} {self.credentials.get("access_token")}",
+            "Authorization": f"{token_type} {access_token}",
             "Content-Type": "application/json"
         }
         response = requests.post(url=url, json=body, headers=headers)
