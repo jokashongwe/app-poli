@@ -123,14 +123,13 @@ class DashboardController extends AbstractController
         $token = $this->getParameter('app.bulksmstoken');
         try {
             $script_path = dirname(getcwd()) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR;
-            $lang = "python3 ";
-            if($this->is_windows()){
-                exec("python3 -m venv venv");
-                $lang = "python ";
+            $lang = "python ";
+            if(!$this->is_windows()){
+                $lang = "source venv/bin/activate & python3 ";
             }
             $command = $lang . $script_path . "orangesms.py --auth $token --message \"$message\" --phone $phone";
             //dd($command);
-            exec(". venv/activate & "$command);
+            exec($command);
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
