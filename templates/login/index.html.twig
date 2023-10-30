@@ -86,7 +86,7 @@
                   {% endif %}
                   <div class="text-center pt-1 mb-5 pb-1">
                     <button class="btn btn-primary btn-block fa-lg py-3 mb-3" type="submit">Se Connecter</button>
-                    <a class="text-muted" href="#!">Mot de passe oublié ? Contactez l'administrateur</a>
+                    <span class="text-muted" href="#!">Vous n'avez pas de compte ? <a href="{{ path('app_register') }}" >S'enregistrer</a> </span>
                   </div>
                   
                   <input type="hidden" name="_target_path" value="{{ path('dashboard') }}"/>
