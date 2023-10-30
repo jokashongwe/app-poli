@@ -58,6 +58,11 @@ class DiffusionController extends AbstractController
             foreach ($raw_tags as $tag) {
                 array_push($tags, $tag->getId());
             }
+
+            $diffusion_tags = [];
+            foreach($raw_tags as $tag){
+                array_push($diffusion_tags, $tag->getName());
+            }
             /*
                 foreach ($raw_tags as $tag) {
                     array_push($tags, $tag->getCode());
@@ -107,12 +112,14 @@ class DiffusionController extends AbstractController
             */
             //$diffusion->setTags($tags);
             $diffusion->setTitre("No-Title");
+            $diffusion->setTags($diffusion_tags);
             $diffusion->setFederations($federations);
             $diffusion->setVisible(true);
             $diffusion->setOrganisation($organisation);
             $diffusion->setNumberOfMembers($nPhones);
-            $entityManager = $doctrine->getManager();
             $organisation->setCredits($currentSolde - $cost);
+
+            $entityManager = $doctrine->getManager();
             $entityManager->persist($diffusion);
             $entityManager->persist($organisation);
             $entityManager->flush();
