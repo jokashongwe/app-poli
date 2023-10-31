@@ -48,7 +48,7 @@ class DashboardController extends AbstractController
             $credits = $organisation->getCredits();
             //$federations = $entityManager->getRepository(Federation::class)->findAll();
             $federationCount = $this->compter($entityManager, Federation::class);
-            $memberCount =  $this->compter($entityManager, Membre::class);
+            $memberCount =  $membreRepository->count(['organisation' => $organisation]) ;
             $list = $membreRepository->findBy(array(), null, 5, null);
 
             $membreData = $membreRepository->countByFederation();
