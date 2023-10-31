@@ -15,7 +15,7 @@ class Tag
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255, unique:true)]
+    #[ORM\Column(type: 'string', length: 255, unique:false)]
     private $code;
 
     #[ORM\Column(type: 'string', length: 255)]
