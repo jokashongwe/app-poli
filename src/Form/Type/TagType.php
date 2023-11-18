@@ -14,6 +14,7 @@ class TagType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $organisation = $_SERVER['organisation_x'];
         $builder
             ->add('code', TextType::class, [
                 'label' => "Code",

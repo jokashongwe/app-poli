@@ -29,13 +29,14 @@ class DiffusionController extends AbstractController
     ): Response {
 
         $diffusion = new Diffusion();
-
+        $user = $this->getUser();
+        $organisation = $user->getOrganisation();
+        $_SERVER['organisation_x'] = $organisation->getId();
+        
         $form = $this->createForm(DiffusionType::class, $diffusion);
 
         $form->handleRequest($request);
 
-        $user = $this->getUser();
-        $organisation = $user->getOrganisation();
         
 
         if ($form->isSubmitted() && $form->isValid()) {

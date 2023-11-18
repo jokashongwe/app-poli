@@ -46,7 +46,7 @@ class MembreController extends AbstractController
         $membres = $doctrine->getRepository(Membre::class)->findBy([
             'visible' => null, 'organisation' => $organisation
         ]);
-
+        $_SERVER['organisation_x'] = $organisation->getId();
         $form = $this->createForm(MembreType::class, $membre);
         $excelForm = $this->createForm(ExcelUploadType::class, null, [
             'action' => $this->generateUrl('membre_new'),
@@ -138,7 +138,7 @@ class MembreController extends AbstractController
         $membre = $doctrine->getRepository(Membre::class)->find($id);
 
         $nvoMembre = new Membre();
-
+        $_SERVER['organisation_x'] = $membre->getOrganisation()->getId();
         $form = $this->createForm(MembreType::class, $nvoMembre);
 
         $form->handleRequest($request);

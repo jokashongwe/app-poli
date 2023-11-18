@@ -22,8 +22,10 @@ class TagController extends AbstractController
     {
 
         $groupe = new Tag();
+        $user = $this->getUser();
+        $organisation = $user->getOrganisation();
 
-        $groupes = $doctrine->getRepository(Tag::class)->findAll();
+        $groupes = $doctrine->getRepository(Tag::class)->findBy(['organisation' => $organisation]);
         
         
         $form = $this->createForm(TagType::class, $groupe);

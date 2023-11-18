@@ -4,6 +4,8 @@ namespace App\Form\Type;
 
 use App\Entity\Federation;
 use App\Entity\Tag;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,6 +20,7 @@ class MembreType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $organisation = $_SERVER['organisation_x'];
         $builder
             ->add('nom', TextType::class, [
                 'label' => "Nom",
@@ -25,6 +28,11 @@ class MembreType extends AbstractType
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'label' => 'Groupe',
+                'query_builder' => function (EntityRepository $er) use ($organisation): QueryBuilder {
+                    return $er->createQueryBuilder('t')
+                        ->where("t.organisation = :organisation")
+                        ->setParameter('organisation', $organisation);
+                },
                 'choice_label' => 'name',
                 'required' => false,
                 'multiple' => true
