@@ -60,7 +60,7 @@ class MembreController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $membre = $form->getData();
-            $p_membre = $membreRepository->findOneBy(['telephone' => $membre->getTelephone()]);
+            $p_membre = $membreRepository->findOneBy(['telephone' => $membre->getTelephone(), 'organisation' => $organisation]);
             if (!is_null($p_membre)) {
                 $this->addFlash("error", "Un utilisateur avec ses informations existe déjà dans la Base de données!");
                 return $this->redirectToRoute('membre_new');

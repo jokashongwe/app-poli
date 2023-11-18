@@ -160,8 +160,8 @@ class DiffusionController extends AbstractController
         $token = $this->getParameter('app.bulksmstoken');
         try {
             $script_path = dirname(getcwd()) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR;
-            $command = "python3 " . $script_path . "orangesms.py --auth $token --message \"$message\" --group $tag_list";
-            exec($command . " > /dev/null 2>&1 &");
+            $command = "python " . $script_path . "orangesms.py --auth $token --message \"$message\" --group $tag_list";
+            exec($command);
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
