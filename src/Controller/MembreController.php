@@ -105,7 +105,7 @@ class MembreController extends AbstractController
         $toast = [];
         if ($excelForm->isSubmitted() && $excelForm->isValid()) {
             $excelFile = $excelForm->get("attachement")->getData();
-            $excelImporter = new ExcelMembreImporter($excelFile, $doctrine);
+            $excelImporter = new ExcelMembreImporter($excelFile, $doctrine, $this->getUser());
 
             try {
                 $excelImporter->processData();
@@ -198,6 +198,9 @@ class MembreController extends AbstractController
         }
         return $this->redirectToRoute('membre_new');
     }
+
+    
+
     #[Route('/membre/delete/{id}', name: 'membre_delete')]
     public function delete(Request $request, ManagerRegistry $doctrine, TagRepository $tagRepository, int $id): Response
     {
@@ -207,7 +210,7 @@ class MembreController extends AbstractController
         }
         $membre->setVisible(false);
         $manager = $doctrine->getManager();
-        $manager->persist($membre);
+        $manager->remove($membre);
         $manager->flush();
         return $this->redirectToRoute('membre_new');
     }

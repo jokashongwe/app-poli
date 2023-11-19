@@ -153,6 +153,15 @@ class DiffusionController extends AbstractController
         return $this->redirectToRoute('diffusion');
     }
 
+    private function is_windows()
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private function send(Diffusion $diffusion, string $tag_list)
     {
 
@@ -160,8 +169,12 @@ class DiffusionController extends AbstractController
         $token = $this->getParameter('app.bulksmstoken');
         try {
             $script_path = dirname(getcwd()) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR;
-            $command = "python3 " . $script_path . "orangesms.py --auth $token --message \"$message\" --group $tag_list";
-            exec($command);
+            $lang = "python ";
+            if(!$this->is_windows()){
+                $lang = "python3 ";
+            }
+            $command = $lang . $script_path . "orangesms.py --auth $token --message \"$message\" --group $tag_list";
+            exec($command ." > /dev/null 2>&1 &");
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
         }

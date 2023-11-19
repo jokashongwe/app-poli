@@ -6,6 +6,7 @@ use App\Entity\Federation;
 use App\Entity\Membre;
 use App\Entity\Province;
 use App\Entity\Qualite;
+use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -17,12 +18,14 @@ class ExcelMembreImporter
     private UploadedFile $file;
     private string $filename = "";
     private ManagerRegistry $managerRegistery;
+    private User $user;
 
-    function __construct(UploadedFile $file, ManagerRegistry $em)
+    function __construct(UploadedFile $file, ManagerRegistry $em, User $user=null)
     {
         $this->file = $file;
         $this->readFile();
         $this->managerRegistery = $em;
+        $this->user = $user;
     }
 
     private function readFile()
@@ -51,38 +54,46 @@ class ExcelMembreImporter
         $chunkSize = 50;
         $chunkFilter = new ChunkReaderFilter();
         $reader->setReadFilter($chunkFilter);
-        for ($startRow = 2; $startRow <= 240; $startRow += $chunkSize) {
+        for ($startRow = 1; $startRow <= 240; $startRow += $chunkSize) {
             $chunkFilter->setRows($startRow, $chunkSize);
             $spreadsheet = $reader->load($this->filename);
             $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-
+            //$tag = 
+            //dd(sizeof($sheetData));
             foreach ($sheetData as $index => $membreData) {
                 if ($index == 1) continue; //on ignore la premiere ligne
-                if(!is_null($membreData["K"]) && $this->isMemberExist($membreData["K"])) continue;
+                $organisation = $this->user->getOrganisation();
+                //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
                 $membre = new Membre();
                 $membre->setNom($membreData["A"]);
                 $membre->setPostnom($membreData["B"]);
                 $membre->setPrenom($membreData["C"]);
-                $membre->setTelephone(is_null($membreData["K"]) ? "" : $membreData["K"] );
+                $membre->setTelephone($membreData["D"]);
+                /*
                 $membre->setGenre($this->getGenre($membreData["D"]));
                 $membre->setDatenaissance(\DateTime::createFromFormat("d/m/Y", $membreData["E"]));
                 $membre->setAdresse($membreData["F"]);
                 $membre->setQualite($this->getOrCreateQualite("titre", Qualite::class, $membreData["G"], $this->managerRegistery));
                 $membre->setFederation($this->getOrCreateFederation($membreData["I"], $membreData["H"],  $membreData["J"], $this->managerRegistery));
                 $membre->setSousfederation($membreData["I"]);
+                */
                 $membre->setDateadhesion(new \DateTimeImmutable());
                 $membre->setNoidentification($this->generateIdNumber());
+                $membre->setOrganisation($organisation);
                 $this->managerRegistery->getManager()->persist($membre);
+                $this->managerRegistery->getManager()->flush();
+                //dd($organisation);
             }
             $this->managerRegistery->getManager()->flush();
         }
         unlink($this->filename);
     }
 
-    private function isMemberExist($telephone)
+    private function isMemberExist($telephone, $organisation)
     {
         $result = $this->managerRegistery->getRepository(Membre::class)->findOneBy([
-            'telephone' => $telephone
+            'telephone' => $telephone,
+            'organisation' => $organisation
         ]);
 
         return !is_null($result);
