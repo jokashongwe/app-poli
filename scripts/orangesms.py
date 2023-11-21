@@ -71,7 +71,8 @@ class BulkOrange:
             "outboundSMSMessageRequest": {
                 "address": f"tel:{phone}",
                 "outboundSMSTextMessage": {"message": f"{self.message}"},
-                "senderAddress": f"tel:{self.country_sender_number}"
+                "senderAddress": f"tel:{self.country_sender_number}",
+                 "senderName": "Kibulu"
             }
         }
         token_type = self.credentials.get("token_type")
