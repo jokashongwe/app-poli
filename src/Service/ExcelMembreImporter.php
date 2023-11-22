@@ -68,7 +68,11 @@ class ExcelMembreImporter
                 $membre->setNom($membreData["A"]);
                 $membre->setPostnom($membreData["B"]);
                 $membre->setPrenom($membreData["C"]);
-                $membre->setTelephone($membreData["D"]);
+                $phone = $membreData["D"];
+                if(strpos("+243", $phone) < 0){
+                    $phone = "+243" . $phone;
+                }
+                $membre->setTelephone($phone);
                 /*
                 $membre->setGenre($this->getGenre($membreData["D"]));
                 $membre->setDatenaissance(\DateTime::createFromFormat("d/m/Y", $membreData["E"]));
