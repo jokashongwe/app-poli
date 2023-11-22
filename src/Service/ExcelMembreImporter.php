@@ -76,7 +76,7 @@ class ExcelMembreImporter
             $phone = $membreData["D"];
             $phone = "+243" . $phone;
             $tags = $this->tags;
-            if(is_null($tags)){
+            if(empty($tags)){
                 $tags = $organisation->getTags();
             }
             
