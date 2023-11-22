@@ -95,7 +95,7 @@ class ExcelMembreImporter
             $membre->setDateadhesion(new \DateTimeImmutable());
             $membre->setNoidentification($this->generateIdNumber());
             $membre->setOrganisation($organisation);
-            dd($membre);
+            dd($this->tags);
             $this->managerRegistery->getManager()->persist($membre);
             $this->managerRegistery->getManager()->flush();
             //dd($organisation);
