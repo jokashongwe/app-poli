@@ -74,16 +74,17 @@ class ExcelMembreImporter
                 }
                 $membre->setTelephone($phone);
                 /*
-                $membre->setGenre($this->getGenre($membreData["D"]));
-                $membre->setDatenaissance(\DateTime::createFromFormat("d/m/Y", $membreData["E"]));
-                $membre->setAdresse($membreData["F"]);
-                $membre->setQualite($this->getOrCreateQualite("titre", Qualite::class, $membreData["G"], $this->managerRegistery));
-                $membre->setFederation($this->getOrCreateFederation($membreData["I"], $membreData["H"],  $membreData["J"], $this->managerRegistery));
-                $membre->setSousfederation($membreData["I"]);
+                    $membre->setGenre($this->getGenre($membreData["D"]));
+                    $membre->setDatenaissance(\DateTime::createFromFormat("d/m/Y", $membreData["E"]));
+                    $membre->setAdresse($membreData["F"]);
+                    $membre->setQualite($this->getOrCreateQualite("titre", Qualite::class, $membreData["G"], $this->managerRegistery));
+                    $membre->setFederation($this->getOrCreateFederation($membreData["I"], $membreData["H"],  $membreData["J"], $this->managerRegistery));
+                    $membre->setSousfederation($membreData["I"]);
                 */
                 $membre->setDateadhesion(new \DateTimeImmutable());
                 $membre->setNoidentification($this->generateIdNumber());
                 $membre->setOrganisation($organisation);
+                dd($membre);
                 $this->managerRegistery->getManager()->persist($membre);
                 $this->managerRegistery->getManager()->flush();
                 //dd($organisation);
