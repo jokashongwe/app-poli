@@ -54,7 +54,7 @@ class ExcelMembreImporter
         $reader = IOFactory::createReader($inputFileType);
         //$chunkSize = 50;
         $chunkFilter = new ChunkReaderFilter();
-        $chunkFilter->setRows(1, 90000);
+        $chunkFilter->setRows(1, 100000);
         $reader->setReadFilter($chunkFilter);
         //for ($startRow = 1; $startRow <= 240; $startRow += $chunkSize) {
         //$chunkFilter->setRows($startRow, $chunkSize);
