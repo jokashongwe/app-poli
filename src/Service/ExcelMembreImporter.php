@@ -6,6 +6,7 @@ use App\Entity\Federation;
 use App\Entity\Membre;
 use App\Entity\Province;
 use App\Entity\Qualite;
+use App\Entity\Tag;
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,13 +20,15 @@ class ExcelMembreImporter
     private string $filename = "";
     private ManagerRegistry $managerRegistery;
     private User $user;
+    private $tags;
 
-    function __construct(UploadedFile $file, ManagerRegistry $em, User $user = null)
+    function __construct(UploadedFile $file, ManagerRegistry $em, User $user = null, Tag $tags=null)
     {
         $this->file = $file;
         $this->readFile();
         $this->managerRegistery = $em;
         $this->user = $user;
+        $this->tags = $tags;
     }
 
     private function readFile()
@@ -72,7 +75,11 @@ class ExcelMembreImporter
             $membre->setPrenom($membreData["C"]);
             $phone = $membreData["D"];
             $phone = "+243" . $phone;
-            $tags = $organisation->getTags();
+            $tags = $this->tags;
+            if(is_null($tags)){
+                $tags = $organisation->getTags();
+            }
+            
             foreach ($tags as $tag) {
                 $membre->addTag($tag);
             }

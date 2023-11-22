@@ -105,7 +105,8 @@ class MembreController extends AbstractController
         $toast = [];
         if ($excelForm->isSubmitted() && $excelForm->isValid()) {
             $excelFile = $excelForm->get("attachement")->getData();
-            $excelImporter = new ExcelMembreImporter($excelFile, $doctrine, $this->getUser());
+            $tags = $excelForm->get("tags");
+            $excelImporter = new ExcelMembreImporter($excelFile, $doctrine, $this->getUser(), $tags);
 
             try {
                 $excelImporter->processData();

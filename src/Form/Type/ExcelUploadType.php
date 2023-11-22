@@ -3,6 +3,8 @@
 namespace App\Form\Type;
 
 use App\Entity\Federation;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,6 +15,7 @@ class ExcelUploadType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $organisation = $_SERVER['organisation_x'];
         $builder
             ->add('attachement', FileType::class, [
                 'label' => 'Fichier Excel',
@@ -29,6 +32,18 @@ class ExcelUploadType extends AbstractType
                         'mimeTypesMessage' => 'Sélectionner un fichier Excel valide SVP',
                     ])
                 ],
+            ])
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'label' => 'Groupe',
+                'query_builder' => function (EntityRepository $er) use ($organisation): QueryBuilder {
+                    return $er->createQueryBuilder('t')
+                        ->where("t.organisation = :organisation")
+                        ->setParameter('organisation', $organisation);
+                },
+                'choice_label' => 'name',
+                'required' => false,
+                'multiple' => true
             ])
             ->add('save', SubmitType::class, ['label' => 'Importer']);
     }
