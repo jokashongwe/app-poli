@@ -69,7 +69,7 @@ class ExcelMembreImporter
                 $membre->setPostnom($membreData["B"]);
                 $membre->setPrenom($membreData["C"]);
                 $phone = $membreData["D"];
-                if(strpos("+243", $phone) < 0){
+                if(strpos($phone, "+243") < 0){
                     $phone = "+243" . $phone;
                 }
                 $membre->setTelephone($phone);
