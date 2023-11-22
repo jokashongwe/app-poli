@@ -22,7 +22,7 @@ class ExcelMembreImporter
     private User $user;
     private $tags;
 
-    function __construct(UploadedFile $file, ManagerRegistry $em, User $user = null, Tag $tags=null)
+    function __construct(UploadedFile $file, ManagerRegistry $em, User $user = null, $tags=null)
     {
         $this->file = $file;
         $this->readFile();
