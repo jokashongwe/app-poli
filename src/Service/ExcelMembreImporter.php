@@ -54,7 +54,7 @@ class ExcelMembreImporter
         $chunkSize = 50;
         $chunkFilter = new ChunkReaderFilter();
         $reader->setReadFilter($chunkFilter);
-        for ($startRow = 1; $startRow <= 240; $startRow += $chunkSize) {
+        for ($startRow = 1; $startRow <= 9000; $startRow += $chunkSize) {
             $chunkFilter->setRows($startRow, $chunkSize);
             $spreadsheet = $reader->load($this->filename);
             $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
