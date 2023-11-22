@@ -20,7 +20,7 @@ class ExcelMembreImporter
     private ManagerRegistry $managerRegistery;
     private User $user;
 
-    function __construct(UploadedFile $file, ManagerRegistry $em, User $user=null)
+    function __construct(UploadedFile $file, ManagerRegistry $em, User $user = null)
     {
         $this->file = $file;
         $this->readFile();
@@ -39,9 +39,10 @@ class ExcelMembreImporter
         $this->filename = "../public/excels/" . $filename;
     }
 
-    private function getGenre(string $genre){
+    private function getGenre(string $genre)
+    {
         $genre = strtolower($genre);
-        if($genre == "m" || $genre == "h" || $genre == "homme" ||  $genre == "masculin"){
+        if ($genre == "m" || $genre == "h" || $genre == "homme" ||  $genre == "masculin") {
             return "Homme";
         }
         return "Femme";
@@ -51,31 +52,32 @@ class ExcelMembreImporter
     {
         $inputFileType = IOFactory::identify($this->filename);
         $reader = IOFactory::createReader($inputFileType);
-        $chunkSize = 50;
+        //$chunkSize = 50;
         $chunkFilter = new ChunkReaderFilter();
+        $chunkFilter->setRows(1, 90000);
         $reader->setReadFilter($chunkFilter);
-        for ($startRow = 1; $startRow <= 9000; $startRow += $chunkSize) {
-            $chunkFilter->setRows($startRow, $chunkSize);
-            $spreadsheet = $reader->load($this->filename);
-            $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-            //$tag = 
-            //dd(sizeof($sheetData));
-            foreach ($sheetData as $index => $membreData) {
-                if ($index == 1) continue; //on ignore la premiere ligne
-                $organisation = $this->user->getOrganisation();
-                //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
-                $membre = new Membre();
-                $membre->setNom($membreData["A"]);
-                $membre->setPostnom($membreData["B"]);
-                $membre->setPrenom($membreData["C"]);
-                $phone = $membreData["D"];
-                $phone = "+243" . $phone;
-                $tags = $organisation->getTags();
-                foreach ($tags as $tag) {
-                    $membre->addTag($tag);
-                }
-                $membre->setTelephone($phone);
-                /*
+        //for ($startRow = 1; $startRow <= 240; $startRow += $chunkSize) {
+        //$chunkFilter->setRows($startRow, $chunkSize);
+        $spreadsheet = $reader->load($this->filename);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        //$tag = 
+        //dd(sizeof($sheetData));
+        foreach ($sheetData as $index => $membreData) {
+            if ($index == 1) continue; //on ignore la premiere ligne
+            $organisation = $this->user->getOrganisation();
+            //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
+            $membre = new Membre();
+            $membre->setNom($membreData["A"]);
+            $membre->setPostnom($membreData["B"]);
+            $membre->setPrenom($membreData["C"]);
+            $phone = $membreData["D"];
+            $phone = "+243" . $phone;
+            $tags = $organisation->getTags();
+            foreach ($tags as $tag) {
+                $membre->addTag($tag);
+            }
+            $membre->setTelephone($phone);
+            /*
                     $membre->setGenre($this->getGenre($membreData["D"]));
                     $membre->setDatenaissance(\DateTime::createFromFormat("d/m/Y", $membreData["E"]));
                     $membre->setAdresse($membreData["F"]);
@@ -83,15 +85,15 @@ class ExcelMembreImporter
                     $membre->setFederation($this->getOrCreateFederation($membreData["I"], $membreData["H"],  $membreData["J"], $this->managerRegistery));
                     $membre->setSousfederation($membreData["I"]);
                 */
-                $membre->setDateadhesion(new \DateTimeImmutable());
-                $membre->setNoidentification($this->generateIdNumber());
-                $membre->setOrganisation($organisation);
-                $this->managerRegistery->getManager()->persist($membre);
-                $this->managerRegistery->getManager()->flush();
-                //dd($organisation);
-            }
+            $membre->setDateadhesion(new \DateTimeImmutable());
+            $membre->setNoidentification($this->generateIdNumber());
+            $membre->setOrganisation($organisation);
+            $this->managerRegistery->getManager()->persist($membre);
             $this->managerRegistery->getManager()->flush();
+            //dd($organisation);
         }
+        $this->managerRegistery->getManager()->flush();
+        //}
         unlink($this->filename);
     }
 
@@ -141,8 +143,7 @@ class ExcelMembreImporter
         $fede = $em->getRepository(Federation::class)->findOneBy([
             "nom" => $nom
         ]);
-        if(!is_null($fede))
-        {
+        if (!is_null($fede)) {
             return $fede;
         }
         $entityManager = $em->getManager();
@@ -150,9 +151,8 @@ class ExcelMembreImporter
         $prov = $em->getRepository(Province::class)->findOneBy([
             'nom' => $province
         ]);
-        
-        if(is_null($province))
-        {
+
+        if (is_null($province)) {
             //creation de la province
             $prov = new Province();
             $prov->setNom($province);
@@ -163,8 +163,7 @@ class ExcelMembreImporter
         $fedeParente = $em->getRepository(Federation::class)->findOneBy([
             "nom" => $federation
         ]);
-        if(is_null($fedeParente))
-        {
+        if (is_null($fedeParente)) {
             $fedeParente = new Federation();
             $fedeParente->setNom($federation);
             $fedeParente->setProvince($prov);
@@ -179,6 +178,4 @@ class ExcelMembreImporter
         $entityManager->flush();
         return $fede;
     }
-
-
 }
