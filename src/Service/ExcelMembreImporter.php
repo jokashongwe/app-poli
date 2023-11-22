@@ -69,10 +69,8 @@ class ExcelMembreImporter
                 $membre->setPostnom($membreData["B"]);
                 $membre->setPrenom($membreData["C"]);
                 $phone = $membreData["D"];
+                $phone = "+243" . $phone;
                 $tags = $organisation->getTags();
-                if(strpos($phone, "+243") < 0){
-                    $phone = "+243" . $phone;
-                }
                 foreach ($tags as $tag) {
                     $membre->addTag($tag);
                 }
