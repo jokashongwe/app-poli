@@ -36,6 +36,7 @@ class TagController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $groupe = $form->getData();
+            $groupe->setOrganisation($organisation);
             $entityManager = $doctrine->getManager();
             $entityManager->persist($groupe);
             $entityManager->flush();
