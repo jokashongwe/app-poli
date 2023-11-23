@@ -48,19 +48,26 @@ def get_phones_from_group(group: str) -> List[str]:
 class BulkSMS:
     def __init__(
         self,
-        country_sender_number: str,
         config: Dict[str, str],
         message: str,
     ) -> None:
-        self.country_sender_number = country_sender_number
         self.config = config
         self.message = message
         self.credentials = None
 
-    def send_messages(self, destinationList=None):
+    def get_routing_group(self, number):
+        number = number.replace("+243", "")
+        carrier_code = number[:2]
+        if carrier_code in ["97", "99"]:
+            return "PREMIUM"
+        if carrier_code in ["81", "82", "83"]:
+            return "ECONOMY"
+        return "STANDARD"
+
+    def send_messages(self, destinationList: list[str]=None):
         print("Starting processing")
-        numbers = destinationList
-        url = "https://api.bulksms.com/v1"
+        numbers = [f"+243{dest.replace("+243","").strip()}" for dest in destinationList] # ajout de 243 au cas ou il n'y en a pas
+        url = "https://api.bulksms.com/v1/messages"
         senderName = self.config.get("senderName")
         senderName = senderName if senderName else "repliable"
         body = []
@@ -69,23 +76,18 @@ class BulkSMS:
                 {
                     "from": senderName,
                     "to": [{"type": "INTERNATIONAL", "address": number}],
-                    "routingGroup": "PREMIUM"
-                    if "+24399" in number or "+24397" in number
-                    else "STANDARD",
+                    "routingGroup": self.get_routing_group(number),
                     "encoding": "TEXT",
                     "longMessageMaxParts": 99,
                     "body": unidecode(self.message),
-                    "userSuppliedId": f"submission-{int(time.time())}",
                     "protocolId": "IMPLICIT",
                     "messageClass": "SIM_SPECIFIC",
                     "deliveryReports": "ALL",
                 }
             )
 
-        token_type = self.credentials.get("token_type")
-        access_token = self.credentials.get("access_token")
         headers = {
-            "Authorization": f"{token_type} {access_token}",
+            "Authorization": f"Basic {self.config.get("token")}",
             "Content-Type": "application/json",
         }
         response = requests.post(url=url, json=body, headers=headers)
@@ -93,7 +95,6 @@ class BulkSMS:
             logging.error(response.text)
             return False
         return True
-        print("End processing")
 
 
 if __name__ == "__main__":
@@ -128,18 +129,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.phone:
-        bulk_instance = BulkOrange(
-            country_sender_number="+2430000",
-            config={"auth_header": args.auth_header},
+        bulk_instance = BulkSMS(
+            config={"token": args.auth_header},
             message=args.message,
         )
         bulk_instance.send_messages(destinationList=[args.phone])
 
     if args.group:
         for numbers in get_phones_from_group(group=f"{args.group}"):
-            bulk_instance = BulkOrange(
+            bulk_instance = BulkSMS(
                 country_sender_number="+2430000",
-                config={"auth_header": args.auth_header},
+                config={"token": args.auth_header},
                 message=args.message,
             )
             bulk_instance.send_messages(destinationList=numbers)

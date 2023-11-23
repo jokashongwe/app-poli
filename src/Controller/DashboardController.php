@@ -120,7 +120,7 @@ class DashboardController extends AbstractController
     private function send($message, $phone)
     {
 
-        $token = $this->getParameter('app.bulksmstoken');
+        $token = $this->getParameter('app.smstoken');
         try {
             $script_path = dirname(getcwd()) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR;
             $lang = "python ";
@@ -128,7 +128,7 @@ class DashboardController extends AbstractController
                 putenv('HOME=/home/marketo');
                 $lang = "python3 ";
             }
-            $command = escapeshellcmd($lang . $script_path . "orangesms.py --auth $token --message \"$message\" --phone $phone");
+            $command = escapeshellcmd($lang . $script_path . "bulksms.py --auth $token --message \"$message\" --phone $phone");
             exec($command );
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");

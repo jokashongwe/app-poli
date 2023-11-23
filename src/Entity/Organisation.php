@@ -48,6 +48,12 @@ class Organisation
     #[ORM\Column(type: 'json', nullable: true)]
     private $senderNames = [];
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $defaultSenderName;
+
+    #[ORM\OneToMany(mappedBy: 'organisation', targetEntity: Sendername::class)]
+    private $sendernames;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -57,6 +63,7 @@ class Organisation
         $this->tags = new ArrayCollection();
         $this->membres = new ArrayCollection();
         $this->diffusions = new ArrayCollection();
+        $this->sendernames = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -318,6 +325,40 @@ class Organisation
     public function setSenderNames(?array $senderNames): self
     {
         $this->senderNames = $senderNames;
+
+        return $this;
+    }
+
+    public function getDefaultSenderName(): ?string
+    {
+        return $this->defaultSenderName;
+    }
+
+    public function setDefaultSenderName(?string $defaultSenderName): self
+    {
+        $this->defaultSenderName = $defaultSenderName;
+
+        return $this;
+    }
+
+    public function addSendername(Sendername $sendername): self
+    {
+        if (!$this->sendernames->contains($sendername)) {
+            $this->sendernames[] = $sendername;
+            $sendername->setOrganisation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSendername(Sendername $sendername): self
+    {
+        if ($this->sendernames->removeElement($sendername)) {
+            // set the owning side to null (unless already changed)
+            if ($sendername->getOrganisation() === $this) {
+                $sendername->setOrganisation(null);
+            }
+        }
 
         return $this;
     }
