@@ -67,7 +67,7 @@ class BulkSMS:
     def send_messages(self, destinationList: list[str]=None):
         print("Starting processing")
         parsed_list = [dest.replace("+243","").strip() for dest in destinationList]
-        numbers = [dest for dest in parsed_list] # ajout de 243 au cas ou il n'y en a pas
+        numbers = [f"+243{dest}" for dest in parsed_list] # ajout de 243 au cas ou il n'y en a pas
         url = "https://api.bulksms.com/v1/messages"
         senderName = self.config.get("senderName")
         senderName = senderName if senderName else "repliable"
