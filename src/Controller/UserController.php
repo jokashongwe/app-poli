@@ -20,7 +20,8 @@ class UserController extends AbstractController
     #[Route('/account', name: 'user_show')]
     public function index(Request $request, ManagerRegistry $registry): Response
     {
-        $users = $registry->getRepository(User::class)->findAll();
+        $organisation = $this->getUser()->getOrganisation();
+        $users = $registry->getRepository(User::class)->findBy(["organisation" => $organisation]);
         $user = new user();
         $form = $this->createForm(UserType::class, $user, [
             "action" => $this->generateUrl("user_new")
