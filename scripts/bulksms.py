@@ -138,7 +138,6 @@ if __name__ == "__main__":
     if args.group:
         for numbers in get_phones_from_group(group=f"{args.group}"):
             bulk_instance = BulkSMS(
-                country_sender_number="+2430000",
                 config={"token": args.auth_header},
                 message=args.message,
             )

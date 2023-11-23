@@ -93,6 +93,7 @@ class DiffusionController extends AbstractController
                 $this->addFlash("error", "Solde de message insuffisant pour la diffusion!");
                 return $this->redirectToRoute('diffusion');
             }
+            //dd($tag_list);
             $this->send($diffusion, $tag_list);
 
             /*
@@ -174,7 +175,7 @@ class DiffusionController extends AbstractController
                 $lang = "python3 ";
             }
             $command = $lang . $script_path . "bulksms.py --auth $token --message \"$message\" --group $tag_list";
-            exec($command ." > /dev/null 2>&1 &");
+            exec($command);
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
         }
