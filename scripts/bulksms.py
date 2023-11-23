@@ -66,7 +66,8 @@ class BulkSMS:
 
     def send_messages(self, destinationList: list[str]=None):
         print("Starting processing")
-        numbers = [f"+243{dest.replace("+243","").strip()}" for dest in destinationList] # ajout de 243 au cas ou il n'y en a pas
+        parsed_list = [dest.replace("+243","").strip() for dest in destinationList]
+        numbers = [dest for dest in parsed_list] # ajout de 243 au cas ou il n'y en a pas
         url = "https://api.bulksms.com/v1/messages"
         senderName = self.config.get("senderName")
         senderName = senderName if senderName else "repliable"
@@ -110,6 +111,9 @@ if __name__ == "__main__":
         "-m", "--message", dest="message", help="The message to send", metavar="MESSAGE"
     )
     parser.add_argument(
+        "-s", "--sender", dest="sender", help="Sender name"
+    )
+    parser.add_argument(
         "-p",
         "--phone",
         dest="phone",
@@ -130,7 +134,7 @@ if __name__ == "__main__":
 
     if args.phone:
         bulk_instance = BulkSMS(
-            config={"token": args.auth_header},
+            config={"token": args.auth_header, "senderName": args.sender},
             message=args.message,
         )
         bulk_instance.send_messages(destinationList=[args.phone])
@@ -138,7 +142,7 @@ if __name__ == "__main__":
     if args.group:
         for numbers in get_phones_from_group(group=f"{args.group}"):
             bulk_instance = BulkSMS(
-                config={"token": args.auth_header},
+                config={"token": args.auth_header, "senderName": args.sender},
                 message=args.message,
             )
             bulk_instance.send_messages(destinationList=numbers)
