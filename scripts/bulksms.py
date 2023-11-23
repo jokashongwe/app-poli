@@ -86,9 +86,9 @@ class BulkSMS:
                     "deliveryReports": "ALL",
                 }
             )
-
+        token = self.config.get("token")
         headers = {
-            "Authorization": f"Basic {self.config.get("token")}",
+            "Authorization": f"Basic {token}",
             "Content-Type": "application/json",
         }
         response = requests.post(url=url, json=body, headers=headers)
