@@ -159,14 +159,14 @@
         let table = null;
         document.addEventListener('DOMContentLoaded', function () {
             table = new DataTable('#membre-data', {
-                ordering: false
                 select: {
                     style: 'multi'
                 },
                 language: {
                     url: '/plugin/datatable.json'
                 },
-                pageLength: 10,
+                order: [[3, 'desc']],
+                pageLength: 10
             });
         });
 
