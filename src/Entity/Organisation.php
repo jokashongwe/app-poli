@@ -45,6 +45,9 @@ class Organisation
     #[ORM\OneToMany(mappedBy: 'organisation', targetEntity: Diffusion::class)]
     private $diffusions;
 
+    #[ORM\Column(type: 'json', nullable: true)]
+    private $senderNames = [];
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -303,6 +306,18 @@ class Organisation
                 $diffusion->setOrganisation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSenderNames(): ?array
+    {
+        return $this->senderNames;
+    }
+
+    public function setSenderNames(?array $senderNames): self
+    {
+        $this->senderNames = $senderNames;
 
         return $this;
     }

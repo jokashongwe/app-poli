@@ -59,6 +59,7 @@ class TagController extends AbstractController
     {
 
         $groupe = $doctrine->getRepository(Tag::class)->find($id);
+        $organisation = $this->getUser()->getOrganisation();
         $_SERVER['organisation_x'] = $organisation->getId();
         
         $form = $this->createForm(TagType::class, $groupe);
@@ -70,9 +71,8 @@ class TagController extends AbstractController
 
             $groupe2 = $form->getData();
 
-            $groupe->setNom($groupe2->getNom());
-            $groupe->setProvince($groupe2->getProvince());
-            $groupe->setgroupe($groupe2->getgroupe());
+            $groupe->setName($groupe2->getName());
+            $groupe->setCode($groupe2->getCode());
 
             $entityManager = $doctrine->getManager();
             $entityManager->persist($groupe);
@@ -81,6 +81,11 @@ class TagController extends AbstractController
 
             return $this->redirectToRoute('tag_new');
         }
+        return $this->renderForm('tag/update.html.twig', [
+            'controller_name' => 'TagController',
+            'form'          => $form,
+            'toast' => null
+        ]);
             
     }
 }

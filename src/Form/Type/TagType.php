@@ -22,6 +22,6 @@ class TagType extends AbstractType
             ->add('name',  TextType::class, [
                 'label' => "Nom",
             ])
-            ->add('save', SubmitType::class, ['label' => 'Créer un groupe']);
+            ->add('save', SubmitType::class, ['label' => 'Enregistrer']);
     }
 }

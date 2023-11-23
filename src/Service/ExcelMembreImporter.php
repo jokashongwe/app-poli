@@ -62,19 +62,27 @@ class ExcelMembreImporter
         //for ($startRow = 1; $startRow <= 240; $startRow += $chunkSize) {
         //$chunkFilter->setRows($startRow, $chunkSize);
         $spreadsheet = $reader->load($this->filename);
-        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        $sheetData = $spreadsheet->getSheetByName("Membres")->toArray(null, true, true, true);
         //$tag = 
         //dd(sizeof($sheetData));
         foreach ($sheetData as $index => $membreData) {
             if ($index == 1) continue; //on ignore la premiere ligne
+            if(is_null($membreData["D"])) continue;
             $organisation = $this->user->getOrganisation();
-            //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
-            $membre = new Membre();
-            $membre->setNom($membreData["A"]);
-            $membre->setPostnom($membreData["B"]);
-            $membre->setPrenom($membreData["C"]);
             $phone = $membreData["D"];
             $phone = "+243" . $phone;
+            if($this->isMemberExist($phone, $organisation))continue;
+            
+            //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
+            $membre = new Membre();
+            $nom = is_null($membreData["A"]) ? "" : $membreData["A"];
+            $postnom = is_null($membreData["B"]) ? "" : $membreData["B"];
+            $prenom = is_null($membreData["C"]) ? "" : $membreData["C"];
+            $membre->setNom($nom);
+            $membre->setPostnom($postnom);
+            $membre->setPrenom($prenom);
+            $phone = $membreData["D"];
+            
             $tags = $this->tags;
             if(empty($tags)){
                 $tags = $organisation->getTags();
@@ -107,12 +115,12 @@ class ExcelMembreImporter
 
     private function isMemberExist($telephone, $organisation)
     {
-        $result = $this->managerRegistery->getRepository(Membre::class)->findOneBy([
+        $result = $this->managerRegistery->getRepository(Membre::class)->findBy([
             'telephone' => $telephone,
             'organisation' => $organisation
         ]);
 
-        return !is_null($result);
+        return !empty($result);
     }
 
     private function generateIdNumber()
