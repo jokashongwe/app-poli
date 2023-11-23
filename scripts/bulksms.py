@@ -12,9 +12,9 @@ from typing import List, Dict, Any, Optional
 def get_phones_from_group(group: str) -> List[str]:
     config = {
         "user": "root",
-        "password": "",
+        "password": "roadToInnov24B",
         "host": "127.0.0.1",
-        "database": "bulksmsapp",
+        "database": "marketoapp",
         "raise_on_warnings": True,
     }
     group = group.strip()
