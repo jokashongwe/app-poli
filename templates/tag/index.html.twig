@@ -32,7 +32,11 @@
                                 {{ tag.name }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ tag.membres | length }}
+                                {% if tag.code == "GENERAL" %}
+                                    {{ all }}
+                                {% else %}
+                                    {{ tag.membres | length }}
+                                {% endif %}
                             </td>
                             <td class="p-3 text-center">
                                 <a 

@@ -7,6 +7,8 @@ use App\Entity\Province;
 use App\Entity\Tag;
 use App\Form\Type\groupeType;
 use App\Form\Type\TagType;
+use App\Repository\MembreRepository;
+use App\Repository\TagRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +20,7 @@ class TagController extends AbstractController
 
 
     #[Route('/tags/new', name: 'tag_new')]
-    public function new(Request $request, ManagerRegistry $doctrine): Response
+    public function new(Request $request, ManagerRegistry $doctrine, MembreRepository $membreRepository): Response
     {
 
         $groupe = new Tag();
@@ -26,7 +28,8 @@ class TagController extends AbstractController
         $organisation = $user->getOrganisation();
         $_SERVER['organisation_x'] = $organisation->getId();
         $groupes = $doctrine->getRepository(Tag::class)->findBy(['organisation' => $organisation]);
-        
+        $total = $membreRepository->count(['organisation' => $organisation]);
+        //dd($total);
         
         $form = $this->createForm(TagType::class, $groupe);
 
@@ -49,6 +52,7 @@ class TagController extends AbstractController
         return $this->renderForm('tag/index.html.twig', [
             'controller_name' => 'TagController',
             'form'          => $form,
+            'all' => $total,
             'tags' => $groupes,
             'toast' => null
         ]);
