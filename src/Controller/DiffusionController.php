@@ -174,7 +174,14 @@ class DiffusionController extends AbstractController
             if(!$this->is_windows()){
                 $lang = "python3 ";
             }
-            $command = $lang . $script_path . "bulksms.py --auth $token --message \"$message\" --group $tag_list";
+            $last = "";
+            if(!is_null($diffusion->getSendername())){
+                $sender = $diffusion->getSendername()->getSenderid();
+                $last = " --sender \"$sender\" "; 
+            }
+            
+            $command = $lang . $script_path . "bulksms.py --auth $token --message \"$message\" --group $tag_list" . $last;
+            dd($command);
             exec($command);
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");

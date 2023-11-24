@@ -48,6 +48,9 @@ class Diffusion
     #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'diffusions')]
     private $organisation;
 
+    #[ORM\ManyToOne(targetEntity: Sendername::class, inversedBy: 'diffusions')]
+    private $sendername;
+
     public function __construct()
     {
         if(is_null($this->startDate)){
@@ -188,6 +191,18 @@ class Diffusion
     public function setOrganisation(?Organisation $organisation): self
     {
         $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    public function getSendername(): ?Sendername
+    {
+        return $this->sendername;
+    }
+
+    public function setSendername(?Sendername $sendername): self
+    {
+        $this->sendername = $sendername;
 
         return $this;
     }

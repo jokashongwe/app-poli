@@ -4,6 +4,7 @@ namespace App\Form\Type;
 
 use App\Entity\Federation;
 use App\Entity\Province;
+use App\Entity\Sendername;
 use App\Entity\Tag;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -31,6 +32,16 @@ class DiffusionType extends AbstractType
                 },
                 'choice_label' => 'name',
                 'multiple' => true,
+                'required' => false
+            ])
+            ->add("sendername", EntityType::class, [
+                'class' => Sendername::class,
+                'query_builder' => function (EntityRepository $er) use ($organisation): QueryBuilder {
+                    return $er->createQueryBuilder('t')
+                        ->where("t.organisation = :organisation")
+                        ->setParameter('organisation', $organisation);
+                },
+                'choice_label' => 'senderid',
                 'required' => false
             ])
             ->add('save', SubmitType::class, ['label' => 'Envoyer une diffusion']);
