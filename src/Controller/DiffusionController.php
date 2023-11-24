@@ -181,7 +181,7 @@ class DiffusionController extends AbstractController
             }
             
             $command = $lang . $script_path . "bulksms.py --auth $token --message \"$message\" --group $tag_list" . $last;
-            dd($command);
+            //dd($command);
             exec($command);
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
