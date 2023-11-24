@@ -22,7 +22,7 @@ class ExcelMembreImporter
     private User $user;
     private $tags;
 
-    function __construct(UploadedFile $file, ManagerRegistry $em, User $user = null, $tags=null)
+    function __construct(UploadedFile $file, ManagerRegistry $em, User $user = null, $tags = null)
     {
         $this->file = $file;
         $this->readFile();
@@ -67,49 +67,53 @@ class ExcelMembreImporter
         //dd(sizeof($sheetData));
         foreach ($sheetData as $index => $membreData) {
             if ($index == 1) continue; //on ignore la premiere ligne
-            if(is_null($membreData["D"])) continue;
-            $organisation = $this->user->getOrganisation();
-            $phone = $membreData["D"];
-            $phone = "+243" . $phone;
-            if($this->isMemberExist($phone, $organisation))continue;
-            
-            //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
-            $membre = new Membre();
-            $nom = is_null($membreData["A"]) ? "" : $membreData["A"];
-            $postnom = is_null($membreData["B"]) ? "" : $membreData["B"];
-            $prenom = is_null($membreData["C"]) ? "" : $membreData["C"];
-            $membre->setNom($nom);
-            $membre->setPostnom($postnom);
-            $membre->setPrenom($prenom);
-            $phone = $membreData["D"];
-            
-            $tags = $this->tags;
-            if(empty($tags)){
-                $tags = $organisation->getTags();
+            if (is_null($membreData["D"]) || empty($membreData["D"])) continue;
+            try {
+                $organisation = $this->user->getOrganisation();
+                $phone = $membreData["D"];
+                $phone = str_replace("+", "", $phone);
+                $parts = substr($phone, 0, 3);
+                $pos = strpos($parts, "243");
+                if ($pos !== false) {
+                    //243 se trouve déjà
+                } else {
+                    $phone = "243$phone";
+                }
+                $phone = "+$phone";
+                if ($this->isMemberExist($phone, $organisation)) continue;
+
+                //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
+                $membre = new Membre();
+                $nom = is_null($membreData["A"]) ? "inconnu" : $membreData["A"];
+                $postnom = is_null($membreData["B"]) ? "-" : $membreData["B"];
+                $prenom = is_null($membreData["C"]) ? "-" : $membreData["C"];
+                $membre->setNom($nom);
+                $membre->setPostnom($postnom);
+                $membre->setPrenom($prenom);
+                //$phone = $membreData["D"];
+
+                $tags = $this->tags;
+                if (empty($tags)) {
+                    $tags = $organisation->getTags();
+                }
+
+                foreach ($tags as $tag) {
+                    $membre->addTag($tag);
+                }
+                $membre->setTelephone($phone);
+                
+                $membre->setDateadhesion(new \DateTimeImmutable());
+                $membre->setNoidentification($this->generateIdNumber());
+                $membre->setOrganisation($organisation);
+                //dd($this->tags);
+                $this->managerRegistery->getManager()->persist($membre);
+                $this->managerRegistery->getManager()->flush();
+            } catch (\Exception $e) {
+                //do nothing... TODO: Modifier plus tard
+                //dd($e);
             }
-            
-            foreach ($tags as $tag) {
-                $membre->addTag($tag);
-            }
-            $membre->setTelephone($phone);
-            /*
-                    $membre->setGenre($this->getGenre($membreData["D"]));
-                    $membre->setDatenaissance(\DateTime::createFromFormat("d/m/Y", $membreData["E"]));
-                    $membre->setAdresse($membreData["F"]);
-                    $membre->setQualite($this->getOrCreateQualite("titre", Qualite::class, $membreData["G"], $this->managerRegistery));
-                    $membre->setFederation($this->getOrCreateFederation($membreData["I"], $membreData["H"],  $membreData["J"], $this->managerRegistery));
-                    $membre->setSousfederation($membreData["I"]);
-                */
-            $membre->setDateadhesion(new \DateTimeImmutable());
-            $membre->setNoidentification($this->generateIdNumber());
-            $membre->setOrganisation($organisation);
-            //dd($this->tags);
-            $this->managerRegistery->getManager()->persist($membre);
-            $this->managerRegistery->getManager()->flush();
-            //dd($organisation);
         }
         $this->managerRegistery->getManager()->flush();
-        //}
         unlink($this->filename);
     }
 
