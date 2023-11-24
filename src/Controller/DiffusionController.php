@@ -9,6 +9,7 @@ use App\Form\Type\DiffusionType;
 use App\Repository\DiffusionRepository;
 use App\Repository\MembreRepository;
 use App\Repository\ReferenceDataRepository;
+use App\Repository\TagRepository;
 use App\Service\MessageService;
 use Doctrine\Persistence\ManagerRegistry;
 use PhpOffice\PhpSpreadsheet\Calculation\Web\Service;
@@ -25,7 +26,7 @@ class DiffusionController extends AbstractController
         ManagerRegistry $doctrine,
         DiffusionRepository $diffusionRepository,
         MembreRepository $membreRepository,
-        ReferenceDataRepository $referenceDataRepository
+        TagRepository $tagRepository
     ): Response {
 
         $diffusion = new Diffusion();
@@ -56,8 +57,17 @@ class DiffusionController extends AbstractController
             $raw_tags = $diffusion->getTags();
             //$phones = [];
             $tags = [];
+            
             foreach ($raw_tags as $tag) {
-                array_push($tags, $tag->getId());
+                if($tag->getCode() == 'GENERAL'){
+                    $alltags = $tagRepository->findBy(['organisation' => $organisation]);
+                    foreach ($alltags as $altag) {
+                        array_push($tags, $altag->getId());
+                    }
+                    break;
+                }else {
+                    array_push($tags, $tag->getId());
+                }
             }
 
             $diffusion_tags = [];
