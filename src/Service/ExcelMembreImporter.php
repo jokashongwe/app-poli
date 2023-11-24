@@ -114,7 +114,7 @@ class ExcelMembreImporter
             }
         }
         $this->managerRegistery->getManager()->flush();
-        unlink($this->filename);
+        //unlink($this->filename);
     }
 
     private function isMemberExist($telephone, $organisation)
