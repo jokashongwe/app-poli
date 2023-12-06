@@ -56,13 +56,7 @@ class BulkSMS:
         self.credentials = None
 
     def get_routing_group(self, number):
-        number = number.replace("+243", "")
-        carrier_code = number[:2]
-        if carrier_code in ["97", "99"]:
-            return "PREMIUM"
-        if carrier_code in ["81", "82", "83"]:
-            return "ECONOMY"
-        return "STANDARD"
+        return "PREMIUM"
 
     def send_messages(self, destinationList: list[str]=None):
         print("Starting processing")

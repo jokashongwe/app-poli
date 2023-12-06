@@ -98,9 +98,13 @@ class DashboardController extends AbstractController
     {
         $message = $request->get("message");
         $phone = $request->get("phone");
-        $this->send($message, $phone);
         $user = $this->getUser();
         $organisation = $user->getOrganisation();
+        $sender = null;
+        if(!is_null($organisation->getDefaultSenderName())){
+            $sender = $organisation->getDefaultSenderName();
+        }
+        $this->send($message, $phone, $sender);
         $current = $organisation->getCredits();
 
         $parts = intval(strlen($message) / 156) + 1;
@@ -117,7 +121,7 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute('dashboard');
     }
 
-    private function send($message, $phone)
+    private function send($message, $phone, $sender=null)
     {
 
         $token = $this->getParameter('app.smstoken');
@@ -128,7 +132,11 @@ class DashboardController extends AbstractController
                 putenv('HOME=/home/marketo');
                 $lang = "python3 ";
             }
-            $command = escapeshellcmd($lang . $script_path . "bulksms.py --auth $token --message \"$message\" --phone $phone");
+            $last = "";
+            if(!is_null($sender)){
+                $last = " --sender \"$sender\" "; 
+            }
+            $command = escapeshellcmd($lang . $script_path . "bulksms.py --auth $token --message \"$message\" --phone $phone" . $last);
             exec($command );
         } catch (\Throwable $th) {
             $this->addFlash("error", "Une erreur lors de la transmissions, réessayez plus tard!");
