@@ -71,6 +71,7 @@ class ExcelMembreImporter
             try {
                 $organisation = $this->user->getOrganisation();
                 $phone = $membreData["D"];
+                dd($phone);
                 $phone = str_replace("+", "", $phone);
                 $parts = substr($phone, 0, 3);
                 $pos = strpos($parts, "243");
