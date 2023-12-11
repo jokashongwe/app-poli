@@ -115,7 +115,8 @@ class MembreController extends AbstractController
                     "message" => "Les données ont été correctement importées"
                 ];
             } catch (\Throwable $th) {
-                dd($th);
+                //dd($th);
+                $this->addFlash("error", "L'erreur suivante est survenue lors du chargement: " . $th->getMessage());
                 $toast = [
                     "isError" => true,
                     "message" => "L'erreur suivante est survenue lors du chargement: " . $th->getMessage()

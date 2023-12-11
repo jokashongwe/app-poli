@@ -67,12 +67,12 @@ class ExcelMembreImporter
         //dd(sizeof($sheetData));
         foreach ($sheetData as $index => $membreData) {
             if ($index == 1) continue; //on ignore la premiere ligne
-            dd($membreData);
+            //dd($membreData);
             if (is_null($membreData["D"]) || empty($membreData["D"])) continue;
             try {
                 $organisation = $this->user->getOrganisation();
                 $phone = $membreData["D"];
-                dd($phone);
+                //dd($phone);
                 $phone = str_replace("+", "", $phone);
                 $parts = substr($phone, 0, 3);
                 $pos = strpos($parts, "243");
