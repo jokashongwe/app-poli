@@ -21,9 +21,9 @@ def get_phones_from_group(group: str) -> List[str]:
     group_parts = [part for part in group.split(",") if part]
     cnx = connector.connect(**config)
     cursor = cnx.cursor()
-    query = f"SELECT distinct membre.telephone as telephone  FROM membre, tag_membre WHERE tag_membre.membre_id = membre.id AND tag_membre.tag_id IN ({group});"
+    query = f"SELECT distinct membre.telephone as telephone  FROM membre, tag_membre WHERE tag_membre.membre_id = membre.id AND tag_membre.tag_id IN ({group}) order by membre.id desc;"
     if len(group_parts) == 1:
-        query = f"SELECT distinct membre.telephone as telephone  FROM membre, tag_membre WHERE tag_membre.membre_id = membre.id AND tag_membre.tag_id = '{group_parts[0]}';"
+        query = f"SELECT distinct membre.telephone as telephone  FROM membre, tag_membre WHERE tag_membre.membre_id = membre.id AND tag_membre.tag_id = '{group_parts[0]}' order by membre.id desc;"
     # print("Query: ", query)
     cursor.execute(query)
     numbers: List[str] = []
