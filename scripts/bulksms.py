@@ -79,7 +79,7 @@ class BulkSMS:
                     "routingGroup": self.get_routing_group(number),
                     "encoding": "TEXT",
                     "longMessageMaxParts": 99,
-                    "body": newMessage,
+                    "body": self.message,
                     "protocolId": "IMPLICIT",
                     "messageClass": "SIM_SPECIFIC",
                     "deliveryReports": "ALL",
