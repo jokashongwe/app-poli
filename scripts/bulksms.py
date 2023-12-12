@@ -44,6 +44,8 @@ def get_phones_from_group(group: str) -> List[str]:
     cursor.close()
     cnx.close()
 
+def isascii(s):
+    return len(s) == len(s.encode())
 
 class BulkSMS:
     def __init__(
@@ -56,7 +58,8 @@ class BulkSMS:
         self.credentials = None
 
     def get_routing_group(self, number):
-        return "PREMIUM"
+        return "STANDARD" if isascii(self.message) else "PREMIUM"
+            
 
     def send_messages(self, destinationList: list[str] = None):
         print("Starting processing")
