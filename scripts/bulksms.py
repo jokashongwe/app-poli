@@ -67,10 +67,9 @@ class BulkSMS:
         url = "https://api.bulksms.com/v1/messages"
         senderName = self.config.get("senderName")
         senderName = senderName if senderName else "repliable"
-        newMessage = (
-            unidecode(self.message).replace("ndeg", "no.").replace("Ndeg", "No.")
-        )
+        newMessage = self.message.replace("?/'","'").replace("?/","")
         body = []
+
         for number in numbers:
             body.append(
                 {
@@ -79,7 +78,7 @@ class BulkSMS:
                     "routingGroup": self.get_routing_group(number),
                     "encoding": "TEXT",
                     "longMessageMaxParts": 99,
-                    "body": f"{self.message}",
+                    "body": newMessage,
                     "protocolId": "IMPLICIT",
                     "messageClass": "SIM_SPECIFIC",
                     "deliveryReports": "ALL",
