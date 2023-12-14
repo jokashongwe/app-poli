@@ -70,7 +70,7 @@ class BulkSMS:
         url = "https://api.bulksms.com/v1/messages"
         senderName = self.config.get("senderName")
         senderName = senderName if senderName else "repliable"
-        newMessage = self.message.replace("?/'","'").replace("?/","")
+        newMessage = self.message.replace("?/'","'").replace("?/","").replace("\\'","'")
         body = []
 
         for number in numbers:
