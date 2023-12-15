@@ -23,6 +23,8 @@ use Symfony\Component\Routing\Annotation\Route;
 //use PhpOffice\PhpSpreadsheet\IOFactory;
 //use Twig\Cache\NullCache;
 
+ini_set('max_execution_time', '0');
+
 class MembreController extends AbstractController
 {
 
