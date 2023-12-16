@@ -92,7 +92,7 @@ class DiffusionController extends AbstractController
             $nPhones = intval($result['compte']);
 
             $message = $diffusion->getContent();
-            $parts = intval(strlen($message) / 153) + 1;
+            $parts = intval(strlen($message) / 160) + 1;
             $cost = 1.5 * $parts * $nPhones;
             $currentSolde = $organisation->getCredits();
             
