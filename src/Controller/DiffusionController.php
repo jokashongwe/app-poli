@@ -143,7 +143,7 @@ class DiffusionController extends AbstractController
             'controller_name' => 'DiffusionController',
             'form' => $form,
             'membreCount' => $membreRepository->count(['visible' => null]),
-            'diffusions' => $diffusionRepository->findBy(['visible' => true, 'organisation' => $organisation]),
+            'diffusions' => $diffusionRepository->findBy(['visible' => true, 'organisation' => $organisation],['id' => 'DESC']),
             'credits' => 0
         ]);
     }
