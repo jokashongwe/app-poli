@@ -36,7 +36,7 @@ def get_phones_from_group(group: str) -> List[str]:
             .replace(")", "")
         )
         numbers.append(parsed_phone)
-        if len(numbers) == 100:
+        if len(numbers) == 50:
             yield numbers
             numbers = []
     yield numbers
