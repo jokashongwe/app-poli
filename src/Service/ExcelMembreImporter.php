@@ -82,7 +82,16 @@ class ExcelMembreImporter
                     $phone = "243$phone";
                 }
                 $phone = "+$phone";
-                if ($this->isMemberExist($phone, $organisation)) continue;
+                $membre = $this->isMemberExist($phone, $organisation);
+                $tags = $this->tags;
+                if(!is_null($membre)){
+                    foreach ($tags as $tag) {
+                        $membre->addTag($tag);
+                    }
+                    $this->managerRegistery->getManager()->persist($membre);
+                    $this->managerRegistery->getManager()->flush();
+                    return;
+                };
 
                 //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
                 $membre = new Membre();
@@ -94,7 +103,7 @@ class ExcelMembreImporter
                 $membre->setPrenom($prenom);
                 //$phone = $membreData["D"];
 
-                $tags = $this->tags;
+                
                 if (empty($tags)) {
                     $tags = $organisation->getTags();
                 }
@@ -119,14 +128,14 @@ class ExcelMembreImporter
         //unlink($this->filename);
     }
 
-    private function isMemberExist($telephone, $organisation)
+    private function isMemberExist($telephone, $organisation):?Membre
     {
-        $result = $this->managerRegistery->getRepository(Membre::class)->findBy([
+        $membre = $this->managerRegistery->getRepository(Membre::class)->findOneBy([
             'telephone' => $telephone,
             'organisation' => $organisation
         ]);
 
-        return !empty($result);
+        return $membre;
     }
 
     private function generateIdNumber()
