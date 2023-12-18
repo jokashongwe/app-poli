@@ -71,6 +71,7 @@ class BulkSMS:
         senderName = self.config.get("senderName")
         senderName = senderName if senderName else "repliable"
         newMessage = self.message.replace("?/'","'").replace("?/","").replace("\\'","'")
+        newMessage = newMessage.replace("m?me","même")
         body = []
 
         for number in numbers:
