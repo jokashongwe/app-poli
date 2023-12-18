@@ -90,7 +90,7 @@ class ExcelMembreImporter
                     }
                     $this->managerRegistery->getManager()->persist($membre);
                     $this->managerRegistery->getManager()->flush();
-                    return;
+                    continue;
                 };
 
                 //if(!is_null($membreData["D"]) && $this->isMemberExist($membreData["D"], $organisation)) continue;
