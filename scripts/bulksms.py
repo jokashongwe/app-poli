@@ -58,7 +58,7 @@ class BulkSMS:
         self.credentials = None
 
     def get_routing_group(self, number):
-        return "STANDARD" if isascii(self.message) else "PREMIUM"
+        return "PREMIUM"
             
 
     def send_messages(self, destinationList: list[str] = None):
